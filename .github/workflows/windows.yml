@@ -1,0 +1,50 @@
+name: Windows pre-alpha
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'project.godot'
+      - 'export_presets.cfg'
+      - 'scripts/**'
+      - 'src/**'
+      - 'scenes/**'
+      - 'assets/**'
+      - 'tests/**'
+      - 'tools/**'
+      - '.github/workflows/windows.yml'
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download official Godot 4.7.2 and Windows template
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path .tools -Force | Out-Null
+          Invoke-WebRequest 'https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_win64.exe.zip' -OutFile .tools/godot.zip
+          Expand-Archive .tools/godot.zip .tools -Force
+          python tools/fetch_windows_template.py
+      - name: Import, test and export
+        shell: pwsh
+        run: |
+          ./tools/build_windows.ps1 -GodotExe "$pwd/.tools/Godot_v4.7.2-stable_win64_console.exe"
+          Copy-Item licenses/GODOT* teste-fase20/
+          Copy-Item docs/TESTING.md teste-fase20/LEIA-ME.md
+      - name: Package executable and source
+        shell: pwsh
+        run: python tools/package_windows.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EchoesOfAethel-Windows-x64
+          path: EchoesOfAethel-Fase20-Consolidado-Windows-x64.zip
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-logs
+          path: relatorios-fase20/*final.log

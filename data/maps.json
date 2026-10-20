@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "total_maps": 15,
+  "dungeon_count": 3,
+  "maps": [
+    {
+      "id": "map_01",
+      "name": "Vigília — Praça dos Sinos",
+      "act": "I",
+      "kind": "hub",
+      "description": "Cidade sobreposta a endereços impossíveis",
+      "cast": "Maera Voss; Teren Hal; Doma Ferreiro",
+      "design_goal": "Introdução, comércio e escolhas persistentes"
+    },
+    {
+      "id": "map_02",
+      "name": "Bairro que Faltava",
+      "act": "I",
+      "kind": "exterior",
+      "description": "Casas de duas épocas ocupam a mesma rua",
+      "cast": "Nela, arquivista; Rasuras",
+      "design_goal": "Três âncoras e caminhos alternativos"
+    },
+    {
+      "id": "map_03",
+      "name": "Pátio dos Endereços",
+      "act": "I",
+      "kind": "exterior",
+      "description": "Cartas sem destinatário marcam as rotas",
+      "cast": "Edrin, carteiro; Vigias do Mapa",
+      "design_goal": "Emboscadas e mapa parcial"
+    },
+    {
+      "id": "map_04",
+      "name": "Arquivo das Portas Seladas",
+      "act": "I",
+      "kind": "dungeon",
+      "description": "Corredores mudam conforme placas encontradas",
+      "cast": "Porteiro das Portas Seladas",
+      "design_goal": "Chefe do Ato I; decisão sobre moradores"
+    },
+    {
+      "id": "map_05",
+      "name": "Estrada dos Retornos",
+      "act": "II",
+      "kind": "exterior",
+      "description": "Caravanas regressam de viagens nunca feitas",
+      "cast": "Olan, condutor; Coletores",
+      "design_goal": "Rastreamento de mercadorias e atalhos"
+    },
+    {
+      "id": "map_06",
+      "name": "Cais de Sal",
+      "act": "II",
+      "kind": "hub",
+      "description": "Porto de navios impossíveis e maré cristalina",
+      "cast": "Lira Ancorista; Iven Mercador",
+      "design_goal": "Comércio, investigação e contratos"
+    },
+    {
+      "id": "map_07",
+      "name": "Estaleiro de Vidro",
+      "act": "II",
+      "kind": "exterior",
+      "description": "Cascos transparentes exibem tripulações alternativas",
+      "cast": "Neris, mergulhadora; Vigias",
+      "design_goal": "Pontes móveis e armadilhas"
+    },
+    {
+      "id": "map_08",
+      "name": "Porão da Travessia Nula",
+      "act": "II",
+      "kind": "dungeon",
+      "description": "Navio preso dentro de um dique subterrâneo",
+      "cast": "Almirante Sem Travessia",
+      "design_goal": "Chefe do Ato II; arquivo de rotas"
+    },
+    {
+      "id": "map_09",
+      "name": "Várzea das Promessas",
+      "act": "III",
+      "kind": "exterior",
+      "description": "Colheitas de estações incompatíveis",
+      "cast": "Alda, botânica; Testemunhas Partidas",
+      "design_goal": "Efeitos ambientais e coleta"
+    },
+    {
+      "id": "map_10",
+      "name": "Jardim de Cobre",
+      "act": "III",
+      "kind": "hub",
+      "description": "Árvores ressoam vozes de gerações possíveis",
+      "cast": "Sive; Teren Hal",
+      "design_goal": "Escolha de Sive e serviços mutáveis"
+    },
+    {
+      "id": "map_11",
+      "name": "Pomar dos Nomes",
+      "act": "III",
+      "kind": "exterior",
+      "description": "Frutos gravados com nomes de pessoas ausentes",
+      "cast": "Isha, guardiã; Não-Nascidos",
+      "design_goal": "Diálogos ramificados e combate"
+    },
+    {
+      "id": "map_12",
+      "name": "Estufa das Causas",
+      "act": "III",
+      "kind": "exterior",
+      "description": "Máquinas vegetais mantêm destinos artificiais",
+      "cast": "Jardineiro das Causas",
+      "design_goal": "Chefe do Ato III e mudança de arena"
+    },
+    {
+      "id": "map_13",
+      "name": "Fenda dos Registros",
+      "act": "IV",
+      "kind": "exterior",
+      "description": "Geometria partida entre versões de Aethel",
+      "cast": "Maera; Conclave",
+      "design_goal": "Revisita consequências dos atos"
+    },
+    {
+      "id": "map_14",
+      "name": "Observatório da Linha Única",
+      "act": "IV",
+      "kind": "exterior",
+      "description": "Lentes gigantes selecionam realidades",
+      "cast": "Iro Sen; Conclave",
+      "design_goal": "Confronto ideológico e guardas elites"
+    },
+    {
+      "id": "map_15",
+      "name": "Atlas do Nunca",
+      "act": "IV",
+      "kind": "dungeon",
+      "description": "Mapas vivos reconfiguram salas e saídas",
+      "cast": "Cartógrafo sem Norte",
+      "design_goal": "Chefe final e três desfechos"
+    }
+  ]
+}
