@@ -21,7 +21,7 @@ func run() -> void:
 	var world = load("res://scenes/main.tscn").instantiate()
 	root.add_child(world)
 	await process_frame
-	for resolution in [Vector2i(1280,720), Vector2i(1366,768), Vector2i(1280,800)]:
+	for resolution in [Vector2i(1280,720), Vector2i(1920,1080), Vector2i(1366,768), Vector2i(1280,800)]:
 		root.size = resolution
 		await shot("hud-%dx%d" % [resolution.x, resolution.y])
 	root.size = Vector2i(1280,720)

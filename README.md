@@ -1,5 +1,23 @@
 # ECHOES OF AETHEL
 
+## Fase 20.2 — base Godot integrada
+
+Branch `integration/fase20-2-godot`, baseada em `e66f451`, proposta contra `main`. Os PRs #4–8 estão abertos e não mesclados; esta branch preserva sua cadeia de commits e disponibiliza o projeto completo. [Auditoria da Fase 20.2](docs/FASE20_2_INTEGRATION_AUDIT.md).
+
+Versão do jogo **0.20.2**, engine **4.7.2.stable.official.ed1daf0bf**. Projeto na raiz da branch; no pacote, abra `fonte/project.godot`. Para jogar, abra `jogo/EchoesOfAethel-Fase20.exe` mantendo o PCK junto.
+
+```powershell
+./tools/fetch_godot.ps1
+python tools/fetch_windows_template.py
+./tools/build_windows.ps1 -GodotExe "$pwd/.tools/Godot_v4.7.2-stable_win64_console.exe"
+./tools/smoke_windows.ps1
+python tools/package_windows.py
+```
+
+O download verifica SHA512 do ZIP oficial da engine; o template verifica CRC e SHA256 fixado. O build recusa outra versão/commit da engine ou hash do template. Dez suítes incluem integridade de cenas/Resources e unicidade de classes; a matriz de clique inclui 1920×1080. O smoke executa o EXE Windows em perfil isolado e verifica dez condições de gameplay, além do marcador do menu e saída correta.
+
+Artefato atual: **EchoesOfAethel-PreAlpha-Windows-x64.zip**, com `jogo/`, `fonte/`, `evidencias/` e manifesto SHA256. Na aba Actions, selecione **Windows PreAlpha Fase 20.2** e baixe o artefato de mesmo nome. O workflow exporta e executa o EXE em Windows; não publica release estável. As seções de estabilização e o CI #4 abaixo registram o histórico da Fase 20.1.
+
 Pré-alpha de ARPG de fantasia sombria, single-player, Windows x64, Godot **4.7.2.stable.official.ed1daf0bf**. Cenário 3D com câmera ortográfica inclinada, controle por clique e WASD relativo à câmera.
 
 Esta branch consolida o **ZIP completo da Fase 20** com os adaptadores das Fases 21 e 22. Não usa o protótipo antigo de Downloads como base. Histórico, fontes e escolha de ancestral: [auditoria](docs/CONSOLIDATION_AUDIT.md) e [manifesto](docs/SOURCE_MANIFEST.json).

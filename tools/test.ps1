@@ -10,7 +10,7 @@ try {
     & $enginePath --headless --path $taskRoot --editor --import --quit --log-file (Join-Path $logsPath 'importacao-final.log') | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'Importacao falhou' }
     if (Select-String -LiteralPath (Join-Path $logsPath 'importacao-final.log') -Pattern 'SCRIPT ERROR|Parse Error|Failed to load script' -Quiet) { throw 'Erro de script na importacao' }
-    foreach ($testName in @('test_items','test_combat','test_gameplay','test_ui_smoke','test_rpg_systems','test_hud_revision','test_consolidation','test_playability','balance_bot')) {
+    foreach ($testName in @('test_project_integrity','test_items','test_combat','test_gameplay','test_ui_smoke','test_rpg_systems','test_hud_revision','test_consolidation','test_playability','balance_bot')) {
         $env:AETHEL_TEST_SAVE_DIR = Join-Path $logsPath "profiles/$testName"
         New-Item -ItemType Directory -Path $env:AETHEL_TEST_SAVE_DIR -Force | Out-Null
         $logPath = Join-Path $logsPath "$testName-final.log"

@@ -1,5 +1,9 @@
 [
   {
+    "Test": "test_project_integrity",
+    "ExitCode": 0
+  },
+  {
     "Test": "test_items",
     "ExitCode": 0
   },

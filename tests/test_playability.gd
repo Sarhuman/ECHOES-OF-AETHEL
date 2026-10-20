@@ -52,7 +52,7 @@ func run() -> void:
 	var boss := target_at(Vector3(4,0,0),2)
 	await frames(2)
 	# Rank-2 target exercises the visible head of the large enemy without inventing a campaign boss.
-	for resolution in [Vector2i(1280,720),Vector2i(1366,768),Vector2i(1280,800)]:
+	for resolution in [Vector2i(1280,720),Vector2i(1920,1080),Vector2i(1366,768),Vector2i(1280,800)]:
 		root.size = resolution
 		await frames(2)
 		for zoom in [10.0,12.0,18.0]:

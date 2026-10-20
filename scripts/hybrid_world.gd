@@ -86,6 +86,11 @@ func _ready() -> void:
 	if "--smoke-gameplay" in OS.get_cmdline_user_args():
 		print("SMOKE GAMEPLAY READY: player=%s inventory=%s hp=%d equipment=%d" % [player != null, inventory != null, player.hp, player.equipped.size()])
 
+	if "--verify-build" in OS.get_cmdline_user_args():
+		var probe := preload("res://src/core/build_smoke.gd").new()
+		add_child(probe)
+		probe.call_deferred("run")
+
 func _mat(c: Color) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = c

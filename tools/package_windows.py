@@ -5,7 +5,7 @@ from pathlib import Path
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "EchoesOfAethel-Fase20-Estabilizado-Windows-x64.zip"
+OUTPUT = ROOT / "EchoesOfAethel-PreAlpha-Windows-x64.zip"
 SOURCE_DIRS = ("assets", "scenes", "scripts", "src", "tests", "tools", "docs", "data", "licenses", ".github")
 
 
@@ -38,6 +38,9 @@ def main():
     provenance = ROOT / ".tools/templates/provenance.json"
     if provenance.exists():
         entries.append((provenance, "evidencias/template-provenance.json"))
+    engine_provenance = ROOT / ".tools/engine-provenance.json"
+    if engine_provenance.exists():
+        entries.append((engine_provenance, "evidencias/engine-provenance.json"))
     manifest = {name: hashlib.sha256(path.read_bytes()).hexdigest() for path, name in entries}
     if len(manifest) != len(entries):
         raise RuntimeError("Duplicate archive entry")

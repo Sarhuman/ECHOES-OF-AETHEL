@@ -58,6 +58,9 @@ def main():
         entry = entries[0]
         content = archive.read(entry)
     output = target / "windows_release_x86_64.exe"
+    expected = "d34d36f3be1a6c49c56525ae86469b92e4f417ddf0b43cf00dd80c385c4b0562"
+    if hashlib.sha256(content).hexdigest() != expected:
+        raise RuntimeError("Official 4.7.2 Windows template SHA256 mismatch")
     output.write_bytes(content)
     metadata = {"source": URL, "entry": entry.filename, "crc32": f"{entry.CRC:08x}", "sha256": hashlib.sha256(content).hexdigest(), "bytes": len(content)}
     (target / "provenance.json").write_text(json.dumps(metadata, indent=2), encoding="utf-8")
