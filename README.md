@@ -4,6 +4,12 @@ Pré-alpha de ARPG de fantasia sombria, single-player, Windows x64, Godot **4.7.
 
 Esta branch consolida o **ZIP completo da Fase 20** com os adaptadores das Fases 21 e 22. Não usa o protótipo antigo de Downloads como base. Histórico, fontes e escolha de ancestral: [auditoria](docs/CONSOLIDATION_AUDIT.md) e [manifesto](docs/SOURCE_MANIFEST.json).
 
+## Estabilização crítica da Fase 20
+
+Branch `fix/fase20-jogabilidade`, baseada na consolidação `596d9e6`. Câmera inicial 12 com zoom 10–18 pela roda, raycast para selecionar inimigos e validar o chão, aproximação limitada ao alcance, F1/F2/F3 com execução direta e estado visível, Doma humano com avental/martelo e ajuda recolhível em H. [Causas, regressões e limites](docs/FASE20_STABILIZATION.md).
+
+As três técnicas já existentes são disponibilizadas como kit de teste desta vertical slice, inclusive ao carregar saves anteriores. Não foram criadas habilidades novas nem declarado balanceamento final; a tela K continua mostrando seus dados e o botão direito repete a última técnica usada. A árvore genérica de progressão continua disponível no componente existente.
+
 ## Estado real
 
 | Situação | Conteúdo |
@@ -13,7 +19,7 @@ Esta branch consolida o **ZIP completo da Fase 20** com os adaptadores das Fases
 | Validado em execução gráfica | Menu, mundo, HUD em 1280×720, 1366×768 e 1280×800, mochila, personagem, habilidades, loja, pausa e opções |
 | Ainda requer playtest humano | Sensação de combate, percurso por mouse, balanceamento amplo e experiência em outras máquinas |
 | Planejado | Quatro outras classes jogáveis; modelos/rigs/animações finais; áudio de produção; navmesh; dungeon map_04; 15 mapas, três dungeons e três finais completos |
-| CI validado | [Windows pre-alpha #1](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39502230965) aprovado: importação, testes, exportação e upload do artefato |
+| CI | A consolidação anterior foi aprovada no run #1; o novo workflow desta branch gera o pacote **Estabilizado**. Consultar o PR de correção para o resultado remoto atual |
 
 Vigília (`map_01`) e Bairro que Faltava (`map_02`) compartilham a geometria de teste e mudam NPCs, inimigos e objetivos. Não são dois mapas artísticos finalizados. Não há conteúdo executável do Arquivo das Portas Seladas (`map_04`).
 
@@ -31,16 +37,17 @@ Para editar: importe o **project.godot da raiz deste repositório** na Godot 4.7
 | Atacar/perseguir | Clique em inimigo; Shift+clique para atacar parado; J para ataque básico |
 | Bloquear | Segurar Q com escudo; bloqueio manual consome Fôlego |
 | Esquivar | Espaço |
-| Habilidade | Botão direito; escolher com F1–F3 ou barra, desbloquear em K |
+| Habilidade | F1: Golpe; F2: Guarda (novamente cancela); F3: Eco. Barra também executa; botão direito repete a última técnica |
 | Interagir/coletar | E; configurável para F em Opções; clique também coleta drops |
 | Mochila/personagem/habilidades/loja | I ou Tab / C / K / L perto de Doma |
 | Mostrar itens comuns | Alt |
 | Poções | 1–4 |
 | Salvar/carregar | F5 / F9 |
+| Câmera / ajuda | Roda: zoom limitado; H: controles recolhíveis |
 | Pausa | Esc; retomar, salvar, opções, menu e saída |
 | Reiniciar após derrota | R, inicia uma nova sessão |
 
-Ações centralizadas no InputMap (`project.godot`) e em `AethelInput`; opções controlam tela cheia, volume do bus Master e tecla de interação. O jogo ainda não possui trilha ou efeitos de áudio finais.
+Ações centralizadas no InputMap (`project.godot`) e em `AethelInput`; opções controlam tela cheia, volume do bus Master, tecla de interação e persistência do zoom. O jogo ainda não possui trilha ou efeitos de áudio finais.
 
 ## Testar e exportar
 
