@@ -14,7 +14,7 @@
 
 A direção técnica é **3D com câmera ortográfica inclinada** (apresentação 2.5D), cenários exploráveis, combate em tempo real, equipamentos e escolhas que repercutem na campanha.
 
-> **Estado público do repositório (20/10/2026):** este repositório contém a documentação do projeto, mas **o código executável da Godot ainda não foi integrado à branch `main`**. Há protótipos ZIP testados e versões experimentais compartilhadas durante o desenvolvimento; a Fase 11 precisa de validação na Godot 4.7.2. Os 15 mapas **ainda não estão implementados**. Não há build pública homologada.
+> **Estado público do repositório (20/10/2026):** este repositório contém a documentação do projeto, mas **o código executável da Godot ainda não foi integrado à branch `main`**. Há protótipos ZIP testados e versões experimentais compartilhadas durante o desenvolvimento; as Fases 11–17 precisam de validação integrada na Godot 4.7.2. Os 15 mapas **ainda não estão implementados**. Não há build pública homologada.
 
 ## História — O Direito ao Impossível
 
@@ -128,6 +128,18 @@ res://
 ```
 
 **Princípios:** `CharacterBody3D` para movimento físico; `NavigationAgent3D` somente com navegação preparada; lógica de combate desacoplada de animações; `Resource` tipados para itens e habilidades; identificadores estáveis para mapa, NPC, quest e item; saves com versionamento e migração; testes de regressão ao substituir a camada visual.
+
+## Expansão de lore, identidade de mapas e combate (em revisão)
+
+O **PR #3** reúne a especificação aprofundada das três dungeons, uma matriz de identidade para os 15 mapas e o cânone literário *O Atlas do Nunca*. Os documentos estão na branch de design e **não comprovam cenas, chefes ou sistemas implementados**:
+
+- [O Atlas do Nunca — Compêndio da Realidade Porosa](https://github.com/Sarhuman/ECHOES-OF-AETHEL/blob/design/environmental-narrative-dungeons/docs/LORE_ATLAS_DO_NUNCA.md)
+- [Matriz multissensorial dos 15 mapas](https://github.com/Sarhuman/ECHOES-OF-AETHEL/blob/design/environmental-narrative-dungeons/docs/MAP_IDENTITY_MATRIX.md)
+- [Balanceamento Normal/Pesadelo/Inferno e chefe Porteiro](https://github.com/Sarhuman/ECHOES-OF-AETHEL/blob/design/environmental-narrative-dungeons/docs/COMBAT_BALANCING_AND_PORTEIRO.md)
+- [Direção de arte e narrativa ambiental das dungeons](https://github.com/Sarhuman/ECHOES-OF-AETHEL/blob/design/environmental-narrative-dungeons/docs/ENVIRONMENTAL_STORYTELLING_AND_DUNGEONS.md)
+- [PR #3 — revisão de design](https://github.com/Sarhuman/ECHOES-OF-AETHEL/pull/3)
+
+**Critério para implementar:** validar primeiro Vigília (`map_01`), Bairro que Faltava (`map_02`) e Arquivo das Portas Seladas (`map_04`), com HUD, inventário, missões e save testados em jogo. Multiplicadores de dificuldade e inimigos propostos são hipóteses de balanceamento até passarem por testes.
 
 ## Próximos marcos
 
