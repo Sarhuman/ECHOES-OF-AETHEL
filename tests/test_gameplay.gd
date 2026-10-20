@@ -71,6 +71,12 @@ func _initialize() -> void:
 	for enemy in world.enemies:
 		if enemy.rank == 1: champions += 1
 	_check(champions == 1, "um campeão entre as Rasuras")
+	# Test a visible target; the old pixel-radius picker also selected off-screen projections.
+	player.position = Vector3(-5,0,-1)
+	camera.snap_to_target()
+	await physics_frame
+	await physics_frame
+	await process_frame
 	var first: CharacterBody3D = world.enemies[0]
 	var picked: CharacterBody3D = world.pick_enemy_at(_screen_of(world, first.global_position + Vector3(0, 0.9, 0)))
 	_check(picked == first, "pick_enemy_at acha a Rasura sob o cursor")

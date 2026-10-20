@@ -55,6 +55,9 @@ var hovered_drop: AethelDroppedItem = null
 var message_until: float = 0.0
 var transient_message: String = ""
 var last_drink_time: float = 0.0
+var merchant: StaticBody3D
+var help_panel: PanelContainer
+var message_label: Label
 var pause_menu: AethelPauseMenu
 
 func _ready() -> void:
@@ -73,6 +76,7 @@ func _ready() -> void:
 	var new_game: bool = bool(Engine.get_meta("aethel_new_game", false))
 	Engine.remove_meta("aethel_new_game")
 	if new_game or not _load_state(): _give_starting_gear()
+	_grant_training_skills()
 	pause_menu = AethelPauseMenu.new()
 	add_child(pause_menu)
 	pause_menu.save_requested.connect(_save_state)
@@ -175,6 +179,7 @@ func _build_vigilia_architecture() -> void:
 
 func _build_ground() -> void:
 	var body := StaticBody3D.new()
+	body.set_meta("walkable_ground", true)
 	body.position = Vector3(0,-0.28,0)
 	add_child(body)
 	var tile := MeshInstance3D.new()
@@ -212,20 +217,44 @@ func _build_narrative_nodes() -> void:
 	_update_region()
 
 func _build_merchant() -> void:
-	var merchant := Node3D.new()
+	merchant = StaticBody3D.new()
 	merchant.name = "DomaFerren"
 	merchant.position = Vector3(-9,0,2)
+	merchant.collision_layer = 8
+	merchant.collision_mask = 2
 	merchant.add_to_group("merchants")
 	add_child(merchant)
-	var model := MeshInstance3D.new()
-	var mesh := CapsuleMesh.new()
-	mesh.radius = 0.45
-	mesh.height = 1.9
-	model.mesh = mesh
-	model.position.y = 0.95
-	model.material_override = _mat(Color("956b47"))
+	var body := CollisionShape3D.new()
+	body.name = "BodyCollision"
+	var capsule := CapsuleShape3D.new()
+	capsule.radius = 0.4
+	capsule.height = 1.8
+	body.shape = capsule
+	body.position.y = 0.9
+	merchant.add_child(body)
+	var interaction := Area3D.new()
+	interaction.name = "InteractionArea"
+	interaction.collision_layer = 32
+	interaction.collision_mask = 2
+	var interaction_shape := CollisionShape3D.new()
+	var sphere := SphereShape3D.new()
+	sphere.radius = 3
+	interaction_shape.shape = sphere
+	interaction.add_child(interaction_shape)
+	merchant.add_child(interaction)
+	var model := Node3D.new()
+	model.name = "DomaVisual"
+	model.set_script(preload("res://scripts/procedural_npc.gd"))
+	model.set("role", &"blacksmith")
+	model.rotation.y = -3 * PI / 4
 	merchant.add_child(model)
-
+	var title := Label3D.new()
+	title.text = "Doma Ferren\nFerreiro"
+	title.position.y = 2.4
+	title.font_size = 26
+	title.pixel_size = 0.007
+	title.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	merchant.add_child(title)
 
 func _build_player() -> void:
 	player = CharacterBody3D.new()
@@ -238,8 +267,8 @@ func _build_player() -> void:
 	var camera := Camera3D.new()
 	camera.set_script(preload("res://src/core/follow_camera.gd"))
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.size = 10.0
-	# Projeção dimétrica 2:1 do ARPG clássico: pitch 30°, yaw 45° (posição = direção inversa da visão).
+	camera.size = 12.0
+	# Projeção ortográfica inclinada; yaw 45°, pitch 35,264°, zoom inicial 12.
 	camera.rotation_degrees = Vector3(-35.264, 45.0, 0.0)
 	camera.position = Vector3(12.25, 12.25, 12.25)
 	camera.current = true
@@ -302,45 +331,75 @@ func _build_ui() -> void:
 	var canvas := CanvasLayer.new()
 	add_child(canvas)
 	var root := Control.new()
-	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	canvas.add_child(root)
+	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	floating_layer = Control.new()
-	floating_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	floating_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	canvas.add_child(floating_layer)
-	var title := Label.new()
-	title.text = "ECHOES OF AETHEL  |  FASE 20 — PROTÓTIPO"
-	title.position = Vector2(18, 16)
-	title.add_theme_font_size_override("font_size", 20)
-	root.add_child(title)
+	floating_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	status_label = Label.new()
-	status_label.position = Vector2(18, 52)
+	status_label.position = Vector2(18,16)
+	status_label.size = Vector2(400,26)
+	status_label.add_theme_font_size_override("font_size", 20)
+	_readable_label(status_label)
 	root.add_child(status_label)
 	hint_label = Label.new()
-	hint_label.position = Vector2(18, 82)
-	hint_label.add_theme_font_size_override("font_size", 16)
+	hint_label.position = Vector2(18,46)
+	hint_label.size = Vector2(400,60)
+	hint_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hint_label.add_theme_font_size_override("font_size", 15)
+	_readable_label(hint_label)
 	root.add_child(hint_label)
+	message_label = Label.new()
+	message_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	message_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_readable_label(message_label)
+	root.add_child(message_label)
+	message_label.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	message_label.offset_left = -280
+	message_label.offset_right = 280
+	message_label.offset_top = -230
+	message_label.offset_bottom = -175
+	var help_button := Button.new()
+	help_button.text = "H · Ajuda"
+	root.add_child(help_button)
+	help_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	help_button.offset_left = -122
+	help_button.offset_right = -18
+	help_button.offset_top = 16
+	help_button.offset_bottom = 48
+	help_button.pressed.connect(func() -> void: help_panel.visible = not help_panel.visible)
+	help_panel = PanelContainer.new()
+	help_panel.name = "ControlsHelp"
+	root.add_child(help_panel)
+	help_panel.set_anchors_preset(Control.PRESET_CENTER)
+	help_panel.offset_left = -270
+	help_panel.offset_right = 270
+	help_panel.offset_top = -190
+	help_panel.offset_bottom = 190
+	var margin := MarginContainer.new()
+	for side in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + side, 20)
+	help_panel.add_child(margin)
 	var help := Label.new()
-	help.text = "Clique: mover/atacar/pegar | Shift: atacar parado | Botão dir.: habilidade | Q: bloquear | 1–4: poções | I/Tab C K L | Alt: itens | E/F: interagir | F5/F9 | Esc: pausa"
-	help.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	help.add_theme_font_size_override("font_size", 12)
-	help.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	help.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(help)
-	help.anchor_left = 0.5
-	help.anchor_right = 1.0
-	help.offset_left = 0.0
-	help.offset_right = -18.0
-	help.offset_top = 70.0
-	help.offset_bottom = 112.0
+	help.text = "CONTROLES — H para fechar\n\nWASD / setas ou clique no chão: mover\nClique no inimigo: aproximar e atacar\nShift + clique: atacar parado · J: ataque básico\nF1: Golpe · F2: Guarda (novamente: cancelar) · F3: Eco\nBotão direito: repetir a última habilidade\nQ: bloquear com escudo · Espaço: esquivar\nE / F: interagir (configurável) · L: loja de Doma\nI / Tab: mochila · C: personagem · K: habilidades\n1–4: poções · Alt: rótulos de itens\nRoda do mouse: zoom · F5/F9: salvar/carregar\nEsc: pausa · R: reiniciar após derrota"
+	help.add_theme_font_size_override("font_size", 16)
+	margin.add_child(help)
+	help_panel.hide()
+
+func _readable_label(label: Label) -> void:
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.add_theme_color_override("font_shadow_color", Color.BLACK)
+	label.add_theme_constant_override("shadow_offset_x", 1)
+	label.add_theme_constant_override("shadow_offset_y", 2)
+	label.add_theme_constant_override("outline_size", 2)
 
 func _build_resource_hud() -> void:
 	hud = AethelHUDManager.new()
 	hud.name = "ResourcesHUD"
 	add_child(hud)
 	hud.setup_player_listeners(player)
-	hud.skill_selected.connect(func(index: int) -> void: _select_right_skill(SKILL_IDS[index]))
+	hud.skill_selected.connect(func(index: int) -> void: _activate_skill(SKILL_IDS[index]))
 
 func _on_combat_event(world_position: Vector3, message: String, kind: String) -> void:
 	var colors: Dictionary = {"damage": Color("ffda75"), "hurt": Color("ff7777"), "heal": Color("77ff99"), "mana": Color("77aaff"), "buff": Color("ffd24a"), "miss": Color("d4d4d4")}
@@ -356,16 +415,16 @@ func _on_combat_event(world_position: Vector3, message: String, kind: String) ->
 
 func _show_message(text_value: String) -> void:
 	transient_message = text_value
-	hint_label.text = text_value
+	message_label.text = text_value
 	message_until = Time.get_ticks_msec() / 1000.0 + 2.0
 
 func _refresh_all() -> void:
 	if progression == null or player == null: return
 	if progression_label != null:
-		progression_label.text = "Nível %d | XP %d/%d | Pontos de habilidade %d | Atributos %d | Ouro %d" % [progression.current_level, progression.current_xp, progression.required_xp(progression.current_level), progression.skill_points, player.stats.unspent, gold]
+		progression_label.text = "Bastião · Nível %d · Ouro %d" % [progression.current_level, gold]
 	if hud != null:
 		hud.set_xp(progression.current_xp, progression.required_xp(progression.current_level))
-		hud.update_skills(right_skill_id, skill_tree.unlocked, SKILL_IDS)
+		hud.update_skills(right_skill_id, skill_tree.unlocked, SKILL_IDS, player, skill_tree.catalog)
 		hud.update_belt(belt, item_catalog)
 	if inventory_view != null:
 		inventory_view.gold_text = "Ouro: %d" % gold
@@ -374,32 +433,36 @@ func _refresh_all() -> void:
 	_refresh_skills_panel()
 
 func _mouse_over_ui(position: Vector2) -> bool:
-	for panel in [inventory_view, character_panel, skills_panel, shop_panel]:
+	for panel in [inventory_view, character_panel, skills_panel, shop_panel, help_panel]:
 		if panel != null and panel.visible and panel.get_global_rect().has_point(position): return true
 	return false
 
 # ---------------------------------------------------------------- escolha por mouse
-func ground_point_at(screen: Vector2) -> Variant:
+func _cursor_ray(screen: Vector2, mask: int, areas: bool = false) -> Dictionary:
 	var camera := get_viewport().get_camera_3d()
-	if camera == null: return null
-	var origin: Vector3 = camera.project_ray_origin(screen)
-	var normal: Vector3 = camera.project_ray_normal(screen)
-	if absf(normal.y) < 0.0001: return null
-	return origin + normal * (-origin.y / normal.y)
+	if camera == null or not get_viewport().get_visible_rect().has_point(screen): return {}
+	var origin := camera.project_ray_origin(screen)
+	var query := PhysicsRayQueryParameters3D.create(origin, origin + camera.project_ray_normal(screen) * 200, mask)
+	query.collide_with_areas = areas
+	return get_world_3d().direct_space_state.intersect_ray(query)
+
+func ground_point_at(screen: Vector2) -> Variant:
+	var hit := _cursor_ray(screen, 1)
+	if hit.is_empty(): return null
+	var collider := hit["collider"] as Node
+	if collider == null or not collider.get_meta("walkable_ground", false): return null
+	var point: Vector3 = hit["position"]
+	return Vector3(point.x, 0, point.z)
 
 func pick_enemy_at(screen: Vector2) -> CharacterBody3D:
-	var camera := get_viewport().get_camera_3d()
-	if camera == null: return null
-	var best: CharacterBody3D = null
-	var best_distance: float = INF
-	for enemy in enemies:
-		if not is_instance_valid(enemy): continue
-		var radius: float = 46.0 * float(RANK_PICK_SCALE[enemy.rank])
-		var distance: float = camera.unproject_position(enemy.global_position + Vector3(0, 0.9, 0)).distance_to(screen)
-		if distance < radius and distance < best_distance:
-			best = enemy
-			best_distance = distance
-	return best
+	var hit := _cursor_ray(screen, 1 | 4 | 16, true)
+	if hit.is_empty(): return null
+	var collider := hit["collider"] as Node
+	while collider != null:
+		if collider is CharacterBody3D and collider.is_in_group("hybrid_enemies"):
+			return collider if collider.hp > 0 and not collider.is_queued_for_deletion() else null
+		collider = collider.get_parent()
+	return null
 
 func pick_drop_at(screen: Vector2) -> AethelDroppedItem:
 	var camera := get_viewport().get_camera_3d()
@@ -423,27 +486,29 @@ func _unhandled_input(event: InputEvent) -> void:
 		_cast_right_skill(event.position)
 
 func _on_left_press(screen: Vector2) -> void:
+	if _mouse_over_ui(screen): return
 	left_held = true
 	pickup_target = null
-	var drop: AethelDroppedItem = pick_drop_at(screen)
+	var enemy := pick_enemy_at(screen)
+	if Input.is_action_pressed("stand_attack"):
+		hold_mode = "stand"
+		var aim: Variant = enemy.global_position if enemy != null else ground_point_at(screen)
+		if aim != null: player.command_stand_attack(aim)
+		return
+	if enemy != null:
+		hold_mode = "attack"
+		player.command_attack(enemy)
+		return
+	var drop := pick_drop_at(screen)
 	if drop != null:
 		hold_mode = "pickup"
 		pickup_target = drop
 		player.command_move(drop.global_position)
 		return
-	if Input.is_action_pressed("stand_attack"):
-		hold_mode = "stand"
-		var aim: Variant = ground_point_at(screen)
-		if aim != null: player.command_stand_attack(aim)
-		return
-	var enemy: CharacterBody3D = pick_enemy_at(screen)
-	if enemy != null:
-		hold_mode = "attack"
-		player.command_attack(enemy)
-		return
-	hold_mode = "move"
 	var point: Variant = ground_point_at(screen)
-	if point != null: player.command_move(point)
+	if point != null:
+		hold_mode = "move"
+		player.command_move(point)
 
 func _on_left_release() -> void:
 	left_held = false
@@ -452,26 +517,51 @@ func _on_left_release() -> void:
 
 func _apply_hold() -> void:
 	if player.keyboard_active or (hold_mode != "move" and hold_mode != "stand"): return
-	var aim: Variant = ground_point_at(get_viewport().get_mouse_position())
+	var screen := get_viewport().get_mouse_position()
+	var enemy := pick_enemy_at(screen) if hold_mode == "stand" else null
+	var aim: Variant = enemy.global_position if enemy != null else ground_point_at(screen)
 	if aim == null: return
 	if hold_mode == "stand": player.command_stand_attack(aim)
 	elif player.global_position.distance_to(aim) > 0.45: player.command_move(aim)
 
-func _cast_right_skill(screen: Vector2) -> void:
-	if right_skill_id.is_empty() or not skill_tree.unlocked.has(right_skill_id):
-		_show_message("Libere e selecione uma habilidade (K ou F1-F3)")
+func _activate_skill(skill_id: String, screen: Variant = null) -> void:
+	if not skill_tree.unlocked.has(skill_id):
+		_show_message("Habilidade indisponível")
 		return
-	var aim: Variant = ground_point_at(screen)
+	var focus: Node3D = player.attack_target if is_instance_valid(player.attack_target) else null
+	if screen is Vector2 and not _mouse_over_ui(screen):
+		var under_cursor := pick_enemy_at(screen)
+		if under_cursor != null: focus = under_cursor
+	var aim: Variant = focus.global_position if focus != null else (ground_point_at(screen) if screen is Vector2 and not _mouse_over_ui(screen) else null)
 	if aim != null:
 		var direction: Vector3 = aim - player.global_position
-		direction.y = 0.0
-		if direction.length() > 0.1: player.facing = direction.normalized()
-	var problem: String = player.use_skill(skill_tree.catalog[right_skill_id])
-	if not problem.is_empty(): _show_message(problem)
+		direction.y = 0
+		if direction.length() > 0.01: player.facing = direction.normalized()
+	var problem: String = player.use_skill(skill_tree.catalog[skill_id])
+	if not problem.is_empty():
+		_show_message(problem)
+	else:
+		left_held = false
+		hold_mode = ""
+		right_skill_id = skill_id
+		_show_message("Guarda encerrada" if skill_id == "iron_guard" and player.guard_remaining <= 0 else skill_tree.catalog[skill_id].display_name)
+		_refresh_skills_panel()
+
+func _cast_right_skill(screen: Vector2) -> void:
+	if right_skill_id.is_empty():
+		_show_message("Use F1–F3 para executar uma habilidade")
+		return
+	_activate_skill(right_skill_id, screen)
+
+func _grant_training_skills() -> void:
+	# Existing three techniques are available in this test slice; no new skill rules.
+	for id: String in SKILL_IDS: skill_tree.unlocked[id] = true
+	if right_skill_id.is_empty(): right_skill_id = "heavy_strike"
 
 # ---------------------------------------------------------------- loop
 func _process(delta: float) -> void:
 	var camera := get_viewport().get_camera_3d()
+	hud.update_skills(right_skill_id, skill_tree.unlocked, SKILL_IDS, player, skill_tree.catalog)
 	for index in range(active_popups.size() - 1, -1, -1):
 		var popup: Dictionary = active_popups[index]
 		popup["age"] += delta
@@ -501,7 +591,7 @@ func _process(delta: float) -> void:
 		if player.global_position.distance_to(pickup_target.global_position) < 1.7: _collect_drop(pickup_target)
 	else:
 		pickup_target = null
-	if shop_panel.visible and (region_id != "map_01" or player.global_position.distance_to(Vector3(-9, 0, 2)) > 4.5):
+	if shop_panel.visible and (region_id != "map_01" or player.global_position.distance_to(merchant.global_position) > 4.5):
 		shop_panel.visible = false
 	status_label.text = "VIGÍLIA / PRAÇA DOS SINOS" if region_id == "map_01" else "BAIRRO QUE FALTAVA  |  Rasuras %d / 5" % slain
 	if region_id == "map_01":
@@ -509,7 +599,7 @@ func _process(delta: float) -> void:
 		if quest_started: hint_label.text = "Missão: Uma Porta para Ninguém — atravesse o portal a leste."
 		if quest_completed: hint_label.text = "Missão concluída: o bairro foi estabilizado."
 		if player.global_position.distance_to(gate.global_position) < 2.8: hint_label.text = "E: entrar no Bairro que Faltava" if quest_started else "Converse com Maera antes de sair."
-		if player.global_position.distance_to(Vector3(-9, 0, 2)) < 3.0: hint_label.text = "L: falar com Doma (loja)"
+		if player.global_position.distance_to(merchant.global_position) < 3.0: hint_label.text = "E: falar com Doma (L: loja)"
 	else:
 		hint_label.text = "Derrote 5 Rasuras. Clique nos itens para pegar. E: retornar pelo portal."
 		if slain >= 5: hint_label.text = "Bairro estabilizado! E perto do portal para voltar a Vigília."
@@ -518,8 +608,7 @@ func _process(delta: float) -> void:
 		status_label.text += "  |  DERROTA — R para reiniciar"
 	elif slain >= 5 and region_id == "map_02":
 		status_label.text += "  |  ÁREA LIBERADA"
-	if message_until > Time.get_ticks_msec() / 1000.0:
-		hint_label.text = transient_message
+	message_label.visible = message_until > Time.get_ticks_msec() / 1000.0
 
 # ---------------------------------------------------------------- teclas
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -542,6 +631,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("character"): _toggle_left_panel(character_panel)
 	elif event.is_action_pressed("skills"): _toggle_left_panel(skills_panel)
 	elif event.is_action_pressed("shop"): _try_open_shop()
+	elif event.is_action_pressed("help"): help_panel.visible = not help_panel.visible
 	elif event.is_action_pressed("attack_key"): player._try_attack()
 	elif event.is_action_pressed("save"): _save_state()
 	elif event.is_action_pressed("load"):
@@ -551,12 +641,14 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		for index in 4:
 			if event.is_action_pressed("potion_%d" % (index + 1)): _drink_belt(index)
 		for index in 3:
-			if event.is_action_pressed("skill_%d" % (index + 1)): _select_right_skill(SKILL_IDS[index])
+			if event.is_action_pressed("skill_%d" % (index + 1)): _activate_skill(SKILL_IDS[index], get_viewport().get_mouse_position())
 
 func _interact() -> void:
 	if _collect_nearest_drop(): return
 	if region_id == "map_01":
-		if player.global_position.distance_to(gate.global_position) < 2.8 and quest_started:
+		if is_instance_valid(merchant) and player.global_position.distance_to(merchant.global_position) < 3:
+			_try_open_shop()
+		elif player.global_position.distance_to(gate.global_position) < 2.8 and quest_started:
 			region_id = "map_02"
 			_update_region()
 		elif player.global_position.distance_to(npc.global_position) < 2.8:
@@ -576,6 +668,9 @@ func _toggle_left_panel(panel: Control) -> void:
 
 # ---------------------------------------------------------------- regiões
 func _update_region() -> void:
+	if is_instance_valid(merchant):
+		merchant.visible = region_id == "map_01"
+		merchant.collision_layer = 8 if merchant.visible else 0
 	for drop in dropped_items:
 		if is_instance_valid(drop): drop.visible = str(drop.get_meta("region", region_id)) == region_id
 	for enemy in enemies:
@@ -754,9 +849,15 @@ func _setup_rpg_systems() -> void:
 	ui.layer = 6
 	add_child(ui)
 	progression_label = Label.new()
-	progression_label.position = Vector2(18, 112)
-	progression_label.add_theme_font_size_override("font_size", 16)
+	progression_label.add_theme_font_size_override("font_size", 14)
+	_readable_label(progression_label)
 	ui.add_child(progression_label)
+	progression_label.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	progression_label.offset_left = -300
+	progression_label.offset_right = -18
+	progression_label.offset_top = -88
+	progression_label.offset_bottom = -62
+	progression_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	character_panel = AethelCharacterPanel.new()
 	character_panel.position = Vector2(20, 150)
 	ui.add_child(character_panel)
@@ -894,7 +995,7 @@ func _add_shop_button(item: AethelItemInstance, is_stock_potion: bool) -> void:
 	shop_column.add_child(button)
 
 func _try_open_shop() -> void:
-	if region_id != "map_01" or player.global_position.distance_to(Vector3(-9, 0, 2)) > 3.0:
+	if region_id != "map_01" or player.global_position.distance_to(merchant.global_position) > 3.0:
 		_show_message("Aproxime-se do ferreiro Doma em Vigília")
 		return
 	_toggle_left_panel(shop_panel)
@@ -984,6 +1085,7 @@ func _load_state() -> bool:
 	if payload.is_empty(): return false
 	progression.restore(payload.get("progression", {}))
 	skill_tree.restore(payload.get("skills", []))
+	_grant_training_skills()
 	player.character_level = progression.current_level
 	if payload.has("stats"):
 		player.stats.restore(payload["stats"])

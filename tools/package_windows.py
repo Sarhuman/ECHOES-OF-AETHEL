@@ -5,7 +5,7 @@ from pathlib import Path
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "EchoesOfAethel-Fase20-Consolidado-Windows-x64.zip"
+OUTPUT = ROOT / "EchoesOfAethel-Fase20-Estabilizado-Windows-x64.zip"
 SOURCE_DIRS = ("assets", "scenes", "scripts", "src", "tests", "tools", "docs", "data", "licenses", ".github")
 
 
