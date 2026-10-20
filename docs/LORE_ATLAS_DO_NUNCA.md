@@ -66,7 +66,59 @@ As conclusões dependem das decisões anteriores; não são meras opções cosm�
 
 A apresentação final deve consultar flags salvas e personagens afetados. Nenhum desfecho é declarado universalmente correto.
 
-## IV. Diretrizes de implementação atmosférica (Godot 4.7.2)
+## IV. A campanha completa — quatro atos, quinze mapas
+
+O escopo narrativo fechado contém **12 regiões não-dungeon, incluindo 3 hubs**, e **3 dungeons**. Os IDs são estáveis; estes locais ainda não equivalem a cenas implementadas.
+
+| ID | Ato | Local | Tipo |
+|---|---|---|---|
+| `map_01` | I — O Bairro que Faltava | Vigília — Praça dos Sinos | Hub |
+| `map_02` | I | Bairro que Faltava | Exterior |
+| `map_03` | I | Pátio dos Endereços | Exterior |
+| `map_04` | I | Arquivo das Portas Seladas | Dungeon 1 |
+| `map_05` | II — Maré de Vidro | Estrada dos Retornos | Exterior |
+| `map_06` | II | Cais de Sal | Hub |
+| `map_07` | II | Estaleiro de Vidro | Exterior |
+| `map_08` | II | Porão da Travessia Nula | Dungeon 2 |
+| `map_09` | III — Jardim dos Ausentes | Várzea das Promessas | Exterior |
+| `map_10` | III | Jardim de Cobre | Hub |
+| `map_11` | III | Pomar dos Nomes | Exterior |
+| `map_12` | III | Estufa das Causas | Exterior / chefe |
+| `map_13` | IV — Atlas do Nunca | Fenda dos Registros | Exterior |
+| `map_14` | IV | Observatório da Linha Única | Exterior |
+| `map_15` | IV | Atlas do Nunca | Dungeon 3 / final |
+
+**Chefes de ato:** Porteiro das Portas Seladas, Almirante Sem Travessia, Jardineiro das Causas e Cartógrafo sem Norte. Na Estufa das Causas, o protagonista confronta consequências que uma realidade produz antes de serem reconhecidas pela história.
+
+## V. Personagens principais
+
+| Personagem | Papel e conflito |
+|---|---|
+| **Maera Voss** | Cartógrafa exilada e mentora; ajudou a disseminar a cartografia dos futuros proibidos. |
+| **Teren Hal** | Sineiro sem voz; documenta o preço das escolhas e preserva relatos incômodos. |
+| **Sive** | Jovem com duas histórias igualmente reais; exige decidir sobre sua própria continuidade. |
+| **Iro Sen** | Primeiro Restaurador; tenta fixar uma realidade única, aceitando apagar possibilidades. |
+| **Doma Ferren** | Ferreiro de Vigília; suas memórias familiares foram afetadas por um Eco. |
+
+Esses personagens demonstram, em diálogos, ambientes, missões e objetos, o custo das decisões. O fato de duas lembranças serem incompatíveis não basta para declarar uma delas falsa.
+
+## VI. Cinco classes jogáveis previstas
+
+| Classe | Especialidade |
+|---|---|
+| Bastião do Crepúsculo | Resistência; machado e escudo; controle corpo a corpo |
+| Tecelã do Éter | Magia ofensiva; manipulação de área e controle |
+| Sentinela das Cinzas | Arco, mobilidade, ataques precisos e armadilhas |
+| Invocadora dos Véus | Invocações, espíritos e enfraquecimentos |
+| Inquisidor da Aurora | Combate híbrido, proteção e julgamento |
+
+O Bastião é o foco do protótipo. A existência das cinco classes neste compêndio **não afirma que sejam jogáveis**.
+
+## VII. Princípio de encerramento
+
+Um Restaurador intervém no mundo, mas não o devolve simplesmente a um passado correto: precisa escolher quais consequências terão o direito de permanecer. As opções da âncora variam por missão, e o custo das intervenções irreversíveis deve aparecer no diário e nas relações do protagonista.
+
+## VIII. Diretrizes de implementação atmosférica (Godot 4.7.2)
 
 A aparência gótica é resultado de **geometria, materiais, composição, iluminação, sons e narrativa ambiental**. Um filtro de cor sozinho não cria o mapa.
 
@@ -78,7 +130,7 @@ A aparência gótica é resultado de **geometria, materiais, composição, ilumi
 
 Os valores são **hipóteses de arte** e precisam de calibração em jogo. `WorldEnvironment` e `Environment` podem definir perfil por zona, mas os mapas precisam de suas próprias luzes de destaque. Evitar duplicar `WorldEnvironment` por carregamento ou sobrescrever recursos compartilhados sem duplicação. `Decal` projeta marcas em superfícies compatíveis com o renderizador; não substituir colisão e malha por efeitos.
 
-## V. Entregáveis editoriais e verificações
+## IX. Entregáveis editoriais e verificações
 
 - Manuscritos colecionáveis devem possuir ID estável, região, versão e condição de obtenção.
 - O diário separa relatos encontrados, fatos confirmados e versões contraditórias.
