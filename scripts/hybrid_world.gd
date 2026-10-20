@@ -363,6 +363,7 @@ func _build_ui() -> void:
 	message_label.offset_bottom = -175
 	var help_button := Button.new()
 	help_button.text = "H · Ajuda"
+	help_button.focus_mode = Control.FOCUS_NONE
 	root.add_child(help_button)
 	help_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	help_button.offset_left = -122

@@ -33,7 +33,7 @@ def main():
         entries.append((path, "fonte/" + name))
     evidence = ROOT / "relatorios-fase20"
     for path in sorted(evidence.glob("*")):
-        if path.is_file() and (path.name.endswith("-final.log") or path.name in ("results.json", "release-menu.log", "release-gameplay.log", "exportacao-release.log") or (path.suffix == ".png" and not path.name.startswith(("pdf", "release"))) or path.name == "release-validado.png"):
+        if path.is_file() and (path.name.endswith("-final.log") or path.name in ("results.json", "release-menu.log", "release-gameplay.log", "exportacao-release.log", "baseline-report.log", "test_focus-before.log") or (path.suffix == ".png" and not path.name.startswith(("pdf", "release"))) or path.name == "release-validado.png"):
             entries.append((path, "evidencias/" + path.name))
     provenance = ROOT / ".tools/templates/provenance.json"
     if provenance.exists():

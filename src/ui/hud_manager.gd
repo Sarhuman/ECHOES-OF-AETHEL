@@ -42,6 +42,7 @@ func _make_skill_bar() -> void:
 	row.offset_bottom = -110
 	for index in 3:
 		var button := Button.new()
+		button.focus_mode = Control.FOCUS_NONE
 		button.text = ["F1 Golpe", "F2 Guarda", "F3 Eco"][index]
 		button.custom_minimum_size = Vector2(138, 54)
 		button.tooltip_text = "Clique ou F1–F3: executar. Botão direito repete a última técnica."

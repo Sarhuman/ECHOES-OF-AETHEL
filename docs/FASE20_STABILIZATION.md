@@ -17,6 +17,7 @@ Cena principal: `scenes/main_menu.tscn` → `scenes/main.tscn`. Mundo: `scripts/
 | Ataque parado desvia | Ao segurar Shift+clique a atualização de mira voltava ao chão sob a cabeça do inimigo | Atualização contínua usa a mesma seleção física e orienta ao alvo, sem deslocamento |
 | F1/F2/F3 não executam | Teclas apenas selecionavam a habilidade do botão direito; todas começavam bloqueadas | Teclas e botões executam a mesma implementação existente; três técnicas do kit liberadas na slice; right-click continua disponível |
 | Falta de feedback das habilidades | Botões cinzentos sem informação de Éter/recarga | Estados Pronto, Ativa, Recarga, Sem Éter, Recuperação e Indisponível; tentativas inválidas sem custo/recarga; guarda com indicador e cancelamento |
+| Espaço após usar a barra | Botão de habilidade retinha foco e Espaço podia repetir a técnica, bloqueando a esquiva | Botões do HUD sem foco de teclado; menus mantêm navegação normal. Regressão com clique GUI real seguido de Espaço |
 | Doma sem representação | Uma CapsuleMesh, sem traje nem ferramenta | Papel blacksmith no visual procedural de NPC existente, com corpo humano, roupa, avental, barba, botas, martelo e nome. Corpo e área de interação separados do visual |
 | Excesso de texto no topo | Título técnico, XP, pontos, ouro e linha longa de controles | Topo com região/objetivo; resumo do personagem no rodapé; ajuda recolhida em H; habilidades com contraste |
 
@@ -42,7 +43,7 @@ As três técnicas foram disponibilizadas como kit de treinamento da vertical sl
 
 ## Testes e evidências
 
-Nove suítes GDScript com exit 0, incluindo `test_playability.gd` com 69 verificações: projeção/raycast em três resoluções e três zooms, cabeça de inimigo rank 2, rejeição de obstáculo, repetição de clique, aproximação, parada no alcance, orientação, ataque parado, F1, F2 ativa/cancela/expira, F3 em área, recursos e cooldowns, movimento interrompido para golpe, E/F/L em Doma, InputMap legado, ajuda, limites e persistência do zoom.
+Nove suítes GDScript com exit 0, incluindo `test_playability.gd` com 70 verificações: projeção/raycast em três resoluções e três zooms, cabeça de inimigo rank 2, rejeição de obstáculo, repetição de clique, aproximação, parada no alcance, orientação, ataque parado, F1, F2 ativa/cancela/expira, F3 em área, recursos e cooldowns, movimento interrompido para golpe, E/F/L em Doma, InputMap legado, ajuda, limites e persistência do zoom. A verificação adicional reproduziu a falha de foco antes da correção e passou após ela: clicar numa habilidade e usar Espaço esquiva sem recast nem gasto de Éter.
 
 As 5.105 verificações de consolidação continuam passando; bot 10/10 vitórias. A suíte usa input sintético despachado pela árvore para as teclas; não equivale a playtest humano completo.
 

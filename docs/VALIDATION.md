@@ -2,7 +2,7 @@
 
 ## Resultado atual
 
-Nove suítes aprovadas, incluindo **test_playability: 69 verificações, zero falhas**. Mantidas as 5.105 verificações de consolidação e 10/10 vitórias do bot. Importação Godot 4.7.2 sem erros de parsing. Zoom/raycast validados em 1280×720, 1366×768 e 1280×800, zoom 10/12/18. Executável Windows exportado com o template oficial.
+Nove suítes aprovadas, incluindo **test_playability: 70 verificações, zero falhas**. Mantidas as 5.105 verificações de consolidação e 10/10 vitórias do bot. Importação Godot 4.7.2 sem erros de parsing. Zoom/raycast validados em 1280×720, 1366×768 e 1280×800, zoom 10/12/18. Executável Windows exportado com o template oficial.
 
 Detalhes das causas reproduzidas e correções: [FASE20_STABILIZATION](FASE20_STABILIZATION.md). Capturas atuais: [HUD e câmera](evidence/hud-1280x720.png), [Doma](evidence/doma.png), [Guarda ativa](evidence/guarda-ativa.png). Ajuda H mantém instruções extensas fora da área principal. Modelos são placeholders identificados.
 

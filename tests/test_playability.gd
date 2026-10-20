@@ -206,6 +206,30 @@ func run() -> void:
 	await press(KEY_H)
 	check(not world.help_panel.visible, "H fecha ajuda")
 	check(world.progression_label.get_global_rect().position.y > root.size.y-120, "informacao do personagem fora do topo")
+	# Clicking a HUD skill must not make Space activate that button instead of dodging.
+	var button_point: Vector2 = world.hud.skill_buttons[0].get_global_rect().get_center()
+	point_cursor(button_point)
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.position = button_point
+	click.global_position = button_point
+	click.pressed = true
+	Input.parse_input_event(click)
+	await process_frame
+	click = click.duplicate()
+	click.pressed = false
+	Input.parse_input_event(click)
+	await frames(20)
+	player.attack_cooldown = 0
+	player.attack_recovery = 0
+	player.skill_cooldowns.clear()
+	player.ether = player.max_ether
+	player.stamina = player.max_stamina
+	var before_dodge: Vector3 = player.position
+	await press(KEY_SPACE)
+	await frames(10)
+	check(player.position.distance_to(before_dodge) > 0.5 and player.ether == player.max_ether, "Espaco apos clicar habilidade esquiva sem executar botao focado")
+
 	for action in ["move_left","move_right","move_up","move_down","inventory","interact","primary","secondary","dodge","block","save","load","pause"]:
 		check(InputMap.has_action(action) and not InputMap.action_get_events(action).is_empty(), "controle preservado " + action)
 	camera.set_zoom(999,false)
