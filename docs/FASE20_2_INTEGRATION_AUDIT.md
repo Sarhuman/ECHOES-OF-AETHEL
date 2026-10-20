@@ -45,7 +45,13 @@ tools/test.ps1 executa dez suítes isoladas: integridade do projeto, itens, comb
 
 Novo smoke de export executa o EXE Windows, não o editor: menu, HUD, câmera, movimento, picking grande, ataque após aproximação, F1–F3, interação de Doma e pausa. Dez condições verificadas, perfil isolado, fechamento/código de saída e marcador final obrigatórios. O script PowerShell aguarda explicitamente o processo GUI antes de ler o log e impõe timeout. Exportação e execução local Windows são evidências distintas. O workflow agora também roda este smoke em windows-latest antes de empacotar.
 
-Artefato versão 0.20.2: EchoesOfAethel-PreAlpha-Windows-x64.zip, com EXE/PCK, licenças, fonte, evidências e manifesto de hashes. Nenhuma release estável automática. CI desta branch deve ser registrado após execução; sucesso anterior não substitui validação desta alteração.
+Artefato versão 0.20.2: EchoesOfAethel-PreAlpha-Windows-x64.zip, com EXE/PCK, licenças, fonte, evidências e manifesto de hashes. Nenhuma release estável automática.
+
+[Workflow desta fase aprovado](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39515919505), commit a06b725: download verificado, importação, dez suítes, exportação, execução do EXE em Windows, pacote e upload. [Artefato Windows](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39515919505/artifacts/12307887323). A atualização posterior registra documentação e captura, sem alterar código executável.
+
+O fonte extraído do ZIP foi importado sem cache anterior e passou nas 31 verificações de integridade. Seu EXE/PCK também passou novamente nas dez condições de smoke a partir de pasta independente. Execução gráfica do EXE em OpenGL, saída 0, registrada em release-graphics-final.log e docs/evidence/release-fase20-2.png. Dez suítes locais com exit 0 registradas em docs/evidence/results.json.
+
+Critérios de aceitação técnicos desta fase atendidos: projeto único acessível, parsing, inicialização, gameplay, câmera/InputMap, adaptadores 21/22, unicidade de classes/implementação ativa, testes, export, artefato, README e PR para revisão. Isso não declara produção final de arte ou campanha nem substitui aceitação humana de jogabilidade.
 
 ## Limites e pendências
 

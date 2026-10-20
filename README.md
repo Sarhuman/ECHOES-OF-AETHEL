@@ -18,6 +18,8 @@ O download verifica SHA512 do ZIP oficial da engine; o template verifica CRC e S
 
 Artefato atual: **EchoesOfAethel-PreAlpha-Windows-x64.zip**, com `jogo/`, `fonte/`, `evidencias/` e manifesto SHA256. Na aba Actions, selecione **Windows PreAlpha Fase 20.2** e baixe o artefato de mesmo nome. O workflow exporta e executa o EXE em Windows; não publica release estável. As seções de estabilização e o CI #4 abaixo registram o histórico da Fase 20.1.
 
+[Pipeline da Fase 20.2 aprovado](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39515919505) no código a06b725, incluindo execução do EXE em Windows. [Baixar artefato Windows](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39515919505/artifacts/12307887323) · [PR #9 para revisão](https://github.com/Sarhuman/ECHOES-OF-AETHEL/pull/9).
+
 Pré-alpha de ARPG de fantasia sombria, single-player, Windows x64, Godot **4.7.2.stable.official.ed1daf0bf**. Cenário 3D com câmera ortográfica inclinada, controle por clique e WASD relativo à câmera.
 
 Esta branch consolida o **ZIP completo da Fase 20** com os adaptadores das Fases 21 e 22. Não usa o protótipo antigo de Downloads como base. Histórico, fontes e escolha de ancestral: [auditoria](docs/CONSOLIDATION_AUDIT.md) e [manifesto](docs/SOURCE_MANIFEST.json).
