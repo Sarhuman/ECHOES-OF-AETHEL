@@ -11,7 +11,7 @@ Um sino toca treze vezes, embora a torre possua doze badaladas. Na praça, uma m
 ## Leis dos Ecos
 
 - Ecos são consequências materiais de decisões **não tomadas**, não mortos ressuscitados ou universos visitáveis livremente.
-- Cada Eco depende de uma âncora identificável; destruir a âncora resolve a anomalia local, mas pode apagar pessoas ligadas a ela.
+- Cada Eco depende de uma âncora identificável; uma âncora pode ser destruída, selada ou mantida sob coexistência controlada, conforme a missão; destruir pode apagar pessoas ligadas a ela.
 - Restauradores percebem contradições e estabilizam âncoras. Cada intervenção irreversível apaga uma memória pessoal identificada no diário.
 - Nenhuma escolha concede final perfeito; NPCs lembram o que perderam, mesmo quando não sabem nomear a perda.
 
@@ -50,6 +50,10 @@ Na missão **Dois Aniversários**, Sive encontra suas duas histórias e exige pa
 ### Ato IV — Atlas do Nunca (13–15)
 
 Na missão **O Nome que Falta**, Iro revela que o Restaurador também é um Eco. O Cartógrafo sem Norte usa âncoras dos três atos como padrões de combate. Finais: **Linha Única** (estabilidade com apagamentos), **Mundo Poroso** (coexistência difícil) e **Atlas Aberto** (decisões locais sem árbitro central). O epílogo consulta escolhas anteriores e personagens sobreviventes.
+
+## Interpretação da Ruptura de Contingência
+
+A Ruptura de Contingência resulta do acúmulo material de consequências de decisões recusadas, até a realidade não conseguir manter uma única continuidade. O compêndio [*O Atlas do Nunca*](LORE_ATLAS_DO_NUNCA.md) amplia esse princípio com crônicas das três dungeons, os quinze mapas e os cinco arquétipos previstos. Suas descrições são narrativas e não atestam cenas ou mecânicas concluídas.
 
 ## Narrativa ambiental
 
