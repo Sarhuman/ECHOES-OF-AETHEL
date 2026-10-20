@@ -3,15 +3,18 @@ extends PanelContainer
 ## Descrição do item no estilo ARPG: nome colorido pela qualidade, base, atributos, afixos e requisitos.
 
 const QUALITY_NAMES: Array = ["Comum", "Mágico", "Raro", "Épico", "Lendário"]
-const QUALITY_HEX: Array = ["e8e8e8", "8c8cff", "ffff64", "b885ec", "c7b377"]
+const QUALITY_HEX: Array = AethelUI.RARITY_HEX
 const SLOT_NAMES: Dictionary = {"weapon": "Arma", "shield": "Escudo", "helm": "Elmo", "armor": "Armadura", "gloves": "Luvas",
 	"boots": "Botas", "belt": "Cinto", "ring": "Anel", "amulet": "Amuleto", "charm": "Talismã"}
 
 var requirement_source: Node # jogador: para pintar de vermelho requisitos não cumpridos
 var _text: RichTextLabel
 var _cursor_offset: Vector2 = Vector2(18.0, 18.0)
+var _focus_rect := Rect2()
+var _keyboard_anchor := false
 
 func _ready() -> void:
+	theme_type_variation = "AethelSpeech"
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	z_index = 100
 	custom_minimum_size = Vector2(260.0, 0.0)
@@ -35,7 +38,7 @@ func build_text(item: AethelItemInstance) -> String:
 	var lines: Array[String] = []
 	lines.append("[center][color=#%s][b]%s[/b][/color]" % [QUALITY_HEX[quality], item.display_name()])
 	if item.display_name() != item.base_display_name():
-		lines.append("[color=#a0a0a0]%s[/color]" % item.base_display_name())
+		lines.append("[color=#b5a88e]%s[/color]" % item.base_display_name())
 	if data.is_potion():
 		if data.heal_life > 0: lines.append("Recupera %d de Vida" % data.heal_life)
 		if data.heal_mana > 0: lines.append("Recupera %d de Éter" % data.heal_mana)
@@ -53,8 +56,8 @@ func build_text(item: AethelItemInstance) -> String:
 		var color: String = "c7b377" if quality == AethelItemData.Rarity.UNIQUE else "8c8cff"
 		for row: Dictionary in item.all_modifiers():
 			lines.append("[color=#%s]%s[/color]" % [color, AethelAffixData.describe(str(row["stat"]), float(row["value"]))])
-		if data.slot != "": lines.append("[color=#808080]%s · %s[/color]" % [QUALITY_NAMES[quality], SLOT_NAMES.get(data.slot, data.slot)])
-	lines.append("[color=#808080]Valor: %d ouro[/color]" % item.gold_value())
+		if data.slot != "": lines.append("[color=#a39780]%s · %s[/color]" % [QUALITY_NAMES[quality], SLOT_NAMES.get(data.slot, data.slot)])
+	lines.append("[color=#a39780]Valor: %d ouro[/color]" % item.gold_value())
 	return "\n".join(lines)
 
 func _current(kind: String) -> int:
@@ -67,6 +70,8 @@ func _requirement(label_text: String, needed: int, current: int) -> String:
 	return "[color=#%s]Requer %s: %d[/color]" % [color, label_text, needed]
 
 func show_item(item: AethelItemInstance) -> void:
+	theme_type_variation = "AethelSpeech"
+	_keyboard_anchor = false
 	if item == null or item.definition == null:
 		hide_item()
 		return
@@ -74,6 +79,21 @@ func show_item(item: AethelItemInstance) -> void:
 	reset_size()
 	visible = true
 	_update_position()
+
+func show_item_at(item: AethelItemInstance, anchor_rect: Rect2) -> void:
+	show_item(item)
+	_focus_rect = anchor_rect
+	_keyboard_anchor = true
+	_update_position()
+
+func show_comparison(item: AethelItemInstance, equipped: AethelItemInstance) -> void:
+	# The caller chooses the equipped item; no slot or stat rules are duplicated here.
+	show_item(item)
+	if equipped != null:
+		theme_type_variation = "AethelComparison"
+		_text.text += "\n\n[center][b]EQUIPADO[/b][/center]\n" + build_text(equipped)
+		reset_size()
+		_update_position()
 
 func hide_item() -> void:
 	visible = false
@@ -83,7 +103,7 @@ func _process(_delta: float) -> void:
 
 func _update_position() -> void:
 	var viewport_size: Vector2 = get_viewport_rect().size
-	var pointer: Vector2 = get_viewport().get_mouse_position()
+	var pointer: Vector2 = _focus_rect.end if _keyboard_anchor else get_viewport().get_mouse_position()
 	var proposed: Vector2 = pointer + _cursor_offset
 	if proposed.x + size.x > viewport_size.x: proposed.x = pointer.x - size.x - _cursor_offset.x
 	if proposed.y + size.y > viewport_size.y: proposed.y = pointer.y - size.y - _cursor_offset.y

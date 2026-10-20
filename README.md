@@ -1,5 +1,9 @@
 # ECHOES OF AETHEL
 
+## Fundação visual gótica — Sino e Limiar
+
+Tema reutilizável aplicado à base da Fase 20.2: paleta de carvão/pedra/bronze, texto pergaminho, molduras de cinco raridades, foco visível e painel compacto com Vida/Éter/Fôlego independentes. Tooltips da mochila também abrem por teclado. Componentes de ícone, comparação e diálogo estão preparados para integração futura; retratos e interfaces definitivas continuam pendentes. [Design system, estados, tipografia e limites](docs/GOTHIC_UI_DESIGN_SYSTEM.md).
+
 ## Fase 20.2 — base Godot integrada
 
 Branch `integration/fase20-2-godot`, baseada em `e66f451`, proposta contra `main`. Os PRs #4–8 estão abertos e não mesclados; esta branch preserva sua cadeia de commits e disponibiliza o projeto completo. [Auditoria da Fase 20.2](docs/FASE20_2_INTEGRATION_AUDIT.md).

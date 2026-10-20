@@ -8,7 +8,7 @@ func _ready() -> void:
 	get_tree().paused = false
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var background := ColorRect.new()
-	background.color = Color("0e1422")
+	background.color = AethelUI.BACKGROUND
 	add_child(background)
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var center := CenterContainer.new()

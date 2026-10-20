@@ -78,10 +78,8 @@ func update_skills(selected: String, unlocked: Dictionary, ids: Array, actor: No
 		button.add_theme_font_size_override("font_size", 13)
 		button.add_theme_color_override("font_color", color)
 		button.add_theme_color_override("font_disabled_color", Color("a7b1bc"))
-		var style := StyleBoxFlat.new()
-		style.bg_color = Color("17202f")
-		style.border_color = Color("91afc4") if id == selected else Color("586674")
-		style.set_border_width_all(2 if id == selected else 1)
+		var style := AethelUI.panel(AethelUI.SURFACE,AethelUI.UNIQUE_REFERENCE if id == selected else AethelUI.BRASS,2 if id == selected else 1)
+		style.set_content_margin_all(4)
 		button.add_theme_stylebox_override("normal", style)
 
 func _make_resource_panel() -> void:
@@ -94,23 +92,26 @@ func _make_resource_panel() -> void:
 	resource_panel.offset_right = 350
 	resource_panel.offset_top = -158
 	resource_panel.offset_bottom = -18
-	var backing := StyleBoxFlat.new()
-	backing.bg_color = Color("121723ef")
-	backing.border_color = Color("8b7957")
-	backing.set_border_width_all(1)
-	backing.set_content_margin_all(12)
+	var backing := AethelUI.panel(AethelUI.BACKGROUND,AethelUI.BRASS)
 	resource_panel.add_theme_stylebox_override("panel", backing)
+	var ornament := AethelOrnament.new()
+	root.add_child(ornament)
+	ornament.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	ornament.offset_left = 18
+	ornament.offset_right = 350
+	ornament.offset_top = -158
+	ornament.offset_bottom = -18
 	var rows := VBoxContainer.new()
 	rows.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	rows.add_theme_constant_override("separation", 6)
 	resource_panel.add_child(rows)
-	var life := _resource_row(rows, "VIDA", Color("bc4049"), 28)
+	var life := _resource_row(rows, "VIDA", AethelUI.LIFE, 28)
 	hp_bar = life[0]
 	hp_text = life[1]
-	var ether := _resource_row(rows, "ÉTER", Color("376fc0"), 24)
+	var ether := _resource_row(rows, "ÉTER", AethelUI.ETHER, 24)
 	ether_bar = ether[0]
 	ether_text = ether[1]
-	var stamina := _resource_row(rows, "FÔLEGO", Color("a87d36"), 24)
+	var stamina := _resource_row(rows, "FÔLEGO", AethelUI.STAMINA, 24)
 	stamina_bar = stamina[0]
 	stamina_text = stamina[1]
 
@@ -124,7 +125,7 @@ func _resource_row(parent: Control, title: String, color: Color, height: int) ->
 	fill.bg_color = color
 	bar.add_theme_stylebox_override("fill", fill)
 	var background := StyleBoxFlat.new()
-	background.bg_color = Color("262b35")
+	background.bg_color = AethelUI.SURFACE
 	bar.add_theme_stylebox_override("background", background)
 	parent.add_child(bar)
 	var text := Label.new()

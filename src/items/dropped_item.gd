@@ -2,7 +2,7 @@ class_name AethelDroppedItem
 extends Area3D
 ## Item, poção ou pilha de ouro no chão. Rótulo colorido pela qualidade (branco/azul/amarelo/dourado).
 
-const COLORS: Array = [Color("e8e8e8"), Color("8c8cff"), Color("ffff64"), Color("b885ec"), Color("c7b377")]
+const COLORS: Array = AethelUI.RARITY_TEXT
 const GOLD_COLOR: Color = Color("ffd24a")
 
 var item: AethelItemInstance
