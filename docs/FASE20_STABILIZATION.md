@@ -52,3 +52,9 @@ Capturas locais em OpenGL 3.3 / AMD RX 580: HUD em 1280×720, 1366×768 e 1280×
 ## Limites
 
 Nenhum chefe de campanha foi implementado nesta etapa. O relato de clique no chefe foi exercitado sobre o mesmo controlador com rank 2 e volume grande; o campeão do Bairro usa essa mesma lógica. Modelos continuam placeholders; Doma não é arte final. Pathfinding para contornar obstáculos complexos continua ausente. O trabalho estabiliza controles e combate da Fase 20; não amplia inventário, campanhas ou efeitos finais. Playtest humano de aprovação permanece necessário.
+
+## Distribuição validada
+
+[PR #8](https://github.com/Sarhuman/ECHOES-OF-AETHEL/pull/8), dependente do PR #7, sem merge automático. [Pipeline #4 aprovado](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39511987807) no commit de código `b6659cd`: importação, nove suítes, exportação, empacotamento e upload. [Download pelo GitHub Actions](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39511987807/artifacts/12306003453).
+
+O fonte extraído do ZIP local foi importado em pasta limpa e passou pelas 70 verificações novas, incluindo o caso de foco/Esquiva, sem usar o cache de desenvolvimento. O pacote local inclui o executável, o fonte editável, capturas, relatórios e manifesto SHA256.

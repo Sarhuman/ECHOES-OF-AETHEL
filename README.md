@@ -19,7 +19,7 @@ As três técnicas já existentes são disponibilizadas como kit de teste desta 
 | Validado em execução gráfica | Menu, mundo, HUD em 1280×720, 1366×768 e 1280×800, mochila, personagem, habilidades, loja, pausa e opções |
 | Ainda requer playtest humano | Sensação de combate, percurso por mouse, balanceamento amplo e experiência em outras máquinas |
 | Planejado | Quatro outras classes jogáveis; modelos/rigs/animações finais; áudio de produção; navmesh; dungeon map_04; 15 mapas, três dungeons e três finais completos |
-| CI | A consolidação anterior foi aprovada no run #1; o novo workflow desta branch gera o pacote **Estabilizado**. Consultar o PR de correção para o resultado remoto atual |
+| CI validado | [Estabilização Windows #4](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39511987807) aprovada: nove suítes, exportação e [artefato Windows](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39511987807/artifacts/12306003453) |
 
 Vigília (`map_01`) e Bairro que Faltava (`map_02`) compartilham a geometria de teste e mudam NPCs, inimigos e objetivos. Não são dois mapas artísticos finalizados. Não há conteúdo executável do Arquivo das Portas Seladas (`map_04`).
 
