@@ -1,56 +1,70 @@
-# Echoes of Aethel — Bíblia narrativa v2
+# Bíblia narrativa v3 — O Direito ao Impossível
 
-## Premissa — A Cidade que Esqueceu o Amanhã
+## Logline
 
-Em Aethel, os mortos não retornam: suas **possibilidades não vividas** permanecem impressas em matéria, criando os **Ecos**. Por séculos, os Cartógrafos do Depois guardaram essas linhas de futuros abortados em mapas subterrâneos. Quando os mapas começaram a ser vendidos para antecipar desastres, decisões jamais tomadas passaram a acontecer no presente. Ruas desembocam em bairros que nunca existiram; pessoas reconhecem filhos que nunca nasceram; exércitos lembram guerras que não ocorreram.
+Em Aethel, decisões que ninguém tomou deixam marcas físicas. Quando os futuros rejeitados invadem o presente, um Restaurador precisa escolher que vidas preservar — pagando com suas próprias lembranças. O inimigo não é um demônio, mas a certeza de que existe apenas um mundo correto.
 
-O personagem protagonista é um **Restaurador**, alguém capaz de atravessar essas contradições sem perder a própria identidade. Mas cada futuro apagado leva consigo uma memória verdadeira sua. O conflito central não é derrotar uma divindade maligna: é decidir quem tem o direito de escolher qual realidade permanece.
+## A abertura (cinemática curta)
 
-## Regras do mundo
+Um sino toca treze vezes, embora a torre possua doze badaladas. Na praça, uma mãe reconhece duas filhas com o mesmo rosto. Uma delas desaparece quando o carteiro lê um endereço em voz alta. Maera encontra o protagonista desacordado ao lado de um mapa molhado: nele, a praça está desenhada com uma rua que ainda não existe. O jogador assume o controle após a última badalada.
 
-1. Um Eco é uma consequência de uma escolha que não ocorreu — não é fantasma, alma nem viagem temporal.
-2. O fenômeno altera espaços, objetos e testemunhos, mas não reescreve livremente a história; cada manifestação precisa de uma **âncora** material.
-3. Para estabilizar uma região, o Restaurador identifica âncoras, confronta os seus Guardiões e escolhe qual consequência sacrificar.
-4. Toda estabilização tem custo visível: uma relação, lembrança ou oportunidade desaparece. O jogo registra essas perdas e altera diálogos, serviços e rotas.
-5. Nenhuma facção conhece a realidade inteira. Documentos e testemunhas podem discordar sem que sejam erros de roteiro.
+## Leis dos Ecos
 
-## Protagonistas e facções
+- Ecos são consequências materiais de decisões **não tomadas**, não mortos ressuscitados ou universos visitáveis livremente.
+- Cada Eco depende de uma âncora identificável; destruir a âncora resolve a anomalia local, mas pode apagar pessoas ligadas a ela.
+- Restauradores percebem contradições e estabilizam âncoras. Cada intervenção irreversível apaga uma memória pessoal identificada no diário.
+- Nenhuma escolha concede final perfeito; NPCs lembram o que perderam, mesmo quando não sabem nomear a perda.
 
-- **O Restaurador** — papel compartilhado pelas classes jogáveis; tem uma lembrança inicial incompleta de um cais inundado.
-- **Maera Voss, cartógrafa exilada** — mentora que sabe ler mapas impossíveis; esconde a participação na primeira venda de futuros.
-- **Teren Hal, sineiro sem voz** — transmite avisos por sinos e placas; registra o custo de cada decisão.
-- **Sive, a menina de dois aniversários** — existe em duas versões mutuamente incompatíveis; não é um objeto a ser resgatado, mas agente de sua própria escolha.
-- **Conclave da Linha Única** — quer fixar uma realidade estável, ainda que milhões de vidas possíveis sejam apagadas.
-- **Coletores de Restos** — traficam âncoras por lucro e provocam rupturas controladas.
-- **Os Não-Nascidos** — coletividade de possibilidades conscientes que reivindica o direito de existir.
-- **Iro Sen, o Primeiro Restaurador** — antagonista trágico: tentou salvar uma cidade de uma epidemia futura e fabricou um presente insustentável.
+## Personagens
 
-## Campanha em quatro atos
+| Personagem | Papel | Objetivo | Segredo / conflito | Presença |
+|---|---|---|---|---|
+| Maera Voss | Cartógrafa e mentora | Desmontar o mercado de futuros | Financiou a primeira cartografia proibida | 01, 13, 15 |
+| Teren Hal | Sineiro sem voz | Documentar perdas | Seus sinos antecipam escolhas, mas nunca dizem quem sofrerá | 01, 10 |
+| Doma Ferren | Ferreiro | Preservar sua oficina | Reconhece ferramentas feitas por um filho inexistente | 01 |
+| Nela Var | Arquivista | Salvar moradores do distrito | Seu registro civil inclui duas versões de si | 02 |
+| Edrin Selo | Carteiro | Entregar a última carta | Toda entrega muda uma rua | 03 |
+| Olan Mer | Condutor | Encontrar uma caravana | Recebeu pagamento por viagem não feita | 05 |
+| Lira Ancorista | Capitã aposentada | Proteger trabalhadores do cais | Conhece a rota do navio impossível | 06 |
+| Iven Daro | Comerciante | Controlar as âncoras | Trabalha para os Coletores de Restos | 06 |
+| Neris Vaal | Mergulhadora | Resgatar tripulação | Ouve a própria voz no fundo do dique | 07 |
+| Alda Cor | Botânica | Conter sementes de futuros | Colhe frutos com datas que ainda não chegaram | 09 |
+| Sive | Jovem de duas histórias | Escolher a própria continuidade | Ambas as versões têm lembranças válidas | 10–12 |
+| Isha Noren | Guardiã do pomar | Defender os Não-Nascidos | Desconfia do Restaurador, com razão | 11 |
+| Iro Sen | Primeiro Restaurador | Fixar uma única realidade | Criou a primeira ruptura tentando evitar uma epidemia | 14–15 |
 
-### Ato I — O Bairro que Faltava
-O jogador chega a **Vigília**, cidade onde um distrito aparece a cada madrugada. Investiga o desaparecimento de moradores, derrota o **Porteiro das Portas Seladas** e descobre que o distrito é uma vida alternativa da própria cidade. Escolha: preservar os moradores recém-chegados ou as casas cujos endereços eles ocupam.
+## Atos e pontos de virada
 
-### Ato II — Maré de Vidro
-Nos **Cais de Sal**, navios chegam de expedições jamais realizadas. O jogador segue âncoras comerciais, confronta a **Almirante Sem Travessia** e encontra evidências do mercado de futuros. Escolha: destruir o arquivo de rotas ou permitir que trabalhadores usem previsões que irão cobrar um preço depois.
+### Ato I — O Bairro que Faltava (01–04)
 
-### Ato III — O Jardim dos Ausentes
-No **Jardim de Cobre**, árvores guardam vozes de gerações hipotéticas. Sive busca decidir qual de suas versões continuará a existir. O chefe, **Jardineiro das Causas**, incorpora ataques diferentes conforme escolhas anteriores. Escolha: dar autonomia a Sive ou aceitar a estabilidade imposta pelo Conclave.
+A missão **Uma Porta para Ninguém** rastreia três âncoras: uma placa, um livro e um sino rachado. O Porteiro das Portas Seladas tenta manter as duas versões do distrito coexistindo. Ao vencê-lo, escolher **acolher** preserva os recém-chegados, mas desloca famílias antigas; escolher **selar** devolve os endereços antigos, mas apaga os recém-chegados da praça. Maera admite ter visto o mapa antes da ruptura.
 
-### Ato IV — Atlas do Nunca
-O subterrâneo de Aethel reúne todos os mapas vendidos. Iro Sen revela que o próprio Restaurador é consequência de uma escolha não realizada. O confronto final, **O Cartógrafo sem Norte**, exige sacrificar o controle absoluto ou a continuidade de uma realidade imperfeita. Três conclusões possíveis: **A Linha Única**, **O Mundo Poroso** e **O Atlas Aberto**; nenhuma é um final universalmente correto.
+### Ato II — Maré de Vidro (05–08)
 
-## Vertical slice jogável — definição narrativa
+A missão **Manifesto de Uma Viagem Nula** revela que comerciantes vendem previsões fabricadas a partir de Ecos. A Almirante Sem Travessia comanda um navio que nunca saiu do porto. O jogador decide destruir os manifestos ou publicá-los, alterando preços, contratos e a confiança dos marinheiros.
 
-- Hub: **Vigília, Praça dos Sinos** (substitui a antiga cidadela em conteúdo futuro).
-- Região: **Bairro que Faltava** (substitui o Bosque das Névoas em conteúdo futuro).
-- Missão principal: **Uma Porta para Ninguém** — localizar três âncoras (placa, livro de registros, sino rachado), derrotar o Porteiro, fazer escolha registrada no save.
-- Inimigos: **Rasuras** (avanço curto), **Vigias do Mapa** (controle de zona), **Testemunhas Partidas** (duas posturas).
-- Chefe: **Porteiro das Portas Seladas** — telegráficos claros, segunda fase ao alterar geometria de arena, sem mortes inevitáveis.
-- Reatividade: duas configurações de NPCs e rotas após a decisão; consequências persistentes no diário.
+### Ato III — O Jardim dos Ausentes (09–12)
 
-## Diretrizes editoriais
+Na missão **Dois Aniversários**, Sive encontra suas duas histórias e exige participar da decisão. O Jardineiro das Causas tenta cultivá-las como propriedade do Conclave. O jogador pode apoiar a autonomia de Sive ou aceitar a tutela da cidade; ambas as decisões produzem consequências verificáveis.
 
-- Não reutilizar Coração de Éter, Vael, corrupção por atos, bosques amaldiçoados ou conflito genérico de escolhido contra mal ancestral.
-- Não anunciar originalidade absoluta: antes de comercializar, realizar revisão de similaridade de nomes, marcas, artes e textos.
-- História original proposta; personagens e locais anteriores permanecem **legado técnico**, não cânone novo.
-- Evoluir dados e cenas por migração controlada; nunca renomear IDs persistidos diretamente sem tabela de compatibilidade.
+### Ato IV — Atlas do Nunca (13–15)
+
+Na missão **O Nome que Falta**, Iro revela que o Restaurador também é um Eco. O Cartógrafo sem Norte usa âncoras dos três atos como padrões de combate. Finais: **Linha Única** (estabilidade com apagamentos), **Mundo Poroso** (coexistência difícil) e **Atlas Aberto** (decisões locais sem árbitro central). O epílogo consulta escolhas anteriores e personagens sobreviventes.
+
+## Narrativa ambiental
+
+- Sinos com badaladas extras, placas com nomes duplicados e cartas com destinatários ausentes.
+- Textos de itens contam versões contraditórias, sem transformar toda inconsistência em exposição verbal.
+- Ao perder uma memória, o diário conserva um espaço vazio e um NPC pode notar o esquecimento.
+
+## Direção de diálogo
+
+Maera: “Este mapa não prevê o amanhã. Ele registra o amanhã que recusamos.”
+
+Sive: “Vocês chamam de erro uma vida que eu me lembro de ter vivido.”
+
+Iro: “Salvei uma cidade. O problema foi decidir qual cidade merecia ser real.”
+
+## Critérios de escrita
+
+Evitar profecia do escolhido, corrupção demoníaca genérica, chefe maligno sem motivação e finais moralmente óbvios. Revisar originalidade de nomes e conflitos antes de comercialização.
