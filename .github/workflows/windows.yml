@@ -1,0 +1,57 @@
+name: Windows PreAlpha Fase 20.2
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'README.md'
+      - 'docs/**'
+      - 'project.godot'
+      - 'export_presets.cfg'
+      - 'scripts/**'
+      - 'src/**'
+      - 'scenes/**'
+      - 'assets/**'
+      - 'tests/**'
+      - 'tools/**'
+      - '.github/workflows/windows.yml'
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download official Godot 4.7.2 and Windows template
+        shell: pwsh
+        run: |
+          ./tools/fetch_godot.ps1
+          python tools/fetch_windows_template.py
+      - name: Import, test and export
+        shell: pwsh
+        run: |
+          ./tools/build_windows.ps1 -GodotExe "$pwd/.tools/Godot_v4.7.2-stable_win64_console.exe"
+          Copy-Item licenses/GODOT* teste-fase20/
+          Copy-Item docs/TESTING.md teste-fase20/LEIA-ME.md
+      - name: Execute exported game on Windows
+        shell: pwsh
+        run: ./tools/smoke_windows.ps1
+      - name: Package executable and source
+        shell: pwsh
+        run: python tools/package_windows.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EchoesOfAethel-PreAlpha-Windows-x64
+          path: EchoesOfAethel-PreAlpha-Windows-x64.zip
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-logs
+          path: |
+            relatorios-fase20/*final.log
+            relatorios-fase20/results.json
+            .tools/*provenance.json
+            .tools/templates/provenance.json
