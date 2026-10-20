@@ -28,8 +28,10 @@ func _ready() -> void:
 	panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	var title := Label.new()
-	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	title.text = "MOCHILA   |   Clique: equipar   |   Botão direito: vender (loja aberta)   |   I: fechar"
+	title.mouse_filter = Control.MOUSE_FILTER_PASS
+	title.text = "MOCHILA   ·   I / Tab: fechar"
+	title.tooltip_text = "Clique ou Enter: equipar. Botão direito: vender com a loja aberta."
+	title.theme_type_variation = "AethelNPCName"
 	title.position = Vector2(18, 14)
 	add_child(title)
 	grid_root = Control.new()
@@ -39,7 +41,7 @@ func _ready() -> void:
 	for y in range(4):
 		for x in range(10):
 			var square := ColorRect.new()
-			square.color = Color("1b222d") if (x + y) % 2 == 0 else Color("252f3b")
+			square.color = AethelUI.BACKGROUND if (x + y) % 2 == 0 else AethelUI.SURFACE
 			square.position = Vector2(x, y) * float(SLOT_SIZE)
 			square.size = Vector2(SLOT_SIZE - 2, SLOT_SIZE - 2)
 			square.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -79,16 +81,11 @@ func bind_player(target: Node) -> void:
 	player = target
 	if tooltip != null: tooltip.requirement_source = target
 
-func _item_style(color: Color) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(color.r, color.g, color.b, 0.16)
-	style.border_color = Color(color.r, color.g, color.b, 0.75)
-	style.set_border_width_all(1)
-	return style
-
 func _attach_tooltip(button: Control, item: AethelItemInstance) -> void:
 	button.mouse_entered.connect(func() -> void: tooltip.show_item(item))
 	button.mouse_exited.connect(func() -> void: tooltip.hide_item())
+	button.focus_entered.connect(func() -> void: tooltip.show_item_at(item,button.get_global_rect()))
+	button.focus_exited.connect(func() -> void: tooltip.hide_item())
 
 func refresh() -> void:
 	if item_root == null or inventory == null: return
@@ -105,8 +102,7 @@ func refresh() -> void:
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		button.add_theme_font_size_override("font_size", 11)
 		button.add_theme_color_override("font_color", color)
-		for state in ["normal", "hover", "pressed", "focus"]:
-			button.add_theme_stylebox_override(state, _item_style(color))
+		AethelUI.style_slot(button,item.get_quality())
 		button.position = Vector2(origin) * float(SLOT_SIZE)
 		button.size = Vector2(item.definition.width, item.definition.height) * float(SLOT_SIZE) - Vector2(2, 2)
 		var uid: String = item.instance_id
@@ -139,15 +135,20 @@ func _refresh_equipment() -> void:
 		button.add_theme_font_size_override("font_size", 12)
 		if item == null:
 			button.text = "%s: —" % SLOT_LABELS[slot]
-			button.add_theme_color_override("font_color", Color("707070"))
+			button.add_theme_color_override("font_color", Color("a39780"))
 		else:
 			var color: Color = AethelDroppedItem.COLORS[clampi(item.get_quality(), 0, 4)]
 			button.text = "%s: %s" % [SLOT_LABELS[slot], item.display_name()]
 			button.add_theme_color_override("font_color", color)
-			for state in ["normal", "hover", "pressed", "focus"]:
-				button.add_theme_stylebox_override(state, _item_style(color))
+			AethelUI.style_slot(button,item.get_quality())
 			_attach_tooltip(button, item)
 		var slot_name: String = slot
 		button.pressed.connect(func() -> void: unequip_requested.emit(slot_name))
 		equip_root.add_child(button)
 		row += 1
+
+func flash_invalid() -> void:
+	# Existing controller reports failure; this view only provides transient feedback.
+	if not is_inside_tree(): return
+	modulate = AethelUI.INVALID
+	create_tween().tween_property(self,"modulate",Color.WHITE,0.16)

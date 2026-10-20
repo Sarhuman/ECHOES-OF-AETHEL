@@ -9,7 +9,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 50
 	overlay = ColorRect.new()
-	(overlay as ColorRect).color = Color(0.02, 0.03, 0.06, 0.92)
+	(overlay as ColorRect).color = Color(AethelUI.BACKGROUND,0.94)
 	add_child(overlay)
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var center := CenterContainer.new()

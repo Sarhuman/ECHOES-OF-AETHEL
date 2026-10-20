@@ -808,6 +808,7 @@ func _on_equip_requested(uid: String) -> void:
 	var result: Dictionary = player.equip_item(item)
 	if not result["ok"]:
 		_show_message(str(result["reason"]))
+		inventory_view.flash_invalid()
 		return
 	inventory.remove_item(uid)
 	var replaced: AethelItemInstance = result["replaced"]
