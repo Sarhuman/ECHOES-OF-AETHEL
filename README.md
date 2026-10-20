@@ -14,13 +14,13 @@
 
 A direção técnica é **3D com câmera ortográfica inclinada** (apresentação 2.5D), cenários exploráveis, combate em tempo real, equipamentos e escolhas que repercutem na campanha.
 
-> **Estado público do repositório (20/10/2026):** este repositório contém a documentação do projeto, mas **o código executável da Godot ainda não foi integrado à branch `main`**. Há protótipos ZIP testados e versões experimentais compartilhadas durante o desenvolvimento; as Fases 11–17 precisam de validação integrada na Godot 4.7.2. Os 15 mapas **ainda não estão implementados**. Não há build pública homologada.
+> **Estado público do repositório (20/10/2026):** este repositório contém a documentação do projeto, mas **o código executável da Godot ainda não foi integrado à branch `main`**. Há protótipos experimentais em ZIP até a Fase 18, sem execução integrada comprovada na Godot 4.7.2; a integridade dos ZIPs não equivale a validação do jogo. Os 15 mapas **ainda não estão implementados**. Não há build pública homologada.
 
 ## História — O Direito ao Impossível
 
 Em Aethel, certas escolhas jamais realizadas deixam consequências reais. Esses vestígios, chamados **Ecos**, podem transformar ruas, memórias e pessoas. Um distrito surge de madrugada onde antes havia um vazio; navios chegam de expedições que ninguém realizou; crianças lembram aniversários de vidas incompatíveis.
 
-O jogador assume o papel de um **Restaurador**, alguém capaz de encontrar as âncoras materiais desses acontecimentos e estabilizar o mundo. Cada intervenção irreversível, porém, apaga uma memória verdadeira do protagonista.
+O jogador assume o papel de um **Restaurador**, alguém capaz de encontrar as âncoras materiais desses acontecimentos e estabilizar o mundo. Cada intervenção irreversível, porém, cobra uma memória verdadeira e identificável do protagonista. Dependendo da âncora e das condições da missão, o Restaurador pode destruir, selar ou negociar coexistência entre realidades.
 
 Não existe apenas um tirano a derrotar: facções disputam o poder de definir **quem merece existir**. A história é contada por ambientes, NPCs, itens, missões e decisões persistentes.
 
@@ -83,12 +83,12 @@ A campanha foi concebida com **três conclusões** — *Linha Única*, *Mundo Po
 | Modelos autorais low-poly para Bastião, Maera e Rasuras | Fase 11 preparada; aguardando teste |
 | Machado, escudo e animação procedural | Fase 11 preparada; aguardando teste |
 | Navegação por clique com `NavigationAgent3D` | Planejado |
-| Inventário em grade e equipamentos persistentes | Planejado para arquitetura 2.5D |
-| Loot com raridades, afixos e tabelas | Planejado |
-| Habilidades e árvore de progressão | Planejado |
+| Inventário em grade e equipamentos persistentes | Protótipos locais das Fases 12–18; visibilidade, coleta e persistência exigem validação em jogo |
+| Loot com raridades, afixos e tabelas | Protótipo local; coleta, geração e interface exigem integração validada |
+| Habilidades e árvore de progressão | Protótipo da Fase 14; efeitos e UI definitivos pendentes |
 | Missões ramificadas e consequências em save | Planejado |
 | 15 mapas e 3 dungeons | Design definido; implementação pendente |
-| Cinemáticas, áudio e interface definitiva | Planejado |
+| Globos de Vida/Éter e Fôlego | Protótipos Fases 12–18; visibilidade em runtime não homologada |\n| Cinemáticas, áudio e interface definitiva | Planejado; scripts experimentais não representam arte final |
 
 ## Direção visual
 
@@ -131,7 +131,7 @@ res://
 
 ## Expansão de lore, identidade de mapas e combate (em revisão)
 
-O **PR #3** reúne a especificação aprofundada das três dungeons, uma matriz de identidade para os 15 mapas e o cânone literário *O Atlas do Nunca*. Os documentos estão na branch de design e **não comprovam cenas, chefes ou sistemas implementados**:
+O **PR #3** reúne a especificação aprofundada das três dungeons, uma matriz de identidade para os 15 mapas e o compêndio literário *O Atlas do Nunca* — agora com a Ruptura de Contingência, as âncoras, o elenco, os cinco arquétipos, os quatro atos e os três finais. Os documentos estão na branch de design e **não comprovam cenas, chefes ou sistemas implementados**:
 
 - [O Atlas do Nunca — Compêndio da Realidade Porosa](https://github.com/Sarhuman/ECHOES-OF-AETHEL/blob/design/environmental-narrative-dungeons/docs/LORE_ATLAS_DO_NUNCA.md)
 - [Matriz multissensorial dos 15 mapas](https://github.com/Sarhuman/ECHOES-OF-AETHEL/blob/design/environmental-narrative-dungeons/docs/MAP_IDENTITY_MATRIX.md)
@@ -143,7 +143,7 @@ O **PR #3** reúne a especificação aprofundada das três dungeons, uma matriz 
 
 ## Próximos marcos
 
-1. **Estabilizar a Fase 11:** validar parsing na Godot, caminhada, ataque, efeitos, interações, machado e escudo.
+1. **Estabilizar a Fase 18:** validar parsing na Godot, câmera isométrica, HUD com globos e Fôlego, inventário com itens visíveis, combate, loot e save/load.
 2. **Versionar o projeto executável**, sem arquivos temporários e com licenças de assets revisadas.
 3. **Construir uma vertical slice de três áreas:** Vigília (hub), Bairro que Faltava (exterior) e Arquivo das Portas Seladas (dungeon).
 4. **Modularizar o jogo:** cenas de entidades, combate, inventário, missões e persistência.
