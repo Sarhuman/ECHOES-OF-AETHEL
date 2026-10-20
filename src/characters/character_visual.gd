@@ -11,6 +11,7 @@ signal animation_requested(state: StringName)
 var _model: Node3D
 var _player: AnimationPlayer
 var _state: StringName = &"idle"
+var _action_time := 0.0
 
 func _ready() -> void:
     if model_scene == null:
@@ -45,9 +46,31 @@ func face_direction(direction: Vector3) -> void:
         rotation.y = atan2(-flat.x, -flat.z)
 
 func update_locomotion(velocity: Vector3, sprinting: bool = false) -> void:
+    if _action_time > 0: return
     if Vector2(velocity.x, velocity.z).length_squared() < 0.01:
         request_state(&"idle")
     elif sprinting:
         request_state(&"run")
     else:
         request_state(&"walk")
+
+func set_motion(world_velocity: Vector3, direction: Vector3, delta: float) -> void:
+    _action_time = maxf(0, _action_time - delta)
+    update_locomotion(world_velocity, world_velocity.length() > 9)
+    if _model != null and _model.has_method("set_motion"):
+        _model.call("set_motion", world_velocity, direction, delta)
+    else:
+        face_direction(direction)
+
+func play_action(state: StringName, duration: float = 0.3) -> void:
+    _action_time = duration
+    request_state(state)
+    if _model != null and _model.has_method("play_state"):
+        _model.call("play_state", state)
+
+func play_attack() -> void:
+    play_action(&"attack_1", 0.45)
+
+func equipment_adapter() -> AethelEquipmentVisual:
+    if _model == null: return null
+    return _model.get_node_or_null("EquipmentAdapter") as AethelEquipmentVisual

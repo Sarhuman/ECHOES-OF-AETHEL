@@ -13,3 +13,5 @@ extends Resource
 @export var hit_animation: StringName = &"hit"
 @export var dodge_animation: StringName = &"dodge"
 @export var death_animation: StringName = &"death"
+@export var attack_2_animation: StringName = &"attack_2"
+@export var block_animation: StringName = &"block"
