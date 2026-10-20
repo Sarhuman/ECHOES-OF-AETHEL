@@ -36,12 +36,23 @@ func run() -> void:
 	world.skills_panel.visible = true
 	await shot("habilidades")
 	world.skills_panel.visible = false
-	world.player.global_position = Vector3(-9,0,2)
+	world.player.global_position = world.merchant.global_position + Vector3(2,0,1)
+	root.get_camera_3d().snap_to_target()
 	world.shop_panel.visible = true
 	world._refresh_shop()
 	await shot("loja")
 	world.shop_panel.visible = false
 	world.inventory_view.visible = false
+	await shot("doma")
+	world.help_panel.show()
+	await shot("ajuda")
+	world.help_panel.hide()
+	world.player.ether = world.player.max_ether
+	world._activate_skill("iron_guard")
+	await physics_frame
+	await physics_frame
+	await shot("guarda-ativa")
+	world.player.guard_remaining = 0
 	world.quest_started = true
 	world.region_id = "map_02"
 	world._update_region()

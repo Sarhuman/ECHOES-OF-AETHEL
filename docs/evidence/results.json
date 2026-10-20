@@ -28,6 +28,10 @@
     "ExitCode": 0
   },
   {
+    "Test": "test_playability",
+    "ExitCode": 0
+  },
+  {
     "Test": "balance_bot",
     "ExitCode": 0
   }

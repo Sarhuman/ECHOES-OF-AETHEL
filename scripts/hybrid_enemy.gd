@@ -53,17 +53,32 @@ func display_name() -> String:
 
 func _ready() -> void:
 	add_to_group("hybrid_enemies")
+	collision_layer = 4
+	collision_mask = 1 | 2 | 4 | 8
 	navigation_agent = NavigationAgent3D.new()
 	navigation_agent.path_desired_distance = 0.45
 	navigation_agent.target_desired_distance = 1.4
 	add_child(navigation_agent)
 	var collision := CollisionShape3D.new()
 	var capsule := CapsuleShape3D.new()
-	capsule.radius = 0.34
-	capsule.height = 1.4
+	capsule.radius = 0.34 * float(RANK_SCALE[rank])
+	capsule.height = 1.6 * float(RANK_SCALE[rank])
 	collision.shape = capsule
-	collision.position.y = 0.7
+	collision.position.y = capsule.height * 0.5
 	add_child(collision)
+	# Selection volume follows the visible head/cloak, not a fixed screen-pixel radius.
+	var pick := Area3D.new()
+	pick.name = "EnemyPickArea"
+	pick.collision_layer = 16
+	pick.collision_mask = 0
+	var pick_shape := CollisionShape3D.new()
+	var pick_capsule := CapsuleShape3D.new()
+	pick_capsule.radius = 0.55 * float(RANK_SCALE[rank])
+	pick_capsule.height = 1.85 * float(RANK_SCALE[rank])
+	pick_shape.shape = pick_capsule
+	pick_shape.position.y = pick_capsule.height * 0.5
+	pick.add_child(pick_shape)
+	add_child(pick)
 	visual = Node3D.new()
 	visual.name = "RasuraVisual"
 	visual.set_script(preload("res://scripts/procedural_rasura.gd"))

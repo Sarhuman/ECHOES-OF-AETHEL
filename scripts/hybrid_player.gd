@@ -53,9 +53,12 @@ var attack_target: Node3D = null
 var stand_attack: bool = false
 var stand_direction: Vector3 = Vector3.ZERO
 var _stuck_time: float = 0.0
+var attack_recovery := 0.0
 
 func _ready() -> void:
 	AethelInput.ensure_defaults()
+	collision_layer = 2
+	collision_mask = 1 | 4 | 8
 	rng.randomize()
 	var collision := CollisionShape3D.new()
 	var capsule := CapsuleShape3D.new()
@@ -175,6 +178,9 @@ func command_move(point: Vector3) -> void:
 	stand_attack = false
 
 func command_attack(enemy: Node3D) -> void:
+	if not is_instance_valid(enemy) or enemy.is_queued_for_deletion() or enemy.hp <= 0: return
+	if attack_target == enemy: return
+	_stuck_time = 0
 	attack_target = enemy
 	has_move_target = false
 	stand_attack = false
@@ -204,6 +210,7 @@ func _keyboard_direction() -> Vector3:
 # ---------------------------------------------------------------- loop principal
 func _physics_process(delta: float) -> void:
 	attack_cooldown = maxf(0.0, attack_cooldown - delta)
+	attack_recovery = maxf(0, attack_recovery - delta)
 	invulnerability = maxf(0.0, invulnerability - delta)
 	dash_remaining = maxf(0.0, dash_remaining - delta)
 	guard_remaining = maxf(0.0, guard_remaining - delta)
@@ -226,14 +233,14 @@ func _physics_process(delta: float) -> void:
 	var direction: Vector3 = _keyboard_direction()
 	keyboard_active = direction.length() > 0.1
 	if keyboard_active: clear_commands()
-	elif is_instance_valid(attack_target):
+	elif is_instance_valid(attack_target) and attack_target.hp > 0 and not attack_target.is_queued_for_deletion():
 		var offset: Vector3 = attack_target.global_position - global_position
 		offset.y = 0.0
 		if offset.length() <= ATTACK_REACH:
 			facing = offset.normalized() if offset.length() > 0.01 else facing
 			_try_attack()
 		else:
-			direction = offset.normalized()
+			direction = offset.normalized() * minf(1, maxf(0, offset.length() - ATTACK_REACH) / maxf(0.001, speed * move_speed_mult * delta))
 	elif attack_target != null:
 		attack_target = null
 	elif stand_attack:
@@ -244,7 +251,7 @@ func _physics_process(delta: float) -> void:
 		offset.y = 0.0
 		if offset.length() < 0.25: has_move_target = false
 		else: direction = offset.normalized()
-	if direction.length() > 0.1: facing = direction
+	if direction.length() > 0.1 and attack_recovery <= 0: facing = direction
 	if Input.is_action_pressed("dodge") and dash_remaining <= 0.0 and invulnerability <= 0.0 and stamina >= DASH_STAMINA_COST:
 		_visual_action(&"dodge", 0.2)
 		dash_remaining = 0.17
@@ -255,6 +262,7 @@ func _physics_process(delta: float) -> void:
 	if dash_remaining > 0.0 and move_direction.length() < 0.1: move_direction = facing
 	var current_speed: float = 15.0 if dash_remaining > 0.0 else speed * move_speed_mult
 	velocity = move_direction * current_speed * (0.35 if manual_block else 1.0)
+	if attack_recovery > 0: velocity = Vector3.ZERO
 	move_and_slide()
 	if has_move_target:
 		if get_real_velocity().length() < 0.4: _stuck_time += delta
@@ -265,6 +273,8 @@ func _physics_process(delta: float) -> void:
 	var visual_node: Node3D = get_node_or_null("BastiaoVisual") as Node3D
 	if visual_node != null:
 		visual_node.call("set_motion", velocity, facing, delta)
+		var model: Node3D = visual_node.get("_model")
+		if model != null and model.has_method("set_guard_active"): model.call("set_guard_active", guard_remaining > 0)
 
 var _ether_fraction: float = 0.0
 
@@ -273,6 +283,8 @@ func _try_attack() -> void:
 	if attack_cooldown > 0.0 or manual_block or hp <= 0: return
 	combo_step = (combo_step + 1) % 2
 	attack_cooldown = 0.55 / attack_speed_mult
+	attack_recovery = 0.18
+	velocity = Vector3.ZERO
 	_play_attack_animation()
 	perform_attack(1.0, ATTACK_RADIUS, false)
 
@@ -314,26 +326,43 @@ func perform_attack(multiplier: float, radius: float, full_circle: bool) -> int:
 		combat_event.emit(global_position + Vector3(0, 2.2, 0), "FORA DE ALCANCE", "miss")
 	return landed
 
+func skill_problem(skill: AethelSkillData) -> String:
+	if skill == null or not String(skill.skill_id) in ["heavy_strike", "iron_guard", "echo_cleave"]: return "Habilidade indisponível"
+	if hp <= 0: return "Personagem derrotado"
+	var skill_id := String(skill.skill_id)
+	if skill_id == "iron_guard" and guard_remaining > 0: return ""
+	if float(skill_cooldowns.get(skill_id, 0.0)) > 0: return "Em recarga"
+	if ether < skill.ether_cost: return "Sem Éter"
+	if skill_id != "iron_guard" and (attack_cooldown > 0 or manual_block): return "Em recuperação"
+	return ""
+
 func use_skill(skill: AethelSkillData) -> String:
-	var skill_id: String = String(skill.skill_id)
-	if ether < skill.ether_cost: return "Éter insuficiente"
-	if float(skill_cooldowns.get(skill_id, 0.0)) > 0.0: return "Habilidade recarregando"
-	var is_attack: bool = skill_id in ["heavy_strike", "echo_cleave"]
-	if is_attack and attack_cooldown > 0.0: return "Aguarde o fim do golpe"
+	var problem := skill_problem(skill)
+	if not problem.is_empty(): return problem
+	var skill_id := String(skill.skill_id)
+	if skill_id == "iron_guard" and guard_remaining > 0:
+		guard_remaining = 0
+		combat_event.emit(global_position + Vector3(0,2.2,0), "GUARDA ENCERRADA", "buff")
+		return ""
+	clear_commands()
+	velocity = Vector3.ZERO
 	ether -= skill.ether_cost
 	ether_changed.emit(float(ether), float(max_ether))
 	skill_cooldowns[skill_id] = skill.cooldown
 	match skill_id:
 		"heavy_strike":
 			attack_cooldown = 0.7 / attack_speed_mult
+			attack_recovery = 0.22
 			_play_attack_animation()
 			perform_attack(1.5, ATTACK_RADIUS, false)
 		"echo_cleave":
 			attack_cooldown = 0.8 / attack_speed_mult
+			attack_recovery = 0.25
 			_play_attack_animation()
 			perform_attack(1.25, 3.4, true)
 		"iron_guard":
-			guard_remaining = 8.0
+			guard_remaining = 8
+			_visual_action(&"block", 0.3)
 			combat_event.emit(global_position + Vector3(0, 2.2, 0), "GUARDA DE FERRO", "buff")
 	return ""
 

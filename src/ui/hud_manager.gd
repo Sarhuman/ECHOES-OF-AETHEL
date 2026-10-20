@@ -36,24 +36,53 @@ func _make_skill_bar() -> void:
 	var row := HBoxContainer.new()
 	root.add_child(row)
 	row.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	row.offset_left = -140
-	row.offset_right = 140
-	row.offset_top = -152
+	row.offset_left = -210
+	row.offset_right = 210
+	row.offset_top = -166
 	row.offset_bottom = -110
 	for index in 3:
 		var button := Button.new()
+		button.focus_mode = Control.FOCUS_NONE
 		button.text = ["F1 Golpe", "F2 Guarda", "F3 Eco"][index]
-		button.custom_minimum_size = Vector2(90, 38)
-		button.tooltip_text = "Desbloqueie em K e selecione para usar com o botão direito"
+		button.custom_minimum_size = Vector2(138, 54)
+		button.tooltip_text = "Clique ou F1–F3: executar. Botão direito repete a última técnica."
 		var selected := index
 		button.pressed.connect(func() -> void: skill_selected.emit(selected))
 		row.add_child(button)
 		skill_buttons.append(button)
 
-func update_skills(selected: String, unlocked: Dictionary, ids: Array) -> void:
+func update_skills(selected: String, unlocked: Dictionary, ids: Array, actor: Node = null, catalog: Dictionary = {}) -> void:
 	for index in skill_buttons.size():
-		skill_buttons[index].disabled = not unlocked.has(ids[index])
-		skill_buttons[index].modulate = Color("e8c978") if selected == ids[index] else Color.WHITE
+		var button := skill_buttons[index]
+		var id: String = ids[index]
+		var state := "Indisponível"
+		var color := Color("92a3b0")
+		if unlocked.has(id):
+			state = "Pronto"
+			color = Color("e4ebf2")
+			if actor != null and catalog.has(id):
+				var skill: AethelSkillData = catalog[id]
+				var issue: String = actor.skill_problem(skill)
+				if id == "iron_guard" and actor.guard_remaining > 0:
+					state = "Ativa %.1fs" % actor.guard_remaining
+					color = Color("a3e4c3")
+				elif issue == "Em recarga":
+					state = "Recarga %.1fs" % float(actor.skill_cooldowns.get(id, 0))
+					color = Color("e4c083")
+				elif not issue.is_empty():
+					state = issue
+					color = Color("e7a5a5")
+				else: state = "Pronto · %d Éter" % skill.ether_cost
+		button.text = "%s\n%s" % [["F1 GOLPE", "F2 GUARDA", "F3 ECO"][index], state]
+		button.disabled = not unlocked.has(id) or (actor != null and actor.hp <= 0)
+		button.add_theme_font_size_override("font_size", 13)
+		button.add_theme_color_override("font_color", color)
+		button.add_theme_color_override("font_disabled_color", Color("a7b1bc"))
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color("17202f")
+		style.border_color = Color("91afc4") if id == selected else Color("586674")
+		style.set_border_width_all(2 if id == selected else 1)
+		button.add_theme_stylebox_override("normal", style)
 
 func _make_resource_panel() -> void:
 	resource_panel = PanelContainer.new()

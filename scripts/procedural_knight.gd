@@ -180,3 +180,20 @@ func play_state(state: StringName) -> void:
   var recovery := create_tween()
   recovery.tween_interval(0.3)
   recovery.tween_property(torso, "rotation", Vector3.ZERO, 0.12)
+
+var guard_ring: MeshInstance3D
+func set_guard_active(active: bool) -> void:
+ if guard_ring == null:
+  guard_ring = MeshInstance3D.new()
+  guard_ring.name = "GuardIndicator"
+  var ring := TorusMesh.new()
+  ring.inner_radius = 0.60
+  ring.outer_radius = 0.66
+  guard_ring.mesh = ring
+  guard_ring.position.y = 0.08
+  var material := StandardMaterial3D.new()
+  material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+  material.albedo_color = Color("c5a963")
+  guard_ring.material_override = material
+  add_child(guard_ring)
+ guard_ring.visible = active

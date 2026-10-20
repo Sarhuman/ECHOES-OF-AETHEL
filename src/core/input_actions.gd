@@ -9,7 +9,7 @@ const KEYS: Dictionary = {
 	"potion_1": [KEY_1], "potion_2": [KEY_2], "potion_3": [KEY_3], "potion_4": [KEY_4],
 	"skill_1": [KEY_F1], "skill_2": [KEY_F2], "skill_3": [KEY_F3],
 	"attack_key": [KEY_J], "stand_attack": [KEY_SHIFT], "show_items": [KEY_ALT],
-	"save": [KEY_F5], "load": [KEY_F9], "restart": [KEY_R], "block": [KEY_Q]
+	"save": [KEY_F5], "load": [KEY_F9], "restart": [KEY_R], "block": [KEY_Q], "help": [KEY_H]
 }
 
 static func ensure_defaults() -> void:
@@ -20,11 +20,13 @@ static func ensure_defaults() -> void:
 			var event := InputEventKey.new()
 			event.keycode = code
 			InputMap.action_add_event(action, event)
-	for action: String in {"primary": MOUSE_BUTTON_LEFT, "secondary": MOUSE_BUTTON_RIGHT}:
+	var mouse_actions: Dictionary = {"primary": MOUSE_BUTTON_LEFT, "secondary": MOUSE_BUTTON_RIGHT,
+		"zoom_in": MOUSE_BUTTON_WHEEL_UP, "zoom_out": MOUSE_BUTTON_WHEEL_DOWN}
+	for action: String in mouse_actions:
 		if InputMap.has_action(action): continue
 		InputMap.add_action(action)
 		var event := InputEventMouseButton.new()
-		event.button_index = MOUSE_BUTTON_LEFT if action == "primary" else MOUSE_BUTTON_RIGHT
+		event.button_index = mouse_actions[action]
 		InputMap.action_add_event(action, event)
 
 static func bind_interact(code: Key) -> void:

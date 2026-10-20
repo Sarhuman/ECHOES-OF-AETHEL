@@ -36,3 +36,11 @@ func _ready() -> void:
 		AethelSettings.interact_key = KEY_F if index == 1 else KEY_E
 		AethelSettings.save_settings())
 	rows.add_child(interaction)
+
+	var remember := CheckButton.new()
+	remember.text = "Lembrar zoom da câmera (roda do mouse)"
+	remember.button_pressed = AethelSettings.remember_zoom
+	remember.toggled.connect(func(value: bool) -> void:
+		AethelSettings.remember_zoom = value
+		AethelSettings.save_settings())
+	rows.add_child(remember)
