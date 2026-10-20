@@ -13,7 +13,7 @@ Esta branch consolida o **ZIP completo da Fase 20** com os adaptadores das Fases
 | Validado em execução gráfica | Menu, mundo, HUD em 1280×720, 1366×768 e 1280×800, mochila, personagem, habilidades, loja, pausa e opções |
 | Ainda requer playtest humano | Sensação de combate, percurso por mouse, balanceamento amplo e experiência em outras máquinas |
 | Planejado | Quatro outras classes jogáveis; modelos/rigs/animações finais; áudio de produção; navmesh; dungeon map_04; 15 mapas, três dungeons e três finais completos |
-| CI | Workflow Windows incluído; verifique a execução remota no PR para o estado atual |
+| CI validado | [Windows pre-alpha #1](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39502230965) aprovado: importação, testes, exportação e upload do artefato |
 
 Vigília (`map_01`) e Bairro que Faltava (`map_02`) compartilham a geometria de teste e mudam NPCs, inimigos e objetivos. Não são dois mapas artísticos finalizados. Não há conteúdo executável do Arquivo das Portas Seladas (`map_04`).
 

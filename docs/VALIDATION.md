@@ -43,6 +43,10 @@ O sandbox impede leitura do armazenamento de certificados e gravação das prefe
 - Navmesh/pathfinding: movimento direto pode parar em obstáculos. IA possui patrulha, perseguição, aviso/ataque, retorno e morte, sem navegação completa.
 - Map_04, restante da campanha, quatro outras classes, decisões narrativas persistentes além da missão introdutória, portal de cidade/baú/resistências.
 - Build sem assinatura/instalador. Auditoria de direitos para lançamento comercial e licença geral do jogo ainda pendentes.
-- CI remoto: consultar execução vinculada ao PR. O pipeline foi preparado e a mesma sequência foi validada localmente; não presumir sucesso remoto sem verificar.
+## CI remoto aprovado
+
+[Windows pre-alpha #1](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39502230965), commit de código `a38a240`: todos os passos concluídos com sucesso, incluindo download oficial, importação, oito suítes, exportação Windows, empacotamento e upload. [Artefato Windows](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39502230965/artifacts/12302045753) e logs disponibilizados. As evidências gráficas são da máquina local; o runner remoto fez validação headless.
+
+A cópia de `fonte/` extraída do ZIP local também foi importada em diretório limpo e passou pelas 5.105 verificações de consolidação, sem depender do cache de desenvolvimento.
 
 O PR deve permanecer **Draft** pelas pendências de arte/animações finais e validação humana. O núcleo executável pode ser testado com essas limitações documentadas.
