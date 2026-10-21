@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "region_id": "map_01",
+  "state": "INITIAL_ARCHITECTURAL_VARIANT_ART_REVIEW_PENDING",
+  "units": "metres, Y up, existing Godot world coordinates",
+  "blocks": [[-11,-11,2,2],[9,-11,2,2],[-14,-9,2,2],[-14,7,2,2],[6,-7,3,2]],
+  "landmarks": {
+    "plaza": [0,0,4],
+    "bell_tower": [-10,0,-10],
+    "doma": [-9,0,2],
+    "workshop": [-11,0,-3],
+    "maera": [-4,0,2],
+    "east_arrival": [9,0,0],
+    "district_exit": [11,0,0]
+  },
+  "rules": [
+    "Presentation only. data/regions.json remains authoritative for geometry, graph and arrivals.",
+    "Do not place new solids or NPCs. Keep existing workshop and anchor IDs.",
+    "Bell tower in existing northwest footprint; low roofs and opacity fade preserve player reading.",
+    "Paving guides Maera, Doma and east exit. Secondary routes use the existing navigable grid.",
+    "Keep asset materials shared and at most two added local lights. No global fog or camera edits."
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "checks": 9,
+  "consumer_engine": "4.7.2-stable (official)",
+  "failures": [],
+  "metrics": {
+    "draw_calls": 46,
+    "frames": 90,
+    "headless": false,
+    "median_ms": 31.405,
+    "p95_ms": 32.062,
+    "primitives": 25824,
+    "renderer": "AMD Radeon RX 580 2048SP"
+  },
+  "passed": true,
+  "scene": "Summer-authored integration_test.tscn",
+  "scene_sha256": "5c26023f6f864d37091cf5399d4606711f9333f4214f260535921bbcc78b1376",
+  "scope": "isolated test actor, same capsule and visual; not a second gameplay controller"
+}
