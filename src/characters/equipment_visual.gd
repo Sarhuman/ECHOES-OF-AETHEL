@@ -9,6 +9,7 @@ const RARITIES: Array[StringName] = [&"common", &"magic", &"rare", &"epic", &"le
 const SLOTS: Array[StringName] = [&"helmet", &"chest", &"gloves", &"boots", &"cape", &"weapon_main", &"offhand"]
 
 @export var slot_root_path: NodePath = NodePath("..")
+@export var preserve_authored_materials := false
 var _equipped: Dictionary = {}
 
 func apply_equipment(slot: StringName, appearance_id: StringName, rarity_id: StringName) -> bool:
@@ -85,7 +86,7 @@ func _set_targets(entry: Node, enabled: bool, rarity: StringName) -> void:
     for target: Node3D in entry.get_meta("placeholder_targets", []):
         if not is_instance_valid(target): continue
         target.visible = enabled
-        if enabled and target is MeshInstance3D:
+        if enabled and target is MeshInstance3D and not preserve_authored_materials:
             var mesh := target as MeshInstance3D
             if not mesh.has_meta("base_material"):
                 mesh.set_meta("base_material", mesh.material_override)
