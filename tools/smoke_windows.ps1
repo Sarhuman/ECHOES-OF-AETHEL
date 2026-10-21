@@ -1,4 +1,4 @@
-param([string]$Executable = (Join-Path $PSScriptRoot '../teste-fase20/EchoesOfAethel-Fase20.exe'))
+param([string]$Executable = (Join-Path $PSScriptRoot '../teste-fase20/EchoesOfAethel-Fase23.exe'))
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
 $logsPath = Join-Path $taskRoot 'relatorios-fase20'

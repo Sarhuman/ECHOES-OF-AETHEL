@@ -9,6 +9,7 @@ var quality: int = -1           # -1 = usa a qualidade da definição
 var affixes: Array = []         # [{id, kind, name, stat, value}]
 var custom_name: String = ""    # nome gerado de itens raros
 var item_level: int = 1
+var quantity: int = 1
 
 func _init(data: AethelItemData, uid: String = "") -> void:
 	definition = data
@@ -66,6 +67,14 @@ func defense_value() -> int:
 	if definition == null: return 0
 	return roundi(float(definition.defense) * (1.0 + stat_total("defense_pct") / 100.0)) + int(stat_total("defense_flat"))
 
+func comparison_values() -> Dictionary:
+	var values := {"Dano base médio":(definition.damage_min+definition.damage_max)/2.0,"Defesa":float(defense_value()),"Bloqueio base (%)":float(definition.block_chance)}
+	var names := {"strength":"Força","dexterity":"Destreza","vitality":"Vitalidade","energy":"Energia","life":"Vida","mana":"Éter","damage_pct":"Dano (%)","damage_add":"Dano adicional","attack_speed":"Velocidade de ataque (%)","move_speed":"Movimento (%)","find_magic":"Descoberta mágica (%)","stamina":"Fôlego"}
+	for row: Dictionary in all_modifiers():
+		var label: String = names.get(row["stat"],str(row["stat"]))
+		values[label] = float(values.get(label,0)) + float(row["value"])
+	return values
+
 func gold_value() -> int:
 	if definition == null: return 0
 	var mult: float = 1.0 + 0.55 * float(affixes.size()) + (3.0 if get_quality() == AethelItemData.Rarity.UNIQUE else 0.0)
@@ -73,14 +82,28 @@ func gold_value() -> int:
 
 func serialize() -> Dictionary:
 	return {"id": instance_id, "item_id": String(definition.item_id), "quality": quality,
-		"name": custom_name, "ilvl": item_level, "affixes": affixes.duplicate(true)}
+		"name": custom_name, "ilvl": item_level, "quantity": quantity, "affixes": affixes.duplicate(true)}
+
+func stacks_with(other: AethelItemInstance) -> bool:
+	if other == null or definition.max_stack <= 1 or definition.item_id != other.definition.item_id: return false
+	var a := serialize()
+	var b := other.serialize()
+	for field in ["id","quantity","x","y"]:
+		a.erase(field)
+		b.erase(field)
+	return a == b
 
 static func from_dict(data: Dictionary, catalog: Dictionary) -> AethelItemInstance:
-	for field: String in ["quality", "ilvl", "x", "y"]:
+	for field in ["id","item_id","name"]:
+		if data.has(field) and not data[field] is String: return null
+	for field: String in ["quality", "ilvl", "x", "y", "quantity"]:
 		if data.has(field) and not (data[field] is int or data[field] is float): return null
+		if data.has(field) and (not is_finite(float(data[field])) or float(data[field]) != floorf(float(data[field]))): return null
 	var key: String = str(data.get("item_id", ""))
 	if not catalog.has(key): return null
 	var instance := AethelItemInstance.new(catalog[key], str(data.get("id", "")))
+	instance.quantity = int(data.get("quantity",1))
+	if instance.quantity < 1 or instance.quantity > instance.definition.max_stack: return null
 	instance.quality = clampi(int(data.get("quality", -1)), -1, 4)
 	instance.custom_name = str(data.get("name", ""))
 	instance.item_level = clampi(int(data.get("ilvl", instance.item_level)), 1, 100)

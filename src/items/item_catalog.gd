@@ -74,6 +74,7 @@ static func create_catalog() -> Dictionary:
 		data.item_id = StringName(spec["id"])
 		data.display_name = str(spec["name"])
 		data.kind = "potion"
+		data.max_stack = 20
 		data.gender = "f"
 		data.width = 1
 		data.height = 1
@@ -100,6 +101,16 @@ static func create_catalog() -> Dictionary:
 	charm.modifiers = {"bonus_hp": 8, "bonus_ether": 3}
 	charm.base_value = 10
 	result["worn_charm"] = charm
+	for spec in [["bronze_shard","Fragmento de bronze","material"],["worn_fabric","Tecido gasto","material"],["stone_dust","Pó de pedra","material"],["quest_seal","Selo de missão","quest"],["vigil_letter","Carta de Vigília","quest"],["annotated_map","Mapa anotado","quest"]]:
+		var entry := AethelItemData.new()
+		entry.item_id = StringName(spec[0])
+		entry.display_name = spec[1]
+		entry.kind = spec[2]
+		entry.max_stack = 50 if entry.kind == "material" else 1
+		result[spec[0]] = entry
+	for entry: AethelItemData in result.values():
+		entry.icon = AethelItemIcons.TEXTURES.get(String(entry.item_id))
+		if entry.description.is_empty(): entry.description = "Objeto de Vigília." if entry.kind in ["material","quest"] else "Peça de equipamento ou suprimento de Aethel."
 	return result
 
 static func _make(spec: Dictionary) -> AethelItemData:

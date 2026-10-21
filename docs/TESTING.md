@@ -1,39 +1,36 @@
-# Teste da Fase 20.2 integrada
+# Teste da Fase 23 — inventário e equipamentos
 
-Pacote atual: `EchoesOfAethel-PreAlpha-Windows-x64.zip`, versão 0.20.2. Para validar o export, execute `tools/smoke_windows.ps1` no fonte após gerar o build. O script inicia o EXE com `-- --verify-build` e perfil isolado obrigatório, aguarda sua saída e exige `BUILD SMOKE: 10 checks, 0 failures`. Verifica menu, HUD, câmera, movimento, seleção de alvo grande, aproximação/ataque, F1–F3, interação de Doma e pausa. Este modo diagnóstico não altera a sessão normal.
+Extraia todo EchoesOfAethel-Fase23-Windows-x64.zip em uma pasta nova. Abra jogo/EchoesOfAethel-Fase23.exe com o PCK ao lado. Fonte editável em fonte/project.godot; Godot 4.7.2.stable.official.ed1daf0bf. O export é pré-alpha, sem assinatura/instalador.
 
-Extraia o ZIP completo e abra `jogo/EchoesOfAethel-Fase20.exe`, mantendo o `.pck` na mesma pasta. Windows 64 bits, OpenGL 3.3; Godot já incluída no executável exportado.
+## Roteiro de playtest
 
-1. No menu, teste Opções (tela cheia, volume e tecla E/F). Inicie Novo jogo. Continuar só fica disponível quando existe save.
-2. Mova com WASD/setas e clique. O ataque por clique seleciona/persegue um inimigo; Shift+clique ataca parado. J é o ataque alternativo.
-3. Ajuste a câmera com a roda do mouse. O tamanho inicial é 12, limitado entre 10 e 18. H abre/fecha a ajuda sem ocupar permanentemente o topo. Em Opções é possível desativar a memorização do zoom.
-4. Procure Maera (marcador azul), use E/F e atravesse o portal roxo a leste com a mesma tecla.
-5. No Bairro, derrote cinco Rasuras, incluindo a campeã. Teste Q com escudo, Espaço para esquiva e 1–4 para poções.
-6. Clique nos drops ou use E/F perto deles. Alt revela todos os rótulos. Abra I/Tab e confira os itens na grade.
-7. Clique em equipamento para equipar, ou no slot para desequipar. Confira dano/defesa em C. Aparências são placeholders geométricos cadastrados, com raridade individual por slot; acessórios não exigem visual.
-8. Ao subir de nível, distribua atributos em C. Consulte as técnicas em K e execute com F1–F3 ou pela barra: agora executam diretamente. O botão direito repete a última técnica. Neste pacote as três técnicas existentes já estão liberadas para teste, inclusive em saves anteriores. F2 reduz dano por oito segundos; uma segunda pressão cancela sem reembolso nem reiniciar a recarga. Cada botão mostra Pronto, Ativa, Recarga, Sem Éter ou indisponibilidade.
-9. Retorne ao portal após limpar a área e conclua a missão. Em Vigília, aproxime-se de Doma (avental, martelo e nome) e use E/F ou L; compre, equipe e venda pelo botão direito na mochila.
-10. F5 salva; altere equipamento/ouro, pressione F9 e confira a restauração. O save v4 aceita v2/v3 e faz backup. Novo jogo não apaga o save anterior até você salvar.
-11. Esc pausa a simulação. Teste Retomar, Salvar, Opções e Voltar ao menu; escolha Continuar. Após derrota, R inicia sessão nova.
+1. Inicie Novo jogo. Mova com WASD/setas ou clique. Procure Maera (azul), interaja com E/F e atravesse o portal a leste para o Bairro. A região de teste compartilha geometria com Vigília.
+2. Derrote Rasuras usando clique/J, F1 Golpe, F2 Guarda, F3 Eco; Shift+clique ataca parado. Q bloqueia com escudo, Espaço esquiva, 1–4 usam poções. R reinicia após derrota.
+3. Observe loot no chão. Alt revela rótulos; clique ou E/F perto para coletar. Ouro soma diretamente. Poções abastecem primeiro o cinto e vão para a mochila quando ele enche. As 40 células aceitam itens de tamanhos diferentes.
+4. Abra I/Tab. Confira ícone, moldura de raridade e quantidade em pilhas. Hover ou foco abre dados e comparação numérica. Roda do mouse sobre o item ou PgUp/PgDn com foco rola um tooltip longo. Os deltas mostram valores do item, não DPS final do personagem.
+5. Arraste entre células vazias e sobre outro item para trocar. Solte fora da mochila, além do limite ou sobre um slot incompatível: estado anterior deve permanecer. Itens grandes precisam de área livre para toda a forma; não se troca um item por múltiplos itens.
+6. Arraste para os slots: elmo, peitoral, luvas, botas, capa, arma principal, mão secundária, amuleto e dois anéis. Cinto e talismã legados permanecem funcionais. Slots com ✓ estão equipados. Joias não exigem modelos 3D.
+7. Clique/Enter também equipa; clique/Enter no slot retira para o primeiro espaço livre. Arrastar do slot para a grade desequipa em posição exata. Sem espaço, a operação falha sem remover o equipamento. Uma arma de duas mãos exige mão secundária livre; os tipos-base atuais continuam de uma mão.
+8. Pelo teclado, navegue com Tab/setas, use Enter para equipar/retirar. Com foco em um item da mochila, M inicia movimento; setas escolhem célula e Enter confirma. Esc cancela. Organizar usa as mesmas posições reais e preserva tudo se não conseguir reorganizar. Fechar ou I encerra a janela.
+9. Confira dano/defesa na mochila e em C após equipar. Verifique o visual do Bastião para os sete slots procedurais cadastrados. Não há modelos finais nem visual falso para acessórios.
+10. Encha o cinto e colete mais poções iguais: observe empilhamento até 20 na mochila. Clique na pilha para transferir uma unidade ao cinto; se cheio, a quantidade não muda. Venda com botão direito na mochila, com a loja de Doma aberta: a venda considera a pilha completa.
+11. F5 salva. Altere posição/itens/equipamentos, depois F9 recarrega. Confira IDs, quantidades, posições, raridade e afixos. Novo jogo só substitui um save ao salvar. O caminho de produção é o user:// da Godot; testes usam AETHEL_TEST_SAVE_DIR isolado.
+12. Esc abre pausa fora do modo de movimento de itens. Retorne a Vigília e interaja com Doma (avental/martelo) por E/F ou L. Confira compra e venda. H abre ajuda; K técnicas; roda do mouse fora da UI ajusta câmera entre 10 e 18.
 
-## Conteúdo e limitações
+## Testes e build reproduzível
 
-Esta entrega é derivada do ZIP da Fase 20 e dos módulos das Fases 21/22. Use o novo **EchoesOfAethel-PreAlpha-Windows-x64.zip**. Os pacotes anteriores não contêm estas correções.
+```powershell
+./tools/fetch_godot.ps1
+python tools/fetch_windows_template.py
+./tools/build_windows.ps1 -GodotExe "$pwd/.tools/Godot_v4.7.2-stable_win64_console.exe"
+./tools/smoke_windows.ps1
+python tools/package_windows.py
+```
 
-Cenário geométrico compartilhado entre map_01/map_02; map_04 e campanha completa pendentes. Clique usa direção direta: ainda não existe NavigationMesh para contornar obstáculos automaticamente. Modelos, animações e emissão localizada são placeholders; sem rigs/arte/áudio finais. Outras quatro classes têm somente contratos de dados.
+O build executa tools/test.ps1 com treze suítes e perfis separados. Para somente os testes, passe o mesmo GodotExe a tools/test.ps1. Os dois scripts novos são tests/test_phase23.gd e test_phase23_gui.gd. O segundo injeta eventos no protocolo nativo da GUI; não chama transações diretamente para simular arrastes.
 
-O pacote usa exportação Windows release da Godot 4.7.2, template oficial, sem assinatura ou instalador. Fonte editável em `fonte/`; documentação e logs em `evidencias/`.
+## Estado artístico e limites
 
-Smoke automatizado do export: execute `EchoesOfAethel-Fase20.exe --headless --quit-after 120 -- --smoke-gameplay`. Esse argumento entra numa sessão nova apenas para conferir o carregamento; não salva.
+43 ícones SVG próprios, explicitamente placeholders, em seis categorias. Armas, armaduras, joias e poções estão ligados ao catálogo real; materiais e objetos de missão têm definições reservadas e não foram introduzidos artificialmente nas recompensas atuais. Não há crafting, conjuntos novos, encaixes ou Sigilos. A comparação usa valores base e modificadores do item; não projeta o DPS final. Para anéis, compara o destino padrão de clique (primeiro livre, senão anel 1); arraste permite escolher anel 2.
 
-As verificações automáticas e capturas gráficas não substituem um playtest humano completo. Registre mapa, ação, mensagem de erro e passos para reproduzir cada problema encontrado.
-
-## Regressões específicas para conferir manualmente
-
-- Clique na cabeça e no corpo da Rasura campeã, inclusive após alterar zoom. Deve selecionar o mesmo alvo, aproximar e atacar, sem buscar o ponto atrás dele. O jogo ainda não inclui um chefe de campanha; os testes exercitam também o rank Único grande do controlador existente.
-- Clique repetidamente no alvo durante a aproximação. Segure Shift e clique para atacar sem deslocamento. WASD continua cancelando um comando anterior como controle explícito do jogador.
-- Use F1 em alcance e confira dano/Éter/recarga. Com movimento ativo, o golpe interrompe o deslocamento anterior durante sua recuperação.
-- Use F2, confira o círculo discreto da guarda e a redução de dano, pressione novamente para cancelar e confira a recarga. Deixe expirar naturalmente em outra tentativa.
-- Use F3 com inimigos próximos em lados diferentes: é o Corte do Eco existente, dano 360° com raio 3,4 e custo 18 de Éter. A mira e o dano não dependem da animação.
-- Gaste Éter e observe Sem Éter; use a poção do cinto. Uma tentativa bloqueada não deve cobrar recurso nem iniciar nova recarga.
-- Confira Doma de perto e abra sua loja tanto com interação configurada quanto com L. A colisão e a área de interação pertencem ao NPC físico, não às peças do modelo.
+Organização é determinística por área e ID, sem rotação de itens; pode recusar uma disposição difícil em vez de perder itens. Grades configuradas maiores usam scroll. Modelos/animações/áudio finais, navmesh e campanha completa continuam pendentes. Testes gráficos automatizados e inspeção de capturas não substituem playtest humano completo; registre mapa, ação, mensagem e passos de qualquer falha.

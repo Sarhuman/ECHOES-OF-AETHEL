@@ -716,6 +716,8 @@ func _setup_inventory() -> void:
 	inventory_view.equip_requested.connect(_on_equip_requested)
 	inventory_view.unequip_requested.connect(_on_unequip_requested)
 	inventory_view.sell_requested.connect(_on_sell_requested)
+	inventory_view.inventory_drop_requested.connect(_on_inventory_drop)
+	inventory_view.equipment_drop_requested.connect(_on_equipment_drop)
 
 func _spawn_drop(entry: Dictionary, at_position: Vector3) -> void:
 	var drop := AethelDroppedItem.new()
@@ -760,19 +762,27 @@ func _collect_nearest_drop() -> bool:
 	return best != null and _collect_drop(best)
 
 func _add_potion(item: AethelItemInstance, allow_inventory: bool = true) -> bool:
-	var kind: String = String(item.definition.item_id)
+	var plan := belt.duplicate(true)
+	var remaining := item.quantity
+	var kind := String(item.definition.item_id)
 	for index in range(BELT_SLOTS):
-		var slot: Dictionary = belt[index]
-		if not slot.is_empty() and slot["kind"] == kind and int(slot["count"]) < BELT_STACK:
-			slot["count"] = int(slot["count"]) + 1
-			if hud != null: hud.update_belt(belt, item_catalog)
-			return true
-	for index in range(BELT_SLOTS):
-		if belt[index].is_empty():
-			belt[index] = {"kind": kind, "count": 1}
-			if hud != null: hud.update_belt(belt, item_catalog)
-			return true
-	return allow_inventory and inventory.add_item(item)
+		var row: Dictionary = plan[index]
+		if row.is_empty(): row = {"kind":kind,"count":0}
+		if row.get("kind") != kind: continue
+		var amount := mini(remaining,BELT_STACK-int(row["count"]))
+		row["count"] += amount
+		if amount > 0: plan[index] = row
+		remaining -= amount
+	if remaining > 0:
+		if not allow_inventory: return false
+		var original := item.quantity
+		item.quantity = remaining
+		if not inventory.add_item(item):
+			item.quantity = original
+			return false
+	belt = plan
+	if hud != null: hud.update_belt(belt,item_catalog)
+	return true
 
 func _drink_belt(index: int) -> void:
 	if index < 0 or index >= BELT_SLOTS or player.hp <= 0: return
@@ -795,38 +805,62 @@ func _drink_belt(index: int) -> void:
 	if int(slot["count"]) <= 0: belt[index] = {}
 	hud.update_belt(belt, item_catalog)
 
-func _on_equip_requested(uid: String) -> void:
-	var item: AethelItemInstance = inventory.find_item(uid)
-	if item == null: return
+func _inventory_failure(message: String) -> void:
+	_show_message(message)
+	inventory_view.flash_invalid()
+
+func _on_equip_requested(uid: String, requested_slot: String = "") -> void:
+	var item := inventory.find_item(uid)
+	if item == null:
+		_inventory_failure("Item indisponível")
+		return
 	if item.definition.is_potion():
-		inventory.remove_item(uid)
-		if not _add_potion(item, false):
-			inventory.add_item(item)
-			_show_message("Cinto cheio")
+		if not requested_slot.is_empty():
+			_inventory_failure("Poções vão para o cinto, não para equipamentos")
+			return
+		var unit := AethelItemInstance.new(item.definition)
+		if _add_potion(unit,false): inventory.take_one(uid)
+		else: _inventory_failure("Cinto cheio")
 		_refresh_all()
 		return
-	var result: Dictionary = player.equip_item(item)
-	if not result["ok"]:
-		_show_message(str(result["reason"]))
-		inventory_view.flash_invalid()
+	var slot: String = requested_slot if not requested_slot.is_empty() else player.slot_for(item)
+	var problem: String = player.equipment_problem(item,slot)
+	if not problem.is_empty():
+		_inventory_failure(problem)
 		return
-	inventory.remove_item(uid)
-	var replaced: AethelItemInstance = result["replaced"]
-	if replaced != null and not inventory.add_item(replaced):
-		player.equipped[result["slot"]] = replaced
-		player.recalculate_stats()
-		inventory.add_item(item)
-		_show_message("Sem espaço na mochila para trocar")
+	var replaced: AethelItemInstance = player.equipped.get(slot)
+	if not inventory.exchange(uid,replaced):
+		_inventory_failure("Sem espaço na mochila para trocar")
+		return
+	player.equip_item(item,slot)
 	_refresh_all()
 
-func _on_unequip_requested(slot: String) -> void:
-	var item: AethelItemInstance = player.unequip_slot(slot)
+func _on_unequip_requested(slot: String, destination: Vector2i = Vector2i(-1,-1)) -> void:
+	var item: AethelItemInstance = player.equipped.get(slot)
 	if item == null: return
-	if not inventory.add_item(item):
-		player.equipped[slot] = item
-		player.recalculate_stats()
-		_show_message("Mochila cheia")
+	var placed: bool = inventory.add_item(item) if destination.x < 0 else inventory.place_item(item,destination)
+	if not placed:
+		_inventory_failure("Destino ocupado ou mochila cheia")
+		return
+	player.unequip_slot(slot)
 	_refresh_all()
+
+func _on_inventory_drop(payload: Dictionary, destination: Vector2i) -> void:
+	if not inventory_view.accepts_payload(payload): return
+	if payload.get("source") == "equipment":
+		var slot: String = str(payload.get("slot",""))
+		var item: AethelItemInstance = player.equipped.get(slot)
+		if item == null or item.instance_id != str(payload.get("uid","")): return
+		_on_unequip_requested(slot,destination)
+	elif not inventory.move_item(str(payload.get("uid","")),destination):
+		_inventory_failure("Não é possível mover ou trocar para essa posição")
+
+func _on_equipment_drop(payload: Dictionary, slot: String) -> void:
+	if not inventory_view.accepts_payload(payload): return
+	if payload.get("source") != "bag":
+		_inventory_failure("Mova para a mochila antes de trocar de slot")
+		return
+	_on_equip_requested(str(payload.get("uid","")),slot)
 
 func _on_sell_requested(uid: String) -> void:
 	if not shop_panel.visible:
@@ -834,7 +868,7 @@ func _on_sell_requested(uid: String) -> void:
 		return
 	var item: AethelItemInstance = inventory.find_item(uid)
 	if item == null: return
-	var price: int = maxi(1, item.gold_value() / 4)
+	var price: int = maxi(1, item.gold_value() / 4) * item.quantity
 	inventory.remove_item(uid)
 	gold += price
 	_show_message("Vendido: %s por %d ouro" % [item.display_name(), price])
@@ -1116,17 +1150,29 @@ func _load_state() -> bool:
 			item = AethelItemInstance.from_dict(entry, item_catalog)
 		else: # versão 2: referência a um item que ficava duplicado na mochila
 			item = inventory.find_item(str(entry))
-			if item != null: inventory.remove_item(item.instance_id)
 		if item != null and str(slot) in player.SLOT_ORDER:
 			var expected: String = "ring" if str(slot) in ["ring1", "ring2"] else str(slot)
 			if item.definition.slot != expected: continue
-			if not player.requirement_problem(item).is_empty(): continue
+			if item.quantity != 1: continue
 			var repeated := false
 			for other: AethelItemInstance in player.equipped.values():
 				if other.instance_id == item.instance_id: repeated = true
 			if repeated: continue
 			inventory.remove_item(item.instance_id)
 			player.equipped[str(slot)] = item
+	# All equipped bonuses must be available before validating requirements.
+	# A weapon may legitimately depend on an amulet appearing later in the save.
+	var changed := true
+	while changed:
+		changed = false
+		for slot in player.equipped.keys():
+			var equipped_item: AethelItemInstance = player.equipped[slot]
+			var problem: String = player.requirement_problem(equipped_item)
+			if str(slot) == "shield" and player.equipped.has("weapon") and player.equipped["weapon"].definition.hands == 2: problem = "Incompatible offhand"
+			if not problem.is_empty():
+				player.equipped.erase(slot)
+				inventory.add_item(equipped_item)
+				changed = true
 	belt = [{}, {}, {}, {}]
 	var saved_belt: Array = payload.get("belt", [])
 	for index in range(mini(BELT_SLOTS, saved_belt.size())):

@@ -9,6 +9,10 @@ enum Rarity { NORMAL = 0, COMMON = 0, MAGIC = 1, RARE = 2, EPIC = 3, LEGENDARY =
 @export var base_name: String = ""        # nome do tipo-base (para únicos e itens legados)
 @export_multiline var description: String = ""
 @export var icon: Texture2D
+@export_range(1, 99, 1) var max_stack: int = 1
+@export_range(1, 2, 1) var hands: int = 1
+# Reserved authoring tags only; no set/socket/Sigil mechanics are enabled.
+@export var future_feature_tags: PackedStringArray = []
 @export_range(1, 10, 1) var width: int = 1
 @export_range(1, 4, 1) var height: int = 1
 @export var rarity: Rarity = Rarity.NORMAL
