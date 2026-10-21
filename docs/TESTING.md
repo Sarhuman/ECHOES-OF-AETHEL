@@ -1,6 +1,6 @@
-# Teste da Fase 25 — exploração e recompensas
+# Teste da Fase 26 — exploração e recompensas
 
-Extraia todo EchoesOfAethel-Fase25-Windows-x64.zip em uma pasta nova. Abra jogo/EchoesOfAethel-Fase25.exe com o PCK ao lado. Fonte editável em fonte/project.godot; Godot 4.7.2.stable.official.ed1daf0bf. O export é pré-alpha, sem assinatura/instalador.
+Extraia todo EchoesOfAethel-Fase26-Windows-x64.zip em uma pasta nova. Abra jogo/EchoesOfAethel-Fase26.exe com o PCK ao lado. Fonte editável em fonte/project.godot; Godot 4.7.2.stable.official.ed1daf0bf. O export é pré-alpha, sem assinatura/instalador.
 
 ## Roteiro de playtest
 
@@ -48,7 +48,7 @@ Organização é determinística por área e ID, sem rotação de itens; pode re
 Automação adicional: test_phase24.gd verifica serviços reais e persistência; test_phase24_gui.gd injeta E/setas/Enter/Esc/L em ambas as resoluções. Rodar o segundo sem --headless e com AETHEL_CAPTURE_DIR gera capturas. A inspeção dessas capturas e os inputs automatizados não substituem o playtest humano acima, que continua pendente. Detalhes em FASE24_NPCS.md.
 
 
-## Fase 25 — roteiro de exploração
+## Fase 26 — roteiro de exploração
 
 1. Em Novo jogo, aceite a investigação provisória de Maera. Ative a Âncora de Travessia de Vigília (próxima ao ponto inicial); descubra, feche a janela e atravesse o portal a leste.
 2. Enfrente comum, campeão e elite com dois lacaios. Observe os nomes/modificadores, proteção temporária e efeito periódico. O bot e as suítes automatizadas cobrem o combate; este roteiro exige avaliação humana adicional.
@@ -60,3 +60,13 @@ Automação adicional: test_phase24.gd verifica serviços reais e persistência;
 8. Repita em 1280×720 e 1920×1080. Verifique foco, mouse, nomes separados, filtros e retorno ao HUD. Os modelos/sons e a geometria compartilhada são provisórios.
 
 Novos testes: test_phase25.gd e test_phase25_gui.gd. O segundo aceita AETHEL_CAPTURE_DIR e gera seis capturas quando executado sem --headless. Inspeção dessas capturas e inputs automatizados não substituem playtest humano. tools/smoke_windows.ps1 executa o EXE exportado com 21 verificações, perfil isolado e teste de persistência de exploração. As taxas e a política de respawn estão em FASE25_EXPLORATION.md.
+
+
+## Verificações adicionais da Fase 26
+
+- Na loja de Doma, mantenha o cursor sobre Escudo de Madeira. Na mochila, faça o mesmo com Eco de Vidro. A caixa deve ficar estável; roda sobre o item ou PgUp/PgDn rola o texto.
+- Na mochila selecione por hover/foco e use Largar [Del], ou Delete com foco no item. Confira a pilha inteira no chão, F5/F9 e recolhimento sem duplicação. Desequipe antes de largar. Missões/protegidos não podem ser largados. Soltar um arrasto fora da grade continua cancelando o movimento.
+- Compare HUD em 1280×720, 1600×900 e 1920×1080, escala 85/100/110%, shader ligado/desligado. Confira Vida/Éter/Fôlego e cooldowns reais de F1–F3, Guarda e altar.
+- U abre o diário da investigação provisória; Esc pausa. Opções incluem canais Master/Music/SFX/UI/Ambience, resolução, escala HUD e redução de movimento. Setas ajustam sliders e Tab alcança opções na área rolável.
+- A derrota oferece carregar, novo jogo e menu; não existe cadáver com equipamentos. Music/Ambience têm canais preparados, sem trilhas finais.
+- Automação gráfica não substitui o playtest humano, que permanece pendente.

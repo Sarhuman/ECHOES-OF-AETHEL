@@ -175,6 +175,7 @@ func open_dialogue(id: String) -> void:
 	if not available(id) or not reachable(id) or world.player.global_position.distance_to(actors[id].global_position) > RANGE: return
 	pending_id = ""
 	active_id = id
+	world.audio.play_cue("npc")
 	world.player.clear_commands()
 	world.player.velocity = Vector3.ZERO
 	world.player.keyboard_active = false

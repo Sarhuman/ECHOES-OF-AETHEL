@@ -12,6 +12,8 @@ var _text: RichTextLabel
 var _cursor_offset: Vector2 = Vector2(18.0, 18.0)
 var _focus_rect := Rect2()
 var _keyboard_anchor := false
+var _last_viewport := Vector2.ZERO
+var _last_pointer := Vector2.INF
 
 func _ready() -> void:
 	theme_type_variation = "AethelSpeech"
@@ -31,6 +33,7 @@ func _ready() -> void:
 	_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_text.custom_minimum_size = Vector2(240.0, 0.0)
 	margin.add_child(_text)
+	_text.get_v_scroll_bar().mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = false
 
 func build_text(item: AethelItemInstance) -> String:
@@ -90,7 +93,7 @@ func show_item(item: AethelItemInstance) -> void:
 		hide_item()
 		return
 	_text.text = build_text(item)
-	reset_size()
+	_fit_to_viewport()
 	visible = true
 	_update_position()
 
@@ -106,7 +109,7 @@ func show_comparison(item: AethelItemInstance, equipped: AethelItemInstance) -> 
 	if equipped != null:
 		theme_type_variation = "AethelComparison"
 		_text.text += "\n\n[center][b]EQUIPADO[/b][/center]\n" + build_text(equipped)
-		reset_size()
+		_fit_to_viewport()
 		_update_position()
 
 func append_comparison(item: AethelItemInstance, equipped: AethelItemInstance) -> void:
@@ -137,15 +140,21 @@ func scroll_by(amount: float) -> void:
 	bar.value += amount
 
 func _process(_delta: float) -> void:
-	if visible:
+	if not visible: return
+	var viewport_size := get_viewport_rect().size
+	var pointer: Vector2 = _focus_rect.end if _keyboard_anchor else get_viewport().get_mouse_position()
+	if viewport_size != _last_viewport:
 		_fit_to_viewport()
 		_update_position()
+	elif pointer != _last_pointer: _update_position()
 
 func _fit_to_viewport() -> void:
+	# Fixed bounded reading area: content height depends on scrollbar width, so
+	# resizing from get_content_height every frame can create a layout oscillation.
 	var limits := get_viewport_rect().size-Vector2(24,24)
-	custom_minimum_size = Vector2(minf(340,limits.x),minf(180,limits.y))
-	size.x = custom_minimum_size.x
-	size.y = clampf(float(_text.get_content_height())+28,custom_minimum_size.y,limits.y)
+	custom_minimum_size = Vector2(minf(340,limits.x),minf(420,limits.y))
+	size = custom_minimum_size
+	_last_viewport = get_viewport_rect().size
 
 func _update_position() -> void:
 	var viewport_size: Vector2 = get_viewport_rect().size
@@ -153,4 +162,5 @@ func _update_position() -> void:
 	var proposed: Vector2 = pointer + _cursor_offset
 	if proposed.x + size.x > viewport_size.x: proposed.x = pointer.x - size.x - _cursor_offset.x
 	if proposed.y + size.y > viewport_size.y: proposed.y = pointer.y - size.y - _cursor_offset.y
+	_last_pointer = pointer
 	global_position = Vector2(clampf(proposed.x, 0.0, maxf(0.0, viewport_size.x - size.x)), clampf(proposed.y, 0.0, maxf(0.0, viewport_size.y - size.y)))

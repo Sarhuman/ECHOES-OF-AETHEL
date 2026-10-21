@@ -2,6 +2,7 @@ class_name AethelInventoryView
 extends Control
 signal equip_requested(instance_id: String)
 signal unequip_requested(slot: String)
+signal discard_requested(instance_id: String)
 signal sell_requested(instance_id: String)
 signal inventory_drop_requested(payload: Dictionary, destination: Vector2i)
 signal equipment_drop_requested(payload: Dictionary, slot: String)
@@ -47,6 +48,13 @@ func _ready() -> void:
  close.position = Vector2(630,10)
  close.pressed.connect(func() -> void: hide())
  add_child(close)
+ var discard := Button.new()
+ discard.text = "Largar [Del]"
+ discard.position = Vector2(500,10)
+ discard.tooltip_text = "Largar a pilha selecionada no chão. Pode ser recolhida novamente."
+ discard.pressed.connect(func() -> void:
+  if not selected_uid.is_empty(): discard_requested.emit(selected_uid))
+ add_child(discard)
  var sort := Button.new()
  sort.text = "Organizar"
  sort.position = Vector2(18,46)
@@ -176,8 +184,7 @@ func _build_cells() -> void:
 
 func _show_item(item: AethelItemInstance, button: Control, keyboard: bool) -> void:
  selected_uid = item.instance_id
- if keyboard: tooltip.show_item_at(item,button.get_global_rect())
- else: tooltip.show_item(item)
+ tooltip.show_item_at(item,button.get_global_rect())
  if player != null and inventory.find_item(item.instance_id) != null and item.definition.kind == "equipment":
   var slot: String = player.slot_for(item)
   var equipped: AethelItemInstance = player.equipped.get(slot)
@@ -235,7 +242,7 @@ func refresh() -> void:
   _attach_tooltip(button,item)
   item_root.add_child(button)
  _refresh_equipment()
- info_label.text = "%s · %d / %d células\nEnter: equipar / retirar · Botão direito: vender na loja\nM + célula: mover / trocar · Organizar: ordenar sem perder itens" % [gold_text,inventory.occupied_count(),inventory.grid_width*inventory.grid_height]
+ info_label.text = "%s · %d / %d células\nEnter: equipar / retirar · Del: largar no chão · Direito: vender\nM + célula: mover / trocar · Organizar: ordenar sem perder itens" % [gold_text,inventory.occupied_count(),inventory.grid_width*inventory.grid_height]
  if player != null: info_label.text += "\nDano %.1f–%.1f · Defesa %d · Bloqueio %.0f%%" % [player.damage_min,player.damage_max,player.defense,player.block_chance]
 
 func _refresh_equipment() -> void:

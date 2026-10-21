@@ -1,6 +1,8 @@
 class_name AethelExploration
 extends Node
 ## World coordination only: existing inventory, Player stats, loot and save remain authoritative.
+signal effect_changed(id: String,remaining: float,intensity: float)
+var _effect_display := -1
 var world: Node3D
 var data: Dictionary
 var objects: Dictionary = {}
@@ -32,8 +34,7 @@ func setup(owner_world: Node3D) -> void:
 	canvas = CanvasLayer.new()
 	canvas.layer = 3
 	world.add_child(canvas)
-	audio = AethelAudioManager.new()
-	add_child(audio)
+	audio = world.audio
 	for definition: Dictionary in data.objects:
 		var actor := Area3D.new()
 		actor.name = definition.id
@@ -337,6 +338,10 @@ func present_drops(alt: bool) -> void:
 			labels.erase(id)
 
 func apply_buffs() -> void:
+	var seconds: int = ceili(float(buffs.get("remaining",0)))
+	if seconds != _effect_display:
+		_effect_display = seconds
+		effect_changed.emit("altar",float(buffs.get("remaining",0)),float(buffs.get("reduction",0)))
 	world.player.exploration_reduction = float(buffs.get("reduction",0)) if float(buffs.get("remaining",0)) > 0 else 0.0
 
 func tick(delta: float) -> void:
@@ -367,18 +372,7 @@ func feedback(position: Vector3,text: String,kind: String) -> void:
 		priority_sound_clock = 0.4
 	elif sound_clock > 0: return
 	sound_clock = 0.12
-	# Short original synthetic chime, no external/proprietary audio.
-	var stream := AudioStreamWAV.new()
-	stream.format = AudioStreamWAV.FORMAT_16_BITS
-	stream.mix_rate = 22050
-	var bytes := PackedByteArray()
-	bytes.resize(4410)
-	var frequency: float = 660 if kind in ["rare","anchor","elite"] else 330
-	for i in range(2205):
-		var sample: int = roundi(sin(TAU*frequency*i/22050.0)*1800*(1-i/2205.0))
-		bytes.encode_s16(i*2,sample)
-	stream.data = bytes
-	audio.play_sfx(stream)
+	audio.play_cue(kind)
 
 func serialize() -> Dictionary:
 	var drops: Array = []

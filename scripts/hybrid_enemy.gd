@@ -1,5 +1,7 @@
 extends CharacterBody3D
 ## Rasura: monstro com nível, rank (normal/campeão/único), defesa, recuo ao ser atingido e golpe com aviso.
+signal presentation_changed
+var _ward_display := -1
 signal defeated(enemy: CharacterBody3D)
 signal damaged(enemy: CharacterBody3D)
 signal combat_event(position: Vector3, message: String, kind: String)
@@ -228,6 +230,9 @@ func configure_modifiers(ids: Array,rules: Dictionary) -> void:
 
 func _tick_modifiers(delta: float) -> void:
 	ward_remaining = maxf(0,ward_remaining-delta)
+	if ceili(ward_remaining) != _ward_display:
+		_ward_display = ceili(ward_remaining)
+		presentation_changed.emit()
 	if hp <= 0: return
 	if "corrupted" in modifiers and is_instance_valid(target) and target.hp > 0:
 		modifier_clock += delta

@@ -1,10 +1,14 @@
 extends Control
+var audio: AethelAudioManager
 var continue_button: Button
 var options: AethelOptionsPanel
 
 func _ready() -> void:
 	AethelInput.ensure_defaults()
 	AethelSettings.load_settings()
+	AethelSettings.apply_window_size()
+	audio = AethelAudioManager.new()
+	add_child(audio)
 	get_tree().paused = false
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var background := ColorRect.new()
@@ -24,7 +28,7 @@ func _ready() -> void:
 	title.add_theme_font_size_override("font_size", 36)
 	rows.add_child(title)
 	var subtitle := Label.new()
-	subtitle.text = "O Direito ao Impossível | Pré-alpha — Fase 25"
+	subtitle.text = "O Direito ao Impossível | Pré-alpha — Fase 26"
 	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rows.add_child(subtitle)
 	var start := _button(rows, "NOVO JOGO", func() -> void: start_game(true))
@@ -44,7 +48,7 @@ func _button(parent: Node, text: String, action: Callable) -> Button:
 	var button := Button.new()
 	button.text = text
 	button.custom_minimum_size.y = 44
-	button.pressed.connect(action)
+	button.pressed.connect(func() -> void: audio.play_cue("ui",true); action.call())
 	parent.add_child(button)
 	return button
 
