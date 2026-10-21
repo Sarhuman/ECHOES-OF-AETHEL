@@ -20,6 +20,7 @@ enum Rarity { NORMAL = 0, COMMON = 0, MAGIC = 1, RARE = 2, EPIC = 3, LEGENDARY =
 @export var base_value: int = 0
 @export var modifiers: Dictionary = {}    # legado: bonus_hp, bonus_ether, bonus_damage
 @export var slot: String = ""             # weapon, shield, helm, armor, gloves, boots, belt, ring, amulet, charm
+@export var sale_locked: bool = false
 @export var kind: String = "equipment"    # equipment | potion
 @export var gender: String = "m"
 @export var damage_min: int = 0

@@ -1,0 +1,159 @@
+{
+  "doma_start": {
+    "speaker": "doma",
+    "text": "A oficina permanece aberta. Precisa de equipamento ou quer conversar?",
+    "responses": [
+      {
+        "text": "Ver mercadorias.",
+        "next": "",
+        "conditions": {
+          "service": "doma"
+        },
+        "effects": [
+          {
+            "type": "shop"
+          }
+        ],
+        "end": true
+      },
+      {
+        "text": "Quero saber da oficina.",
+        "next": "doma_workshop",
+        "conditions": {},
+        "effects": [],
+        "end": false
+      },
+      {
+        "text": "Até logo.",
+        "next": "",
+        "conditions": {},
+        "effects": [],
+        "end": true
+      }
+    ]
+  },
+  "doma_workshop": {
+    "speaker": "doma",
+    "text": "Doma examina as ferramentas, depois volta a atenção ao trabalho.",
+    "responses": [
+      {
+        "text": "Vou me lembrar desta oficina.",
+        "next": "doma_start",
+        "conditions": {},
+        "effects": [
+          {
+            "type": "choice",
+            "key": "doma_workshop",
+            "value": "remember"
+          }
+        ],
+        "end": false
+      },
+      {
+        "text": "Já conversamos sobre a oficina.",
+        "next": "doma_start",
+        "conditions": {
+          "choice": {
+            "key": "doma_workshop",
+            "value": "remember"
+          }
+        },
+        "effects": [],
+        "end": false
+      },
+      {
+        "text": "Encerrar.",
+        "next": "",
+        "conditions": {},
+        "effects": [],
+        "end": true
+      }
+    ]
+  },
+  "maera_start": {
+    "speaker": "maera",
+    "text": "Este mapa não prevê o amanhã. Ele registra o amanhã que recusamos.",
+    "responses": [
+      {
+        "text": "Investigar as Rasuras do bairro. [Demonstração]",
+        "next": "maera_objective",
+        "conditions": {
+          "quest_started": false
+        },
+        "effects": [
+          {
+            "type": "start_investigation"
+          }
+        ],
+        "end": false
+      },
+      {
+        "text": "Relembrar o objetivo.",
+        "next": "maera_objective",
+        "conditions": {
+          "quest_started": true,
+          "quest_completed": false
+        },
+        "effects": [],
+        "end": false
+      },
+      {
+        "text": "Relatar a investigação. [Demonstração]",
+        "next": "maera_report",
+        "conditions": {
+          "quest_started": true,
+          "map_02_cleared": true,
+          "reward_claimed": false
+        },
+        "effects": [
+          {
+            "type": "finish_investigation"
+          }
+        ],
+        "end": false
+      },
+      {
+        "text": "A investigação foi registrada.",
+        "next": "maera_report",
+        "conditions": {
+          "reward_claimed": true
+        },
+        "effects": [],
+        "end": false
+      },
+      {
+        "text": "Encerrar.",
+        "next": "",
+        "conditions": {},
+        "effects": [],
+        "end": true
+      }
+    ]
+  },
+  "maera_objective": {
+    "speaker": "maera",
+    "text": "Objetivo provisório de teste: atravesse o portal a leste, derrote cinco Rasuras e retorne a Maera. Recompensa: 60 ouro, uma única vez. Esta investigação não conclui Uma Porta para Ninguém nem suas três âncoras.",
+    "responses": [
+      {
+        "text": "Continuar.",
+        "next": "",
+        "conditions": {},
+        "effects": [],
+        "end": true
+      }
+    ]
+  },
+  "maera_report": {
+    "speaker": "maera",
+    "text": "Relatório da investigação registrado. As âncoras e a decisão de Uma Porta para Ninguém ainda aguardam implementação.",
+    "responses": [
+      {
+        "text": "Encerrar.",
+        "next": "",
+        "conditions": {},
+        "effects": [],
+        "end": true
+      }
+    ]
+  }
+}

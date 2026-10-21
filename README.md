@@ -1,3 +1,13 @@
+# Fase 24 — NPCs, diálogo e comércio integrado
+
+Versão Windows 0.24.0, Godot 4.7.2. Parte da Fase 23 (PR #11), preservando inventário, equipamentos e combate. Doma tem diálogo ramificado, oficina provisória, estoque determinístico persistente e compra/venda reais; Maera apresenta uma investigação provisória com recompensa única. A missão canônica completa permanece pendente.
+
+Execute `jogo/EchoesOfAethel-Fase24.exe` com PCK junto após extrair o ZIP. Fonte: `fonte/project.godot`. E/F conversa; clique em NPC distante aproxima; L abre loja perto de Doma; I mochila; F5/F9 salva/carrega. [Roteiro](docs/TESTING.md), [auditoria](docs/FASE24_AUDIT.md), [arquitetura e limites](docs/FASE24_NPCS.md). Arte procedural e retratos são provisórios. Playtest humano pendente. PR Draft, sem merge automático.
+
+---
+
+## Histórico da Fase 23
+
 # ECHOES OF AETHEL
 
 ## Fase 23 — inventário funcional da vertical slice

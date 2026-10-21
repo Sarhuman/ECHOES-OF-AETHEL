@@ -66,3 +66,11 @@ func _build_blacksmith() -> void:
  _part(apron,Vector3(0,0.84,-0.29),Vector3(0.30,0.22,0.04),"754d31")
  _part(figure,Vector3(0.49,0.72,-0.15),Vector3(0.07,0.62,0.07),"795337")
  _part(figure,Vector3(0.49,0.43,-0.15),Vector3(0.40,0.19,0.22),"8a8f92")
+
+ # Protective gloves, worn apron stitching, iron shoulder guard and bronze buckle.
+ _part(figure,Vector3(-0.49,0.88,-0.02),Vector3(0.28,0.28,0.33),"41352a")
+ _part(figure,Vector3(0.49,0.88,-0.02),Vector3(0.28,0.28,0.33),"41352a")
+ _part(figure,Vector3(-0.40,1.47,0),Vector3(0.42,0.13,0.48),"50585a")
+ for x in [-0.24,0.24]:
+  _part(apron,Vector3(x,0.99,-0.281),Vector3(0.015,0.7,0.012),"ac8a62")
+ _part(apron,Vector3(0,1.05,-0.32),Vector3(0.12,0.10,0.025),"9b8559")

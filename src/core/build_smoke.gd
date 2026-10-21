@@ -62,6 +62,7 @@ func run() -> void:
 	player.ether = player.max_ether
 	player.attack_target = enemy
 	var hp_before: int = enemy.hp
+	prepare_hit()
 	await press(KEY_F1)
 	check(enemy.hp < hp_before, "F1 damage")
 	await press(KEY_F2)
@@ -70,12 +71,39 @@ func run() -> void:
 	player.attack_recovery = 0
 	player.ether = player.max_ether
 	hp_before = enemy.hp
+	prepare_hit()
 	await press(KEY_F3)
 	check(enemy.hp < hp_before, "F3 damage")
 	check(world.merchant.get_node_or_null("InteractionArea") != null, "Doma interaction")
+	player.clear_commands()
+	player.attack_recovery = 0
+	player.position = world.merchant.position + Vector3(2,0,0)
+	world.narrative.request("doma")
+	check(world.narrative.view.visible,"Doma dialogue data exported")
+	world.narrative.select_response(0)
+	check(world.shop_panel.visible,"Doma response opens store")
+	world.gold = 1000
+	var offer: AethelItemInstance = world.shop_stock[0]
+	var price: int = world._buy_price(offer)
+	for row: Dictionary in world.inventory.entries(): world.inventory.remove_item(row.instance.instance_id)
+	world._purchase(offer,false)
+	check(world.inventory.find_item(offer.instance_id) != null and world.gold == 1000-price,"release purchase")
+	world._save_state()
+	world.gold = 0
+	check(world._load_state() and world.gold == 1000-price and world.inventory.find_item(offer.instance_id) != null,"release save/load transaction")
+	check(not world.shop_stock.any(func(item: AethelItemInstance) -> bool: return item.instance_id == offer.instance_id),"release stock persisted")
 	world.pause_menu.open()
 	check(get_tree().paused, "pause")
 	get_tree().paused = false
 	print("BUILD SMOKE: %d checks, %d failures" % [checks,failures.size()])
 	for failure in failures: printerr("FALHA: ",failure)
 	get_tree().quit(0 if failures.is_empty() else 1)
+
+func prepare_hit() -> void:
+	# Enemy receive_hit uses global randf, independently of player.rng.
+	# Control only this diagnostic's next hit roll; preserve actual combat rules.
+	for candidate in range(100):
+		seed(candidate)
+		if randf() < 0.5:
+			seed(candidate)
+			return
