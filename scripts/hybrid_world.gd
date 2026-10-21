@@ -4,7 +4,7 @@ extends Node3D
 
 const PLAYER_SCRIPT = preload("res://scripts/hybrid_player.gd")
 const ENEMY_SCRIPT = preload("res://scripts/hybrid_enemy.gd")
-const SAVE_VERSION: int = 5
+const SAVE_VERSION: int = 6
 var SAVE_PATH: String = AethelSavePaths.current()
 const BELT_SLOTS: int = 4
 const BELT_STACK: int = 4
@@ -58,6 +58,7 @@ var last_drink_time: float = 0.0
 var merchant: StaticBody3D
 var help_panel: PanelContainer
 var message_label: Label
+var exploration: AethelExploration
 var narrative: AethelNPCController
 var workshop: Node3D
 var stock_initialized := false
@@ -80,6 +81,9 @@ func _ready() -> void:
 	narrative = AethelNPCController.new()
 	add_child(narrative)
 	narrative.setup(self)
+	exploration = AethelExploration.new()
+	add_child(exploration)
+	exploration.setup(self)
 	var new_game: bool = bool(Engine.get_meta("aethel_new_game", false))
 	Engine.remove_meta("aethel_new_game")
 	if new_game or not _load_state(): _give_starting_gear()
@@ -300,11 +304,7 @@ func _give_starting_gear() -> void:
 
 # ---------------------------------------------------------------- inimigos
 func _build_enemies() -> void:
-	var layout: Array = [
-		{"pos": Vector3(-5, 0, -5), "rank": 0}, {"pos": Vector3(5, 0, -6), "rank": 0}, {"pos": Vector3(9, 0, 1), "rank": 0},
-		{"pos": Vector3(-8, 0, 3), "rank": 0}, {"pos": Vector3(2, 0, -11), "rank": 1}]
-	for entry: Dictionary in layout:
-		_spawn_enemy(entry["pos"], 2, int(entry["rank"]))
+	if exploration != null: exploration.build_encounters()
 
 func _spawn_enemy(at_position: Vector3, level: int, rank: int) -> CharacterBody3D:
 	var enemy := CharacterBody3D.new()
@@ -319,12 +319,11 @@ func _spawn_enemy(at_position: Vector3, level: int, rank: int) -> CharacterBody3
 	return enemy
 
 func _on_enemy_defeated(enemy: CharacterBody3D) -> void:
+	if exploration != null and not exploration.defeat(enemy): return
 	enemies.erase(enemy)
 	slain += 1
 	if region_id == "map_02" and slain >= 5: map_02_cleared = true
 	progression.gain_xp(enemy.xp_value)
-	for entry: Dictionary in loot_generator.roll_drops(enemy.level, enemy.rank, player.magic_find):
-		_spawn_drop(entry, enemy.global_position)
 	_refresh_all()
 
 func _on_player_died() -> void:
@@ -439,6 +438,7 @@ func _refresh_all() -> void:
 	_refresh_skills_panel()
 
 func _mouse_over_ui(position: Vector2) -> bool:
+	if exploration != null and exploration.blocks_ui(position): return true
 	if narrative != null and narrative.view.visible: return true
 	for panel in [inventory_view, character_panel, skills_panel, shop_panel, help_panel]:
 		if panel != null and panel.visible and panel.get_global_rect().has_point(position): return true
@@ -477,7 +477,8 @@ func pick_drop_at(screen: Vector2) -> AethelDroppedItem:
 	var best: AethelDroppedItem = null
 	var best_distance: float = INF
 	for drop in dropped_items:
-		if not is_instance_valid(drop) or not drop.visible: continue
+		if not is_instance_valid(drop) or drop.is_queued_for_deletion() or not drop.visible or (exploration != null and not exploration.visible_drop(drop)): continue
+		if exploration != null and exploration.labels.has(drop.get_instance_id()) and exploration.labels[drop.get_instance_id()].label.visible and drop.get_meta("label_rect",Rect2()).has_point(screen): return drop
 		var distance: float = camera.unproject_position(drop.global_position + Vector3(0, 0.5, 0)).distance_to(screen)
 		if distance < 34.0 and distance < best_distance:
 			best = drop
@@ -495,6 +496,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _on_left_press(screen: Vector2) -> void:
 	if _mouse_over_ui(screen): return
 	if narrative != null: narrative.close()
+	if exploration != null: exploration.pending = ""
 	left_held = true
 	pickup_target = null
 	var enemy := pick_enemy_at(screen)
@@ -516,6 +518,10 @@ func _on_left_press(screen: Vector2) -> void:
 		hold_mode = "pickup"
 		pickup_target = drop
 		player.command_move(drop.global_position)
+		return
+	var object_id: String = exploration.pick(screen) if exploration != null else ""
+	if not object_id.is_empty():
+		exploration.request(object_id)
 		return
 	var point: Variant = ground_point_at(screen)
 	if point != null:
@@ -576,6 +582,7 @@ func _grant_training_skills() -> void:
 # ---------------------------------------------------------------- loop
 func _process(delta: float) -> void:
 	if narrative != null: narrative.tick(delta)
+	if exploration != null: exploration.tick(delta)
 	var camera := get_viewport().get_camera_3d()
 	hud.update_skills(right_skill_id, skill_tree.unlocked, SKILL_IDS, player, skill_tree.catalog)
 	for index in range(active_popups.size() - 1, -1, -1):
@@ -596,6 +603,7 @@ func _process(delta: float) -> void:
 	var alt_held: bool = Input.is_action_pressed("show_items")
 	for drop in dropped_items:
 		if is_instance_valid(drop): drop.set_label_visible(alt_held or drop.default_label_visible() or drop == hovered_drop)
+	if exploration != null: exploration.present_drops(alt_held)
 	var focus: CharacterBody3D = player.attack_target as CharacterBody3D if is_instance_valid(player.attack_target) else hovered_enemy
 	if is_instance_valid(focus) and not game_over:
 		hud.show_target(focus.display_name(), focus.hp, focus.max_hp, RANK_NAME_COLORS[focus.rank])
@@ -604,7 +612,11 @@ func _process(delta: float) -> void:
 	if left_held and not Input.is_action_pressed("primary"): _on_left_release()
 	if left_held and not game_over: _apply_hold()
 	if is_instance_valid(pickup_target):
-		if player.global_position.distance_to(pickup_target.global_position) < 1.7: _collect_drop(pickup_target)
+		if player.keyboard_active or is_instance_valid(player.attack_target): pickup_target = null
+		elif player.global_position.distance_to(pickup_target.global_position) < 1.7: _collect_drop(pickup_target)
+		elif not player.has_move_target:
+			pickup_target = null
+			_show_message("Caminho bloqueado até o loot")
 	else:
 		pickup_target = null
 	if shop_panel.visible and (not narrative.available("doma") or not narrative.hub.get("doma",false) or player.global_position.distance_to(merchant.global_position) > 3.0):
@@ -634,6 +646,15 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			narrative.close()
 			get_viewport().set_input_as_handled()
 		return
+	if exploration != null:
+		if event.keycode == KEY_O:
+			exploration.filter_panel.visible = not exploration.filter_panel.visible
+			return
+		if event.is_action_pressed("pause"):
+			exploration.pending = ""
+			if exploration.travel_panel.visible:
+				exploration.travel_panel.hide()
+				return
 	if event.is_action_pressed("pause") and narrative != null: narrative.close()
 	if event.is_action_pressed("pause"):
 		for panel in [inventory_view, character_panel, skills_panel, shop_panel]: panel.visible = false
@@ -671,6 +692,17 @@ func _interact() -> void:
 		if not pointed.is_empty():
 			narrative.request(pointed)
 			return
+	if exploration != null:
+		var nearest := ""
+		var distance := 2.5
+		for id: String in exploration.objects:
+			var actor: Node3D = exploration.objects[id]
+			if actor.visible and player.global_position.distance_to(actor.global_position) < distance:
+				nearest = id
+				distance = player.global_position.distance_to(actor.global_position)
+		if not nearest.is_empty(): exploration.request(nearest); return
+		var object_id: String = exploration.pick(get_viewport().get_mouse_position())
+		if not object_id.is_empty(): exploration.request(object_id); return
 	if _collect_nearest_drop(): return
 	if region_id == "map_01":
 		if is_instance_valid(merchant) and player.global_position.distance_to(merchant.global_position) < 3:
@@ -693,6 +725,7 @@ func _toggle_left_panel(panel: Control) -> void:
 
 # ---------------------------------------------------------------- regiões
 func _update_region() -> void:
+	if exploration != null: exploration.update_region()
 	if narrative != null: narrative.close()
 	if workshop != null:
 		workshop.visible = region_id == "map_01"
@@ -715,11 +748,8 @@ func _update_region() -> void:
 		player.position = Vector3(0, 0, 9)
 		npc.visible = false
 		gate.position = Vector3(0, 0, 12)
-		if map_02_cleared:
-			slain = 5
-		else:
-			slain = 0
-			_build_enemies()
+		slain = exploration.killed.size() if exploration != null else 0
+		_build_enemies()
 	player.clear_commands()
 
 
@@ -743,7 +773,7 @@ func _setup_inventory() -> void:
 	inventory_view.inventory_drop_requested.connect(_on_inventory_drop)
 	inventory_view.equipment_drop_requested.connect(_on_equipment_drop)
 
-func _spawn_drop(entry: Dictionary, at_position: Vector3) -> void:
+func _spawn_drop(entry: Dictionary, at_position: Vector3) -> AethelDroppedItem:
 	var drop := AethelDroppedItem.new()
 	if entry["kind"] == "gold": drop.gold_amount = int(entry["amount"])
 	else: drop.item = entry["item"]
@@ -753,9 +783,13 @@ func _spawn_drop(entry: Dictionary, at_position: Vector3) -> void:
 	drop.set_meta("region", region_id)
 	add_child(drop)
 	dropped_items.append(drop)
+	if exploration != null:
+		exploration.feedback(drop.global_position,"Recompensa rara" if drop.item != null and drop.item.get_quality() >= 2 else "", "rare" if drop.item != null and drop.item.get_quality() >= 2 else "drop")
+	return drop
 
 func _collect_drop(drop: AethelDroppedItem) -> bool:
-	if not is_instance_valid(drop) or str(drop.get_meta("region", region_id)) != region_id: return false
+	if not is_instance_valid(drop) or drop.is_queued_for_deletion() or not dropped_items.has(drop) or str(drop.get_meta("region", region_id)) != region_id: return false
+	if player.global_position.distance_to(drop.global_position) > 2.6 or (exploration != null and not exploration.reachable(drop)): return false
 	if drop.is_gold():
 		gold += drop.gold_amount
 		_show_message("+%d ouro" % drop.gold_amount)
@@ -768,6 +802,7 @@ func _collect_drop(drop: AethelDroppedItem) -> bool:
 			_show_message("Mochila cheia")
 			return false
 		_show_message("Coletado: " + drop.item.display_name())
+	if exploration != null: exploration.feedback(drop.global_position,"Coletado","pickup")
 	dropped_items.erase(drop)
 	drop.queue_free()
 	if pickup_target == drop: pickup_target = null
@@ -778,7 +813,7 @@ func _collect_nearest_drop() -> bool:
 	var best: AethelDroppedItem = null
 	var best_distance: float = 2.6
 	for drop in dropped_items:
-		if not is_instance_valid(drop) or str(drop.get_meta("region", region_id)) != region_id: continue
+		if not is_instance_valid(drop) or drop.is_queued_for_deletion() or str(drop.get_meta("region", region_id)) != region_id or (exploration != null and not exploration.visible_drop(drop)): continue
 		var distance: float = player.global_position.distance_to(drop.global_position)
 		if distance < best_distance:
 			best = drop
@@ -1126,7 +1161,7 @@ func _save_state() -> void:
 	var payload: Dictionary = {"version": SAVE_VERSION, "character_id": player.character_id, "class_id": String(player.class_id), "position": [player.position.x, player.position.y, player.position.z], "stamina": player.stamina, "progression": progression.serialize(), "skills": skill_tree.serialize(),
 		"stats": player.stats.serialize(), "gold": gold, "region_id": region_id, "quest_started": quest_started,
 		"quest_completed": quest_completed, "map_02_cleared": map_02_cleared, "slain": slain, "hp": player.hp,
-		"ether": player.ether, "inventory": inventory.serialize(), "equipped": equipment, "belt": belt, "right_skill": right_skill_id, "narrative": narrative.serialize(), "shop_stock": shop_stock.map(func(item: AethelItemInstance) -> Dictionary: return item.serialize())}
+		"ether": player.ether, "inventory": inventory.serialize(), "equipped": equipment, "belt": belt, "right_skill": right_skill_id, "exploration": exploration.serialize(), "narrative": narrative.serialize(), "shop_stock": shop_stock.map(func(item: AethelItemInstance) -> Dictionary: return item.serialize())}
 	var file := FileAccess.open(SAVE_PATH + ".tmp", FileAccess.WRITE)
 	if file == null:
 		_show_message("Falha ao abrir arquivo de save")
@@ -1191,6 +1226,16 @@ func _valid_save(data: Dictionary) -> bool:
 			for owned: Variant in data.get("equipped",{}).values():
 				if owned is Dictionary and str(owned.get("id","")) == item.instance_id: return false
 			seen[item.instance_id] = true
+	if int(data.version) >= 6 and not data.has("exploration"): return false
+	if data.has("exploration"):
+		if not exploration.valid_state(data.exploration): return false
+		var owned_ids: Dictionary = {}
+		for row: Dictionary in data.get("inventory",{}).get("items",[]): owned_ids[str(row.get("id",""))] = true
+		for row: Variant in data.get("equipped",{}).values():
+			if row is Dictionary: owned_ids[str(row.get("id",""))] = true
+		for row: Dictionary in data.get("shop_stock",[]): owned_ids[str(row.get("id",""))] = true
+		for row: Dictionary in data.exploration.get("drops",[]):
+			if int(row.gold) == 0 and owned_ids.has(str(row.item.get("id",""))): return false
 	return true
 
 func _load_state() -> bool:
@@ -1216,6 +1261,7 @@ func _load_state() -> bool:
 	_roll_shop_stock()
 	_refresh_shop()
 	map_02_cleared = bool(payload.get("map_02_cleared", false))
+	exploration.restore(payload.get("exploration",{}),map_02_cleared)
 	var saved_region: String = str(payload.get("region_id", "map_01"))
 	region_id = saved_region if saved_region in ["map_01", "map_02"] else "map_01"
 	_update_region()

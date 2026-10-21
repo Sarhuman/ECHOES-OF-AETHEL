@@ -1,0 +1,252 @@
+{
+  "modifier_definitions": {
+    "brutal": {
+      "name": "Punho de Cinza",
+      "damage": 1.2
+    },
+    "resistant": {
+      "name": "Pele de Ardósia",
+      "defense": 1.5
+    },
+    "fast": {
+      "name": "Passo Partido",
+      "speed": 1.2
+    },
+    "corrupted": {
+      "name": "Ferida de Eco",
+      "dot_damage": 2,
+      "interval": 2,
+      "radius": 2.8
+    },
+    "guardian": {
+      "name": "Vigília de Ferro",
+      "reduction": 0.2,
+      "interval": 6,
+      "duration": 2,
+      "radius": 4
+    }
+  },
+  "encounters": [
+    {
+      "id": "alley_patrol",
+      "region": "map_02",
+      "kind": "common",
+      "quest_required": true,
+      "members": [
+        {
+          "id": "patrol_1",
+          "position": [
+            -5,
+            0,
+            -5
+          ],
+          "level": 2,
+          "rank": 0,
+          "table": "normal",
+          "modifiers": [],
+          "type": "rasura"
+        }
+      ],
+      "reward_scale": 1.0
+    },
+    {
+      "id": "broken_steps",
+      "region": "map_02",
+      "kind": "champion",
+      "quest_required": true,
+      "members": [
+        {
+          "id": "champion_1",
+          "position": [
+            5,
+            0,
+            -6
+          ],
+          "level": 1,
+          "rank": 1,
+          "health_scale": 0.7,
+          "table": "champion",
+          "modifiers": [
+            "fast",
+            "resistant"
+          ],
+          "type": "rasura"
+        }
+      ],
+      "reward_scale": 1.0
+    },
+    {
+      "id": "echo_guard",
+      "region": "map_02",
+      "kind": "elite_with_minions",
+      "quest_required": true,
+      "members": [
+        {
+          "id": "elite_1",
+          "position": [
+            -8,
+            0,
+            3
+          ],
+          "level": 1,
+          "rank": 2,
+          "health_scale": 0.55,
+          "table": "elite",
+          "name": "Rasura do Limiar",
+          "modifiers": [
+            "brutal",
+            "corrupted",
+            "guardian"
+          ],
+          "type": "rasura"
+        },
+        {
+          "id": "minion_1",
+          "position": [
+            -6,
+            0,
+            3
+          ],
+          "level": 1,
+          "rank": 0,
+          "table": "normal",
+          "leader": "elite_1",
+          "modifiers": [],
+          "type": "rasura"
+        },
+        {
+          "id": "minion_2",
+          "position": [
+            -7,
+            0,
+            5
+          ],
+          "level": 1,
+          "rank": 0,
+          "table": "normal",
+          "leader": "elite_1",
+          "modifiers": [],
+          "type": "rasura"
+        }
+      ],
+      "reward_scale": 1.0
+    }
+  ],
+  "objects": [
+    {
+      "id": "vigilia_anchor",
+      "region": "map_01",
+      "kind": "anchor",
+      "position": [
+        3,
+        0,
+        6
+      ]
+    },
+    {
+      "id": "district_anchor",
+      "region": "map_02",
+      "kind": "anchor",
+      "position": [
+        3,
+        0,
+        9
+      ]
+    },
+    {
+      "id": "district_chest",
+      "region": "map_02",
+      "kind": "chest",
+      "position": [
+        -3,
+        0,
+        7
+      ],
+      "table": "container"
+    },
+    {
+      "id": "district_special",
+      "region": "map_02",
+      "kind": "chest",
+      "position": [
+        7,
+        0,
+        -9
+      ],
+      "table": "special_chest",
+      "requires_encounter": "echo_guard"
+    },
+    {
+      "id": "district_barrel",
+      "region": "map_02",
+      "kind": "barrel",
+      "position": [
+        -10,
+        0,
+        -5
+      ],
+      "table": "container"
+    },
+    {
+      "id": "district_urn",
+      "region": "map_02",
+      "kind": "urn",
+      "position": [
+        10,
+        0,
+        -4
+      ],
+      "table": "container"
+    },
+    {
+      "id": "district_remains",
+      "region": "map_02",
+      "kind": "remains",
+      "position": [
+        -3,
+        0,
+        -10
+      ],
+      "table": "container"
+    },
+    {
+      "id": "district_tomb",
+      "region": "map_02",
+      "kind": "tomb",
+      "position": [
+        8,
+        0,
+        5
+      ],
+      "table": "container"
+    },
+    {
+      "id": "district_altar",
+      "region": "map_02",
+      "kind": "altar",
+      "position": [
+        -3,
+        0,
+        4
+      ],
+      "duration": 30,
+      "effect": "resistance",
+      "reduction": 0.2,
+      "uses": 1
+    },
+    {
+      "id": "district_well",
+      "region": "map_02",
+      "kind": "well",
+      "position": [
+        6,
+        0,
+        8
+      ],
+      "life": 0.5,
+      "ether": 0.5,
+      "stamina": 1.0,
+      "uses": 2
+    }
+  ]
+}

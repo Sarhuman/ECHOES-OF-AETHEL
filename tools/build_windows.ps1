@@ -11,9 +11,9 @@ if (-not (Test-Path -LiteralPath $templatePath)) { throw 'Template ausente. Exec
 if ((Get-FileHash -LiteralPath $templatePath -Algorithm SHA256).Hash -ne 'D34D36F3BE1A6C49C56525AE86469B92E4F417DDF0B43CF00DD80C385C4B0562') { throw 'Hash do template Windows incorreto' }
 New-Item -ItemType Directory -Path $outputPath,$logsPath -Force | Out-Null
 if (-not $SkipTests) { & (Join-Path $PSScriptRoot 'test.ps1') -GodotExe $enginePath }
-& $enginePath --headless --path $taskRoot --export-release 'Windows Desktop' (Join-Path $outputPath 'EchoesOfAethel-Fase24.exe') --log-file (Join-Path $logsPath 'exportacao-release.log') | Out-Host
+& $enginePath --headless --path $taskRoot --export-release 'Windows Desktop' (Join-Path $outputPath 'EchoesOfAethel-Fase25.exe') --log-file (Join-Path $logsPath 'exportacao-release.log') | Out-Host
 if ($LASTEXITCODE -ne 0) { throw 'Exportacao Windows falhou' }
 $exportLog = Get-Content -LiteralPath (Join-Path $logsPath 'exportacao-release.log') -Raw
 if ($exportLog -match 'SCRIPT ERROR|Parse Error|Export failed') { throw 'Erro na exportacao' }
-Get-FileHash -LiteralPath (Join-Path $outputPath 'EchoesOfAethel-Fase24.exe'),(Join-Path $outputPath 'EchoesOfAethel-Fase24.pck') -Algorithm SHA256 | Format-List | Out-File (Join-Path $outputPath 'SHA256.txt')
+Get-FileHash -LiteralPath (Join-Path $outputPath 'EchoesOfAethel-Fase25.exe'),(Join-Path $outputPath 'EchoesOfAethel-Fase25.pck') -Algorithm SHA256 | Format-List | Out-File (Join-Path $outputPath 'SHA256.txt')
 Write-Host "Exportado em $outputPath"

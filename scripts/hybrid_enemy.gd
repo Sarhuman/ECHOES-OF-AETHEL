@@ -33,6 +33,11 @@ var ai_state: StringName = &"patrol"
 var home_position := Vector3.ZERO
 var _home_initialized := false
 var _patrol_clock := 0.0
+var modifiers: Array[String] = []
+var modifier_rules: Dictionary = {}
+var modifier_clock := 0.0
+var guardian_clock := 0.0
+var ward_remaining := 0.0
 var visual: Node3D
 
 func setup(new_level: int, new_rank: int, new_name: String = "Rasura") -> void:
@@ -49,7 +54,7 @@ func setup(new_level: int, new_rank: int, new_name: String = "Rasura") -> void:
 	move_speed = 2.65 * [1.0, 1.1, 1.15][rank]
 
 func display_name() -> String:
-	return monster_name if rank == 0 else "%s %s" % [monster_name, ["", "Campeã", "Única"][rank]]
+	return monster_name if rank == 0 else "%s %s" % [monster_name, ["", "Campeã", "Elite"][rank]]
 
 func _ready() -> void:
 	add_to_group("hybrid_enemies")
@@ -101,6 +106,7 @@ func _ready() -> void:
 		add_child(name_label)
 
 func _physics_process(delta: float) -> void:
+	_tick_modifiers(delta)
 	if not _home_initialized:
 		home_position = global_position
 		_home_initialized = true
@@ -186,7 +192,7 @@ func receive_hit(damage: int, attacker_rating: int, attacker_level: int) -> bool
 
 func take_damage(amount: int) -> void:
 	if hp <= 0: return
-	hp -= amount
+	hp -= maxi(1,roundi(amount * (1.0-float(modifier_rules.get("guardian",{}).get("reduction",0.2))) if ward_remaining > 0 else amount))
 	combat_event.emit(global_position + Vector3(0, 2.1, 0), "-%d" % amount, "damage")
 	stagger = float(RANK_STAGGER[rank])
 	windup_active = false
@@ -195,3 +201,49 @@ func take_damage(amount: int) -> void:
 		ai_state = &"death"
 		defeated.emit(self)
 		queue_free()
+
+func configure_modifiers(ids: Array,rules: Dictionary) -> void:
+	modifier_rules = rules
+	for id: String in ids:
+		if not rules.has(id) or id in modifiers: continue
+		modifiers.append(id)
+		match id:
+			"brutal":
+				damage_min = roundi(damage_min*float(rules[id].damage))
+				damage_max = roundi(damage_max*float(rules[id].damage))
+			"resistant": defense = roundi(defense*float(rules[id].defense))
+			"fast": move_speed *= float(rules[id].speed)
+	var names: Array[String] = []
+	for id: String in modifiers: names.append(str(rules[id].name))
+	if not names.is_empty():
+		var label := Label3D.new()
+		label.text = " · ".join(names)
+		label.font_size = 18
+		label.pixel_size = 0.005
+		label.position.y = 2.8 * float(RANK_SCALE[rank])
+		label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		add_child(label)
+	for child in get_children():
+		if child is Label3D and child.font_size != 18: child.text = display_name()
+
+func _tick_modifiers(delta: float) -> void:
+	ward_remaining = maxf(0,ward_remaining-delta)
+	if hp <= 0: return
+	if "corrupted" in modifiers and is_instance_valid(target) and target.hp > 0:
+		modifier_clock += delta
+		var rule: Dictionary = modifier_rules.corrupted
+		if modifier_clock >= float(rule.interval):
+			modifier_clock = 0
+			if global_position.distance_to(target.global_position) <= float(rule.radius):
+				target.take_damage(int(rule.dot_damage))
+				combat_event.emit(target.global_position+Vector3(0,2.3,0),str(rule.name),"hurt")
+	if "guardian" in modifiers:
+		guardian_clock -= delta
+		if guardian_clock <= 0:
+			var rule: Dictionary = modifier_rules.guardian
+			guardian_clock = float(rule.interval)
+			for ally in get_tree().get_nodes_in_group("hybrid_enemies"):
+				if ally == self or ally.hp <= 0: continue
+				if global_position.distance_to(ally.global_position) <= float(rule.radius):
+					ally.ward_remaining = maxf(ally.ward_remaining,float(rule.duration))
+			combat_event.emit(global_position+Vector3(0,2.5,0),str(rule.name),"buff")

@@ -1,0 +1,94 @@
+{
+  "rarity_weights": [
+    55,
+    27,
+    12,
+    5,
+    1
+  ],
+  "quality_rank_bonus": 0.8,
+  "tables": {
+    "normal": {
+      "rolls": 1,
+      "chance": 0.55,
+      "guaranteed": 0,
+      "minimum_quality": 0,
+      "gold_scale": 1,
+      "weights": {
+        "gold": 50,
+        "potion": 22,
+        "equipment": 23,
+        "material": 5
+      }
+    },
+    "champion": {
+      "rolls": 2,
+      "chance": 0.75,
+      "guaranteed": 1,
+      "minimum_quality": 1,
+      "gold_scale": 3,
+      "weights": {
+        "gold": 50,
+        "potion": 22,
+        "equipment": 23,
+        "material": 5
+      }
+    },
+    "elite": {
+      "rolls": 4,
+      "chance": 0.75,
+      "guaranteed": 3,
+      "minimum_quality": 1,
+      "gold_scale": 8,
+      "weights": {
+        "gold": 45,
+        "potion": 22,
+        "equipment": 23,
+        "material": 10
+      }
+    },
+    "container": {
+      "rolls": 2,
+      "chance": 0.8,
+      "guaranteed": 0,
+      "minimum_quality": 0,
+      "gold_scale": 1,
+      "weights": {
+        "gold": 50,
+        "potion": 20,
+        "equipment": 20,
+        "material": 10
+      }
+    },
+    "special_chest": {
+      "rolls": 3,
+      "chance": 1,
+      "guaranteed": 1,
+      "minimum_quality": 2,
+      "gold_scale": 2,
+      "weights": {
+        "gold": 35,
+        "potion": 20,
+        "equipment": 25,
+        "material": 20
+      }
+    }
+  },
+  "materials": [
+    "bronze_shard",
+    "worn_fabric",
+    "stone_dust"
+  ],
+  "gold_range": [
+    4,
+    10
+  ],
+  "potion_life_chance": 0.6,
+  "difficulty_scales": {
+    "test": 1.0
+  },
+  "regions": [
+    "map_01",
+    "map_02"
+  ]
+}

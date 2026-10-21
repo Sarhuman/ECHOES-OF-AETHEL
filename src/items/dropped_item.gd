@@ -5,6 +5,7 @@ extends Area3D
 const COLORS: Array = AethelUI.RARITY_TEXT
 const GOLD_COLOR: Color = Color("ffd24a")
 
+var drop_id: String = AethelItemInstance._new_id()
 var item: AethelItemInstance
 var gold_amount: int = 0
 var mesh: MeshInstance3D
@@ -34,7 +35,13 @@ func set_label_visible(value: bool) -> void:
 	if label != null: label.visible = value
 
 func _ready() -> void:
-	collision_layer = 0
+	collision_layer = 256
+	var shape := CollisionShape3D.new()
+	var sphere := SphereShape3D.new()
+	sphere.radius = 0.4
+	shape.shape = sphere
+	shape.position.y = 0.35
+	add_child(shape)
 	collision_mask = 0
 	mesh = MeshInstance3D.new()
 	if is_gold():
@@ -55,6 +62,17 @@ func _ready() -> void:
 	material.emission = material.albedo_color
 	material.emission_energy_multiplier = 0.6
 	mesh.material_override = material
+	if item != null and item.get_quality() >= AethelItemData.Rarity.RARE:
+		var ring := MeshInstance3D.new()
+		var torus := TorusMesh.new()
+		torus.inner_radius = 0.32
+		torus.outer_radius = 0.37
+		torus.rings = 16
+		torus.ring_segments = 8
+		ring.mesh = torus
+		ring.position.y = 0.12
+		ring.material_override = material
+		add_child(ring)
 	label = Label3D.new()
 	label.text = display_text()
 	label.position.y = 1.0
