@@ -24,6 +24,7 @@ static func inspect(model: Node3D, definition: AethelCharacterVisualDefinition) 
 			for bone in node.get_bone_count():
 				var parent: int=node.get_bone_parent(bone)
 				if parent>=bone: errors.append("Invalid bone hierarchy: "+node.get_bone_name(bone))
+				if not node.get_bone_rest(bone).basis.get_scale().is_equal_approx(Vector3.ONE): errors.append("Apply bone rest scale: "+node.get_bone_name(bone))
 		if node is MeshInstance3D and node.mesh!=null:
 			if node.skin!=null: skinned_meshes+=1
 			var transform:=Transform3D.IDENTITY
@@ -60,9 +61,18 @@ static func inspect(model: Node3D, definition: AethelCharacterVisualDefinition) 
 				var animation: Animation=node.get_animation(id)
 				animations[str(id)]={"duration":animation.length,"loop":animation.loop_mode!=Animation.LOOP_NONE}
 				for track in animation.get_track_count():
+					var track_path: NodePath=animation.track_get_path(track)
+					if track_path.is_empty():
+						errors.append("Empty animation target: "+str(id));continue
+					var animation_root: Node=node.get_node_or_null(node.root_node)
+					var target: Node=animation_root.get_node_or_null(NodePath(track_path.get_concatenated_names())) if animation_root!=null else null
+					if target==null or (target!=model and not model.is_ancestor_of(target)): errors.append("Animation target outside model: "+str(id))
 					if animation.track_get_type(track) not in [Animation.TYPE_POSITION_3D,Animation.TYPE_ROTATION_3D,Animation.TYPE_SCALE_3D,Animation.TYPE_BLEND_SHAPE]: errors.append("Non-transform animation track rejected: "+str(id))
 					# Root motion is not part of this contract. Root bones may rotate, never translate.
 					if animation.track_get_type(track)==Animation.TYPE_POSITION_3D and str(animation.track_get_path(track)).get_slice(":",1).to_lower() in ["root","hips"]: errors.append("Root motion rejected: "+str(id))
+					if animation.track_get_type(track)==Animation.TYPE_POSITION_3D and target is Skeleton3D and track_path.get_subname_count()>0:
+						var bone_id: int=target.find_bone(track_path.get_subname(0))
+						if bone_id>=0 and target.get_bone_parent(bone_id)<0: errors.append("Root bone translation rejected: "+str(id))
 	if not model.transform.is_equal_approx(Transform3D.IDENTITY): errors.append("Model root transform must be identity")
 	if not has_bounds or bounds.size.y<definition.min_height or bounds.size.y>definition.max_height or maxf(bounds.size.x,bounds.size.z)>definition.max_width: errors.append("Model dimensions outside proposed integration envelope")
 	if has_bounds and absf(bounds.position.y)>0.08: errors.append("Feet must rest at Y=0")
