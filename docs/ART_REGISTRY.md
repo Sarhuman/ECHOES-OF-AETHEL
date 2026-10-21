@@ -38,6 +38,19 @@ Dependências: Godot 4.7.2, adaptadores character_visual/equipment_visual e cont
 
 Nenhum ART_APPROVED atribuído. A integração visual de produção e a revisão artística do Bastião permanecem pendentes. A fixture não deve ser submetida como personagem final: seu estado técnico não implica qualidade artística. Evidências do viewport identificam explicitamente PLACEHOLDER ou TESTE DE PIPELINE.
 
+## Fase 27.3 — Vigília e Summer
+
+| ID / versão | Fonte / saída | Estado artístico | Estado técnico |
+|---|---|---|---|
+| vigilia_greybox / Fase27 | region_level.gd + map_01.tscn | Greybox | Preservado, recuperável por GREYBOX |
+| summer_integration_area / 1 | build_summer_scene.gd → art/imported/vigilia/integration_test.tscn | Greybox de teste | Round-trip Summer→Godot e rampa tecnicamente validados |
+| vigilia_summer_architecture / 0.1 | art/source/vigilia/layout.json + build_summer_scene.gd → vigilia_summer.tscn | ART_REVIEW_PENDING, arquitetura inicial | INTEGRATED, testes de navegação/colisão/NPCs/persistência executados |
+| vigilia_modular_kit / 0.1 | modules/*.tscn e materials/*.tres | Placeholder arquitetônico original | Treze módulos e sete materiais; uso posterior requer teste no mapa de destino |
+
+Responsável: Codex na tarefa do usuário,21/10/2026; autoria original por GDScript executado no Summer Engine0.7.3 local (engine4.7.2.custom), interoperabilidade e renderização na Godot oficial4.7.2. Sem modelos/texturas de terceiros, sem serviços de IA de nuvem ou assets de loja. LICENSE.txt da instalação foi consultado; não atribuir licenças de serviços/loja que não foram usados. Binário Summer não incluído na entrega; direitos de recursos externos futuros exigem revisão própria.
+
+Fonte e parâmetros editáveis incluídos; não há .blend/GLB produzido para o kit. .tscn/.tres e ArrayMesh são os formatos efetivamente testados. Edifícios agrupados por material; geometria individual paramétrica permanece no fonte. Dependências: Godot4.7.2, coordenador/navegação/oclusão existentes. Posições/IDs/save v6 não mudam. Fachadas são decorativas, sem novos interiores/interações. Documentação e evidências em FASE27_3_AUDIT/SUMMER_PIPELINE/VIGILIA_LAYOUT/VALIDATION. Nenhum ART_APPROVED atribuído; Bairro/Pátio/Arquivo permanecem anteriores.
+
 ## Revisão da captura do Arquivo
 
 Os +50 XP foram gerados explicitamente por `Progression.gain_xp(50)` na fixture gráfica para verificar preenchimento e percentual. Não são recompensa de inimigo nem ganho espontâneo em gameplay. O aviso agora nasce acima do modelo. O rastreador explicita Rasuras e Bairro; M2 usa Golpe Pesado; cabeçalho compacto usa Arquivo/Pátio/Bairro/Vigília; fila compartilha a borda do minimapa. Rótulos de portal têm contorno e maior tamanho.

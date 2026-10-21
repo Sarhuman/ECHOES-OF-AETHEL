@@ -38,12 +38,12 @@ _surfaces = [{
 "vertex_data": PackedByteArray("bCadv2hnKj0L15O/gDTjvERzVz8zM6O/gDTjvERzVz8L15O/bCadv2hnKj0zM6O/yAyWv2hnKr0L15O/gDTjPFYmQj8zM6O/gDTjPFYmQj8L15O/yAyWv2hnKr0zM6O/gDTjvERzVz8L15O/bCadv2hnKj0zM6O/gDTjvERzVz8zM6O/bCadv2hnKj0L15O/gDTjPFYmQj8L15O/yAyWv2hnKr0zM6O/gDTjPFYmQj8zM6O/yAyWv2hnKr0L15O/gDTjvERzVz8L15O/yAyWv2hnKr0L15O/bCadv2hnKj0L15O/gDTjPFYmQj8L15O/gDTjvERzVz8zM6O/yAyWv2hnKr0zM6O/bCadv2hnKj0zM6O/gDTjPFYmQj8zM6O/gDTjPERzVz8L15O/bCadP2hnKj0zM6O/bCadP2hnKj0L15O/gDTjPERzVz8zM6O/gDTjvFYmQj8L15O/yAyWP2hnKr0zM6O/yAyWP2hnKr0L15O/gDTjvFYmQj8zM6O/bCadP2hnKj0L15O/gDTjPERzVz8zM6O/bCadP2hnKj0zM6O/gDTjPERzVz8L15O/yAyWP2hnKr0L15O/gDTjvFYmQj8zM6O/yAyWP2hnKr0zM6O/gDTjvFYmQj8L15O/bCadP2hnKj0L15O/gDTjvFYmQj8L15O/gDTjPERzVz8L15O/yAyWP2hnKr0L15O/bCadP2hnKj0zM6O/gDTjvFYmQj8zM6O/gDTjPERzVz8zM6O/yAyWP2hnKr0zM6O//3/+f8zMmNn/////MjNlpv9//n/MzJjZ/////zIzZab/f/5/zMyY2f////8yM2Wm/3/+f8zMmNn/////MjNlpszMMrP/////MjPMTP9//r/MzDKz/////zIzzEz/f/6/zMwys/////8yM8xM/3/+v8zMMrP/////MjPMTP9//r/MTMzMMjNlpjKzMjPMzJjZzEzMzDIzZaYyszIzzMyY2cxMzMwyM2WmMrMyM8zMmNnMTMzMMjNlpjKzMjPMzJjZ/n//f8zMZab/////MjOY2f5//3/MzGWm/////zIzmNn+f/9/zMxlpv////8yM5jZ/n//f8zMZab/////MjOY2czMzEz/////MjMys/5//7/MzMxM/////zIzMrP+f/+/zMzMTP////8yMzKz/n//v8zMzEz/////MjMys/5//78ys8zMMjOY2cxMMjPMzGWmMrPMzDIzmNnMTDIzzMxlpjKzzMwyM5jZzEwyM8zMZaYys8zMMjOY2cxMMjPMzGWm")
 }]
 
-[node name="roof" type="Node3D" unique_id=309443828]
+[node name="roof" type="Node3D" unique_id=350990759]
 
-[node name="Geometry" type="Node3D" parent="." unique_id=452574712]
+[node name="Geometry" type="Node3D" parent="." unique_id=1640840692]
 
-[node name="roof" type="MeshInstance3D" parent="Geometry" unique_id=572524830]
+[node name="roof" type="MeshInstance3D" parent="Geometry" unique_id=1577228874]
 mesh = SubResource("ArrayMesh_wst60")
 
-[node name="timber" type="MeshInstance3D" parent="Geometry" unique_id=157930335]
+[node name="timber" type="MeshInstance3D" parent="Geometry" unique_id=1256279207]
 mesh = SubResource("ArrayMesh_ic2kp")

@@ -609,194 +609,194 @@ _surfaces = [{
 "vertex_data": PackedByteArray("9iikwM3MJEDXo5A/CtebwM3MJEBSuF4/CtebwM3MJEDXo5A/9iikwM3MJEBSuF4/9iikwGdmDkDXo5A/CtebwGdmDkBSuF4/CtebwGdmDkDXo5A/9iikwGdmDkBSuF4/CtebwM3MJEDXo5A/9iikwM3MJEBSuF4/CtebwM3MJEBSuF4/9iikwM3MJEDXo5A/CtebwGdmDkDXo5A/9iikwGdmDkBSuF4/CtebwGdmDkBSuF4/9iikwGdmDkDXo5A/CtebwM3MJEDXo5A/9iikwGdmDkDXo5A/9iikwM3MJEDXo5A/CtebwGdmDkDXo5A/CtebwM3MJEBSuF4/9iikwGdmDkBSuF4/9iikwM3MJEBSuF4/CtebwGdmDkBSuF4/Ctf7QM3MJEBSuF6/exQCQc3MJEDXo5C/exQCQc3MJEBSuF6/Ctf7QM3MJEDXo5C/Ctf7QGdmDkBSuF6/exQCQWdmDkDXo5C/exQCQWdmDkBSuF6/Ctf7QGdmDkDXo5C/exQCQc3MJEBSuF6/Ctf7QM3MJEDXo5C/exQCQc3MJEDXo5C/Ctf7QM3MJEBSuF6/exQCQWdmDkBSuF6/Ctf7QGdmDkDXo5C/exQCQWdmDkDXo5C/Ctf7QGdmDkBSuF6/exQCQc3MJEBSuF6/Ctf7QGdmDkBSuF6/Ctf7QM3MJEBSuF6/exQCQWdmDkBSuF6/exQCQc3MJEDXo5C/Ctf7QGdmDkDXo5C/Ctf7QM3MJEDXo5C/exQCQWdmDkDXo5C//3//f////7//////AAD/v/9//3////+//////wAA/7//f/9/////v/////8AAP+//3//f////7//////AAD/v///AID/////AAAAgP9//7///wCA/////wAAAID/f/+///8AgP////8AAACA/3//v///AID/////AAAAgP9//78AgP//AAD/vwCAAAD///+/AID//wAA/78AgAAA////vwCA//8AAP+/AIAAAP///78AgP//AAD/vwCAAAD///+//3//f////7//////AAD/v/9//3////+//////wAA/7//f/9/////v/////8AAP+//3//f////7//////AAD/v///AID/////AAAAgP9//7///wCA/////wAAAID/f/+///8AgP////8AAACA/3//v///AID/////AAAAgP9//78AgP//AAD/vwCAAAD///+/AID//wAA/78AgAAA////vwCA//8AAP+/AIAAAP///78AgP//AAD/vwCAAAD///+/")
 }]
 
-[node name="VigiliaSummerArchitecture" type="Node3D" unique_id=541044436]
+[node name="VigiliaSummerArchitecture" type="Node3D" unique_id=885309352]
 metadata/source_engine = "4.7.2-stable (custom_build)"
 metadata/art_status = "ART_REVIEW_PENDING"
 
-[node name="BlockVisual0" type="Node3D" parent="." unique_id=1436082366]
+[node name="BlockVisual0" type="Node3D" parent="." unique_id=2032022123]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -10)
 metadata/occlusion_bounds = AABB(-1.3742821, 0, -1.375, 2.7485642, 5.468708, 2.675)
 
-[node name="stone" type="MeshInstance3D" parent="BlockVisual0" unique_id=1149047675]
+[node name="stone" type="MeshInstance3D" parent="BlockVisual0" unique_id=1707163249]
 mesh = SubResource("ArrayMesh_6wyrk")
 
-[node name="dark_stone" type="MeshInstance3D" parent="BlockVisual0" unique_id=867084901]
+[node name="dark_stone" type="MeshInstance3D" parent="BlockVisual0" unique_id=2089866040]
 mesh = SubResource("ArrayMesh_iru5s")
 
-[node name="timber" type="MeshInstance3D" parent="BlockVisual0" unique_id=1331662226]
+[node name="timber" type="MeshInstance3D" parent="BlockVisual0" unique_id=1843430837]
 mesh = SubResource("ArrayMesh_4dkk6")
 
-[node name="iron" type="MeshInstance3D" parent="BlockVisual0" unique_id=1279987728]
+[node name="iron" type="MeshInstance3D" parent="BlockVisual0" unique_id=1202299097]
 mesh = SubResource("ArrayMesh_06esx")
 
-[node name="bronze" type="MeshInstance3D" parent="BlockVisual0" unique_id=638978132]
+[node name="bronze" type="MeshInstance3D" parent="BlockVisual0" unique_id=423590383]
 mesh = SubResource("ArrayMesh_h1emn")
 
-[node name="roof" type="MeshInstance3D" parent="BlockVisual0" unique_id=866902480]
+[node name="roof" type="MeshInstance3D" parent="BlockVisual0" unique_id=608575681]
 mesh = SubResource("ArrayMesh_xoxmg")
 
-[node name="BlockVisual1" type="Node3D" parent="." unique_id=711553292]
+[node name="BlockVisual1" type="Node3D" parent="." unique_id=845475526]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, -10)
 metadata/occlusion_bounds = AABB(-1.1773134, 0, -1.2249999, 2.354627, 3.3668807, 2.4099998)
 
-[node name="stone" type="MeshInstance3D" parent="BlockVisual1" unique_id=1830307766]
+[node name="stone" type="MeshInstance3D" parent="BlockVisual1" unique_id=1251783323]
 mesh = SubResource("ArrayMesh_32but")
 
-[node name="dark_stone" type="MeshInstance3D" parent="BlockVisual1" unique_id=1555984658]
+[node name="dark_stone" type="MeshInstance3D" parent="BlockVisual1" unique_id=1076947126]
 mesh = SubResource("ArrayMesh_ok11a")
 
-[node name="timber" type="MeshInstance3D" parent="BlockVisual1" unique_id=814684659]
+[node name="timber" type="MeshInstance3D" parent="BlockVisual1" unique_id=1340508861]
 mesh = SubResource("ArrayMesh_58m5w")
 
-[node name="iron" type="MeshInstance3D" parent="BlockVisual1" unique_id=1391932904]
+[node name="iron" type="MeshInstance3D" parent="BlockVisual1" unique_id=1770345661]
 mesh = SubResource("ArrayMesh_s7hvu")
 
-[node name="bronze" type="MeshInstance3D" parent="BlockVisual1" unique_id=877758552]
+[node name="bronze" type="MeshInstance3D" parent="BlockVisual1" unique_id=580172173]
 mesh = SubResource("ArrayMesh_xotmn")
 
-[node name="roof" type="MeshInstance3D" parent="BlockVisual1" unique_id=692035217]
+[node name="roof" type="MeshInstance3D" parent="BlockVisual1" unique_id=667840370]
 mesh = SubResource("ArrayMesh_8rulq")
 
-[node name="BlockVisual2" type="Node3D" parent="." unique_id=1982444568]
+[node name="BlockVisual2" type="Node3D" parent="." unique_id=1830289469]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, -8)
 metadata/occlusion_bounds = AABB(-1.1773134, 0, -1.2249999, 2.354627, 3.3668807, 2.4099998)
 
-[node name="stone" type="MeshInstance3D" parent="BlockVisual2" unique_id=1091735855]
+[node name="stone" type="MeshInstance3D" parent="BlockVisual2" unique_id=443326364]
 mesh = SubResource("ArrayMesh_wn1xq")
 
-[node name="dark_stone" type="MeshInstance3D" parent="BlockVisual2" unique_id=489898299]
+[node name="dark_stone" type="MeshInstance3D" parent="BlockVisual2" unique_id=1824325236]
 mesh = SubResource("ArrayMesh_2dq3p")
 
-[node name="timber" type="MeshInstance3D" parent="BlockVisual2" unique_id=1274091571]
+[node name="timber" type="MeshInstance3D" parent="BlockVisual2" unique_id=592442422]
 mesh = SubResource("ArrayMesh_4nokb")
 
-[node name="iron" type="MeshInstance3D" parent="BlockVisual2" unique_id=147902340]
+[node name="iron" type="MeshInstance3D" parent="BlockVisual2" unique_id=1675419704]
 mesh = SubResource("ArrayMesh_i0i8e")
 
-[node name="bronze" type="MeshInstance3D" parent="BlockVisual2" unique_id=351847269]
+[node name="bronze" type="MeshInstance3D" parent="BlockVisual2" unique_id=902746954]
 mesh = SubResource("ArrayMesh_ei12p")
 
-[node name="roof" type="MeshInstance3D" parent="BlockVisual2" unique_id=356867772]
+[node name="roof" type="MeshInstance3D" parent="BlockVisual2" unique_id=772412923]
 mesh = SubResource("ArrayMesh_r1o7i")
 
-[node name="BlockVisual3" type="Node3D" parent="." unique_id=486865698]
+[node name="BlockVisual3" type="Node3D" parent="." unique_id=2022165992]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, 8)
 metadata/occlusion_bounds = AABB(-1.1773134, 0, -1.2249999, 2.354627, 3.3668807, 2.4099998)
 
-[node name="stone" type="MeshInstance3D" parent="BlockVisual3" unique_id=1034046686]
+[node name="stone" type="MeshInstance3D" parent="BlockVisual3" unique_id=1809930444]
 mesh = SubResource("ArrayMesh_vqewk")
 
-[node name="dark_stone" type="MeshInstance3D" parent="BlockVisual3" unique_id=1607162272]
+[node name="dark_stone" type="MeshInstance3D" parent="BlockVisual3" unique_id=2120116340]
 mesh = SubResource("ArrayMesh_mt3y4")
 
-[node name="timber" type="MeshInstance3D" parent="BlockVisual3" unique_id=665559068]
+[node name="timber" type="MeshInstance3D" parent="BlockVisual3" unique_id=258806120]
 mesh = SubResource("ArrayMesh_mragc")
 
-[node name="iron" type="MeshInstance3D" parent="BlockVisual3" unique_id=621616668]
+[node name="iron" type="MeshInstance3D" parent="BlockVisual3" unique_id=1524106072]
 mesh = SubResource("ArrayMesh_j1eao")
 
-[node name="bronze" type="MeshInstance3D" parent="BlockVisual3" unique_id=1229906751]
+[node name="bronze" type="MeshInstance3D" parent="BlockVisual3" unique_id=1683688548]
 mesh = SubResource("ArrayMesh_iaf63")
 
-[node name="echo" type="MeshInstance3D" parent="BlockVisual3" unique_id=149169682]
+[node name="echo" type="MeshInstance3D" parent="BlockVisual3" unique_id=1582982428]
 mesh = SubResource("ArrayMesh_l4fvo")
 
-[node name="roof" type="MeshInstance3D" parent="BlockVisual3" unique_id=332346177]
+[node name="roof" type="MeshInstance3D" parent="BlockVisual3" unique_id=2089163463]
 mesh = SubResource("ArrayMesh_4f3hf")
 
-[node name="BlockVisual4" type="Node3D" parent="." unique_id=350576432]
+[node name="BlockVisual4" type="Node3D" parent="." unique_id=1465079605]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, -6)
 metadata/occlusion_bounds = AABB(-1.6706901, 0, -1.2249999, 3.3413801, 3.3705184, 2.4099998)
 
-[node name="stone" type="MeshInstance3D" parent="BlockVisual4" unique_id=1263605917]
+[node name="stone" type="MeshInstance3D" parent="BlockVisual4" unique_id=1524702234]
 mesh = SubResource("ArrayMesh_buv4y")
 
-[node name="dark_stone" type="MeshInstance3D" parent="BlockVisual4" unique_id=810549615]
+[node name="dark_stone" type="MeshInstance3D" parent="BlockVisual4" unique_id=883507596]
 mesh = SubResource("ArrayMesh_3hons")
 
-[node name="timber" type="MeshInstance3D" parent="BlockVisual4" unique_id=1551944382]
+[node name="timber" type="MeshInstance3D" parent="BlockVisual4" unique_id=316949830]
 mesh = SubResource("ArrayMesh_bctt8")
 
-[node name="iron" type="MeshInstance3D" parent="BlockVisual4" unique_id=1724089183]
+[node name="iron" type="MeshInstance3D" parent="BlockVisual4" unique_id=1842234587]
 mesh = SubResource("ArrayMesh_iruku")
 
-[node name="bronze" type="MeshInstance3D" parent="BlockVisual4" unique_id=659721064]
+[node name="bronze" type="MeshInstance3D" parent="BlockVisual4" unique_id=946447166]
 mesh = SubResource("ArrayMesh_qjvot")
 
-[node name="roof" type="MeshInstance3D" parent="BlockVisual4" unique_id=158571114]
+[node name="roof" type="MeshInstance3D" parent="BlockVisual4" unique_id=268530063]
 mesh = SubResource("ArrayMesh_3duo5")
 
-[node name="GroundOverlay" type="Node3D" parent="." unique_id=1561073288]
+[node name="GroundOverlay" type="Node3D" parent="." unique_id=1459144162]
 
-[node name="dark_stone" type="MeshInstance3D" parent="GroundOverlay" unique_id=318578904]
+[node name="dark_stone" type="MeshInstance3D" parent="GroundOverlay" unique_id=1078091932]
 mesh = SubResource("ArrayMesh_m4ppu")
 
-[node name="stone" type="MeshInstance3D" parent="GroundOverlay" unique_id=1940955954]
+[node name="stone" type="MeshInstance3D" parent="GroundOverlay" unique_id=741825437]
 mesh = SubResource("ArrayMesh_oa8vo")
 
-[node name="bronze" type="MeshInstance3D" parent="GroundOverlay" unique_id=1285050745]
+[node name="bronze" type="MeshInstance3D" parent="GroundOverlay" unique_id=302636164]
 mesh = SubResource("ArrayMesh_gstnp")
 
-[node name="echo" type="MeshInstance3D" parent="GroundOverlay" unique_id=1234448818]
+[node name="echo" type="MeshInstance3D" parent="GroundOverlay" unique_id=1296676626]
 mesh = SubResource("ArrayMesh_vvsxk")
 
-[node name="ForgeCanopy" type="Node3D" parent="." unique_id=1413974233]
+[node name="ForgeCanopy" type="Node3D" parent="." unique_id=1924709086]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -3)
 metadata/occlusion_bounds = AABB(-1.3658113, 0, -1.2249999, 2.7316227, 3.1999998, 2.375)
 
-[node name="timber" type="MeshInstance3D" parent="ForgeCanopy" unique_id=1650991458]
+[node name="timber" type="MeshInstance3D" parent="ForgeCanopy" unique_id=758856531]
 mesh = SubResource("ArrayMesh_x7hco")
 
-[node name="roof" type="MeshInstance3D" parent="ForgeCanopy" unique_id=431674424]
+[node name="roof" type="MeshInstance3D" parent="ForgeCanopy" unique_id=1524482257]
 mesh = SubResource("ArrayMesh_67bg7")
 
-[node name="stone" type="MeshInstance3D" parent="ForgeCanopy" unique_id=900693919]
+[node name="stone" type="MeshInstance3D" parent="ForgeCanopy" unique_id=1067568236]
 mesh = SubResource("ArrayMesh_ulrb0")
 
-[node name="EastGate" type="Node3D" parent="." unique_id=1846402654]
+[node name="EastGate" type="Node3D" parent="." unique_id=1826243768]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 0)
 metadata/occlusion_bounds = AABB(-1.14, 0, -0.225, 2.28, 2.78, 0.45)
 
-[node name="stone" type="MeshInstance3D" parent="EastGate" unique_id=2053975554]
+[node name="stone" type="MeshInstance3D" parent="EastGate" unique_id=1375877915]
 mesh = SubResource("ArrayMesh_7i8il")
 
-[node name="RepairsAndLamps" type="Node3D" parent="." unique_id=784991199]
+[node name="RepairsAndLamps" type="Node3D" parent="." unique_id=1085708270]
 
-[node name="iron" type="MeshInstance3D" parent="RepairsAndLamps" unique_id=1530094914]
+[node name="iron" type="MeshInstance3D" parent="RepairsAndLamps" unique_id=1390494567]
 mesh = SubResource("ArrayMesh_eaqlf")
 
-[node name="bronze" type="MeshInstance3D" parent="RepairsAndLamps" unique_id=314660518]
+[node name="bronze" type="MeshInstance3D" parent="RepairsAndLamps" unique_id=534784111]
 mesh = SubResource("ArrayMesh_qfg7m")
 
-[node name="@OmniLight3D@2" type="OmniLight3D" parent="." unique_id=623550717]
+[node name="@OmniLight3D@2" type="OmniLight3D" parent="." unique_id=475061950]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2.3, 1)
 light_color = Color(0.9647059, 0.7882353, 0.5568628, 1)
 light_energy = 0.7
 omni_range = 4.0
 
-[node name="@OmniLight3D@3" type="OmniLight3D" parent="." unique_id=328177148]
+[node name="@OmniLight3D@3" type="OmniLight3D" parent="." unique_id=1095658123]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.3, -1)
 light_color = Color(0.9647059, 0.7882353, 0.5568628, 1)
 light_energy = 0.7
 omni_range = 4.0
 
-[node name="Reference_plaza" type="Marker3D" parent="." unique_id=175084699]
+[node name="Reference_plaza" type="Marker3D" parent="." unique_id=1974214489]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
 
-[node name="Reference_bell_tower" type="Marker3D" parent="." unique_id=284559606]
+[node name="Reference_bell_tower" type="Marker3D" parent="." unique_id=841914626]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -10)
 
-[node name="Reference_doma" type="Marker3D" parent="." unique_id=1063574784]
+[node name="Reference_doma" type="Marker3D" parent="." unique_id=1226613456]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 2)
 
-[node name="Reference_workshop" type="Marker3D" parent="." unique_id=499930172]
+[node name="Reference_workshop" type="Marker3D" parent="." unique_id=1252908421]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -3)
 
-[node name="Reference_maera" type="Marker3D" parent="." unique_id=577030746]
+[node name="Reference_maera" type="Marker3D" parent="." unique_id=1637288740]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 2)
 
-[node name="Reference_east_arrival" type="Marker3D" parent="." unique_id=1370921865]
+[node name="Reference_east_arrival" type="Marker3D" parent="." unique_id=1572842862]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 0)
 
-[node name="Reference_district_exit" type="Marker3D" parent="." unique_id=1499826879]
+[node name="Reference_district_exit" type="Marker3D" parent="." unique_id=856848836]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 0)

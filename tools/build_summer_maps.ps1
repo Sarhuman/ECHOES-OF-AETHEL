@@ -7,11 +7,17 @@ $taskRoot=Split-Path -Parent $PSScriptRoot
 $sandbox=Join-Path $taskRoot '.tools/summer273'
 $output=Join-Path $sandbox 'art/imported/vigilia'
 $enginePath=(Resolve-Path -LiteralPath $SummerExe).Path
+$engineSha=(Get-FileHash -LiteralPath $enginePath -Algorithm SHA256).Hash.ToLower()
+$releaseVersion='UNKNOWN'
+$versionFile=Join-Path (Split-Path -Parent $enginePath) 'sq.version'
+if(Test-Path -LiteralPath $versionFile) { [xml]$releaseMetadata=Get-Content -LiteralPath $versionFile -Raw; $releaseVersion=[string]$releaseMetadata.package.metadata.version }
 if($Mode -eq 'VIGILIA') {
     $proof=Join-Path $taskRoot 'docs/evidence/fase27-3-isolated.json'
     if(-not(Test-Path -LiteralPath $proof) -or -not(Get-Content -LiteralPath $proof -Raw | ConvertFrom-Json).passed) { throw 'Validate the isolated test in official Godot before authoring Vigilia' }
     $proofData=Get-Content -LiteralPath $proof -Raw | ConvertFrom-Json
     if($proofData.metrics.headless -or $proofData.scene_sha256 -ne (Get-FileHash -LiteralPath (Join-Path $taskRoot 'art/imported/vigilia/integration_test.tscn') -Algorithm SHA256).Hash.ToLower()) { throw 'Graphical proof must match the current isolated scene' }
+    $isolatedBuild=Get-Content -LiteralPath (Join-Path $taskRoot 'docs/evidence/fase27-3-summer-isolated.json') -Raw | ConvertFrom-Json
+    if($isolatedBuild.executableSha256 -ne $engineSha) { throw 'Summer binary changed: repeat isolated authoring and graphical validation first' }
 }
 New-Item -ItemType Directory -Force -Path $sandbox,$output | Out-Null
 @'
@@ -34,6 +40,6 @@ if($process.ExitCode -ne 0 -or $log -notmatch 'SUMMER AUTHORING: .*"success":tru
 $destination=Join-Path $taskRoot 'art/imported/vigilia'
 New-Item -ItemType Directory -Force -Path $destination | Out-Null
 Copy-Item -Path (Join-Path $output '*') -Destination $destination -Recurse -Force
-$record=@{ engine=(Get-Content -LiteralPath $stdout -Raw).Trim(); executableSha256=(Get-FileHash -LiteralPath $enginePath -Algorithm SHA256).Hash.ToLower(); mode=$Mode; editorVersion='0.7.3'; generated=(Get-ChildItem -LiteralPath $destination -File -Recurse | ForEach-Object { @{file=$_.Name;sha256=(Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLower()} }) }
+$record=@{ engine=(Get-Content -LiteralPath $stdout -Raw).Trim(); executableSha256=$engineSha; mode=$Mode; editorVersion=$releaseVersion; generated=(Get-ChildItem -LiteralPath $destination -File -Recurse | ForEach-Object { @{file=$_.Name;sha256=(Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLower()} }) }
 $record | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $taskRoot ('docs/evidence/fase27-3-summer-'+$Mode.ToLower()+'.json'))
 Write-Output ('SUMMER AUTHORING VERIFIED: '+$Mode)

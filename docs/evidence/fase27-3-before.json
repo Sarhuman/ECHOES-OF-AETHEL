@@ -1,0 +1,18 @@
+{
+  "cells": 988,
+  "draw_calls": 267,
+  "fixture": "same idle hub at (-4,0,5), 30 warmup +180 frames, cap60; live physics; no enemies",
+  "fps_from_median": 27.9431078324531,
+  "lights": 5,
+  "mean_path_query_us": 49.54,
+  "median_ms": 35.787,
+  "p95_ms": 41.8,
+  "primitives": 68800,
+  "region_build_us": 39970,
+  "renderer": "AMD Radeon RX 580 2048SP",
+  "resolution": "1920x1080",
+  "static_memory_bytes": 66533216,
+  "variant": "GREYBOX",
+  "video_memory_bytes": 48789901,
+  "visible_mesh_materials": 75
+}

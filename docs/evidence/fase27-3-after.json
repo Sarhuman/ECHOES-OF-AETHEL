@@ -1,0 +1,18 @@
+{
+  "cells": 988,
+  "draw_calls": 297,
+  "fixture": "same idle hub at (-4,0,5), 30 warmup +180 frames, cap60; live physics; no enemies",
+  "fps_from_median": 27.5824024272514,
+  "lights": 7,
+  "mean_path_query_us": 100.22,
+  "median_ms": 36.255,
+  "p95_ms": 43.579,
+  "primitives": 73420,
+  "region_build_us": 44735,
+  "renderer": "AMD Radeon RX 580 2048SP",
+  "resolution": "1920x1080",
+  "static_memory_bytes": 67119465,
+  "variant": "SUMMER",
+  "video_memory_bytes": 49782745,
+  "visible_mesh_materials": 77
+}

@@ -23,10 +23,10 @@ func scan(folder: String) -> void:
 	for directory in DirAccess.get_directories_at(folder): scan(folder.path_join(directory))
 
 func _initialize() -> void:
-	for folder in ["res://src", "res://scripts", "res://scenes", "res://assets", "res://data"]: scan(folder)
+	for folder in ["res://src", "res://scripts", "res://scenes", "res://assets", "res://data", "res://art/imported"]: scan(folder)
 	var main_scene: String = ProjectSettings.get_setting("application/run/main_scene", "")
 	check(main_scene == "res://scenes/main_menu.tscn" and ResourceLoader.exists(main_scene), "main menu scene")
-	check(ProjectSettings.get_setting("application/config/version", "") == "0.27.2", "artifact version")
+	check(ProjectSettings.get_setting("application/config/version", "") == "0.27.3", "artifact version")
 	print("PROJECT INTEGRITY: %d checks, %d failures" % [checks, failures.size()])
 	for failure in failures: printerr("FALHA: ",failure)
 	quit(0 if failures.is_empty() else 1)

@@ -76,18 +76,18 @@ _surfaces = [{
 "vertex_data": PackedByteArray("UrjevuxRiD+5HoU9UrjePuxRiD8fheu9UrjePuxRiD+5HoU9UrjevuxRiD8fheu9Urjevilcbz+5HoU9UrjePilcbz8fheu9UrjePilcbz+5HoU9Urjevilcbz8fheu9UrjePuxRiD+5HoU9UrjevuxRiD8fheu9UrjePuxRiD8fheu9UrjevuxRiD+5HoU9UrjePilcbz+5HoU9Urjevilcbz8fheu9UrjePilcbz8fheu9Urjevilcbz+5HoU9UrjePuxRiD+5HoU9Urjevilcbz+5HoU9UrjevuxRiD+5HoU9UrjePilcbz+5HoU9UrjePuxRiD8fheu9Urjevilcbz8fheu9UrjevuxRiD8fheu9UrjePilcbz8fheu9/3//f////7//////AAD/v/9//3////+//////wAA/7//f/9/////v/////8AAP+//3//f////7//////AAD/v///AID/////AAAAgP9//7///wCA/////wAAAID/f/+///8AgP////8AAACA/3//v///AID/////AAAAgP9//78AgP//AAD/vwCAAAD///+/AID//wAA/78AgAAA////vwCA//8AAP+/AIAAAP///78AgP//AAD/vwCAAAD///+/")
 }]
 
-[node name="window" type="Node3D" unique_id=1025024893]
+[node name="window" type="Node3D" unique_id=1621908047]
 
-[node name="Geometry" type="Node3D" parent="." unique_id=550899981]
+[node name="Geometry" type="Node3D" parent="." unique_id=366353225]
 
-[node name="iron" type="MeshInstance3D" parent="Geometry" unique_id=1793706403]
+[node name="iron" type="MeshInstance3D" parent="Geometry" unique_id=1529612567]
 mesh = SubResource("ArrayMesh_57i2f")
 
-[node name="timber" type="MeshInstance3D" parent="Geometry" unique_id=657886486]
+[node name="timber" type="MeshInstance3D" parent="Geometry" unique_id=1612541669]
 mesh = SubResource("ArrayMesh_5qmwa")
 
-[node name="bronze" type="MeshInstance3D" parent="Geometry" unique_id=856590212]
+[node name="bronze" type="MeshInstance3D" parent="Geometry" unique_id=1118806315]
 mesh = SubResource("ArrayMesh_1nx1y")
 
-[node name="stone" type="MeshInstance3D" parent="Geometry" unique_id=1274606898]
+[node name="stone" type="MeshInstance3D" parent="Geometry" unique_id=272759709]
 mesh = SubResource("ArrayMesh_tpe5k")

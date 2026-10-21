@@ -1,6 +1,6 @@
 {
+  "mode": "VIGILIA",
   "engine": "Welcome to Summer Engine (c) built on the awesome work by Godot 2007-present Juan Linietsky, Ariel Manzur & Godot Contributors.\r\n\r\nSUMMER AUTHORING: {\"binary\":\"C:/Users/Sarumano/AppData/Local/SummerEngine/current/Summer.exe\",\"engine\":\"4.7.2-stable (custom_build)\",\"mode\":\"VIGILIA\",\"success\":true}",
-  "executableSha256": "07ad5b69732c86384b91f54c027c5f6c83a415b824536d064fbbdde5a477bd47",
   "generated": [
     {
       "file": "integration_test.tscn",
@@ -8,7 +8,7 @@
     },
     {
       "file": "vigilia_summer.tscn",
-      "sha256": "f74804641e6906d73007331082b78ecb2f9346cc8bc6c85b6f13c2d5be80778c"
+      "sha256": "eb9ce984fac170694168cb3c50d871d38ebb09df7365138ad7a6ad911536b28d"
     },
     {
       "file": "bronze.tres",
@@ -40,57 +40,57 @@
     },
     {
       "file": "column.tscn",
-      "sha256": "58196afcf66b3f556063074922da6f8c63a3279d9a837049e360089a7cb0b766"
+      "sha256": "7169650066ee45fc445c7e91a190ebcc64fadf20cb97bd412502788efe509cac"
     },
     {
       "file": "curb.tscn",
-      "sha256": "a8112c578ed8854e3323eeffc4dea52bedeeacff0c94eb4ea4f9041a8774ed7b"
+      "sha256": "3abe3a372fad9a0aeae1c55c4f50c3c3423a6d8ba50b39381a60c12b5c470c86"
     },
     {
       "file": "door_arch.tscn",
-      "sha256": "5ae924635915a2b759be4a7f2bfd736cfadf57589d5091c84b13325c305eadd7"
+      "sha256": "363d0266ec80b450a1b12e1f56f96c45d0e838772120b19dbcd98620c27c1bd7"
     },
     {
       "file": "echo_inlay.tscn",
-      "sha256": "a348eff2d10d2b857fcef8d8cb5afd1a3d12aa30022797394ceb1c7baa8e7f1e"
+      "sha256": "c5a7d1caa790a49553347ec392833fccbbcc06eb8535464f71d25b3110066544"
     },
     {
       "file": "floor.tscn",
-      "sha256": "8ea2b1bf546f29396e2fe169dfe814e71c6fe425f453f564603cc596f670cadd"
+      "sha256": "e8fe7cee76186b0559a73d7de577ddfeac2f6cbf4d2dd3dd563665fda3ad5fc3"
     },
     {
       "file": "lantern.tscn",
-      "sha256": "4cdbf304136598395374b13949560dbafa70bb204ef1cff40428b048f79ca439"
+      "sha256": "7cccc4d2cec7a90f52983c8299d1461336c370685920885bca87ff76647cf70d"
     },
     {
       "file": "ramp.tscn",
-      "sha256": "9b5c8fb7e4a8159cfcefff9e3f4080ddc142785e96f31f2ffeec2be3ad46d8ad"
+      "sha256": "016c652b50aba0131e8354219e0c36d618bba62b4422586548e1c72d34fc3575"
     },
     {
       "file": "roof.tscn",
-      "sha256": "fbf112df847ea75e075491a7b3ac276be282640a2a110047e0d54af8459713dc"
+      "sha256": "07a64ba6523df2457d8383ca7694c7d3d01e0de76bd7d148fdd2742db120de8a"
     },
     {
       "file": "stairs.tscn",
-      "sha256": "37184eb145ad1aa9d91700299e9789403d9c7ba7095faad94eef47f8763615d0"
+      "sha256": "fcb8f9fd1e58c5891378c9e2f00c1d288886d4a763a35e57d2c2e21e1d63b9d9"
     },
     {
       "file": "street.tscn",
-      "sha256": "978407f72970d403dda2eb802f68a3fb728c36daa82a475ddba8f5e4b931e5b1"
+      "sha256": "9359bda15456240adf19f9e76a066d2767a1cbca59f9fb3a38cb6d631cae54d7"
     },
     {
       "file": "timber_frame.tscn",
-      "sha256": "807764a79ff2809aaf7829523fc7b973edb183603863ef934127b8c0860f924c"
+      "sha256": "2e915df37596d278a62daab4ba0cbbaae7dbf7f208b1a0482fe4b6c393001c5f"
     },
     {
       "file": "wall.tscn",
-      "sha256": "cf98ff6ab47a1e77e3b595176882c745838de9f6338b944c76034d53dbb0286c"
+      "sha256": "ded0fb453d31d553b28f32209fbdcdf71391cc207b6740e68ea5190bba2ddfe7"
     },
     {
       "file": "window.tscn",
-      "sha256": "c658fb12edd7587eca044e9827fd324701a66261b5d5a825cd13e2142f90333c"
+      "sha256": "290ac5f27e613daf6729538015db36e9748ec3686e3f335276c37e94c7038245"
     }
   ],
   "editorVersion": "0.7.3",
-  "mode": "VIGILIA"
+  "executableSha256": "07ad5b69732c86384b91f54c027c5f6c83a415b824536d064fbbdde5a477bd47"
 }

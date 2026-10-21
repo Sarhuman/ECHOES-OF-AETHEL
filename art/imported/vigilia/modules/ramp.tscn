@@ -19,9 +19,9 @@ _surfaces = [{
 "vertex_data": PackedByteArray("AACAv2poCD4wX70/AACAP4xeXD+0Kbe/AACAP2poCD4wX70/AACAv4xeXD+0Kbe/AACAv/gbeb20Kbc/AACAP7KyKj8wX72/AACAP/gbeb20Kbc/AACAv7KyKj8wX72/AACAP2poCD4wX70/AACAv4xeXD+0Kbe/AACAP4xeXD+0Kbe/AACAv2poCD4wX70/AACAP/gbeb20Kbc/AACAv7KyKj8wX72/AACAP7KyKj8wX72/AACAv/gbeb20Kbc/AACAP2poCD4wX70/AACAv/gbeb20Kbc/AACAv2poCD4wX70/AACAP/gbeb20Kbc/AACAP4xeXD+0Kbe/AACAv7KyKj8wX72/AACAv4xeXD+0Kbe/AACAP7KyKj8wX72//39lZv7//79l5v//AAD/v/9/ZWb+//+/Zeb//wAA/7//f2Vm/v//v2Xm//8AAP+//39lZv7//79l5v//AAD/v/7/AIBl5v//AAAAgP9/MrP+/wCAZeb//wAAAID/fzKz/v8AgGXm//8AAACA/38ys/7/AIBl5v//AAAAgP9/MrP/f2XmAAD/v5mZAAD+//+//39l5gAA/7+ZmQAA/v//v/9/ZeYAAP+/mZkAAP7//7//f2XmAAD/v5mZAAD+//+/")
 }]
 
-[node name="ramp" type="Node3D" unique_id=637291368]
+[node name="ramp" type="Node3D" unique_id=721815012]
 
-[node name="Geometry" type="Node3D" parent="." unique_id=1049334615]
+[node name="Geometry" type="Node3D" parent="." unique_id=1665562729]
 
-[node name="stone" type="MeshInstance3D" parent="Geometry" unique_id=2015372182]
+[node name="stone" type="MeshInstance3D" parent="Geometry" unique_id=1529685928]
 mesh = SubResource("ArrayMesh_1tb7h")

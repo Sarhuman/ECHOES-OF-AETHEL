@@ -1,3 +1,17 @@
+# Teste da Fase 27.3 — Vigília modular e pipeline Summer
+
+Extraia EchoesOfAethel-Fase27.3-Windows-x64.zip inteiro. Execute jogo/EchoesOfAethel-Fase27.3.exe com o PCK ao lado. Summer Engine não é necessário para jogar: o executável usa Godot oficial. Fonte em fonte/project.godot. A nova apresentação de Vigília é inicial e aguarda revisão artística humana.
+
+Conferir praça, torre/sino, oficina de Doma, Maera, Âncora e saída leste. Testar clique/aproximação, E/F, loja e inventário; aceitar a investigação, visitar Bairro e retornar; F5/F9 deve preservar posição, loot, serviços e exploração sem migração. Ataques ofensivos continuam bloqueados no hub. Repetir720p/1080p e observar telhados se tornando translúcidos sem alterar colisão. Interiores de fachadas não foram implementados.
+
+Rollback de desenvolvimento: definir aethel/world/vigilia_variant como GREYBOX em Project Settings e recarregar região/projeto. SUMMER recupera a nova apresentação. Nenhum modo é gravado no save. Não mudar câmera global ou posição de NPCs para mascarar problemas.
+
+Regeneração pelo Summer e teste isolado em FASE27_3_SUMMER_PIPELINE.md; layout em FASE27_3_VIGILIA_LAYOUT.md; medições/limites em FASE27_3_VALIDATION.md. As rotinas de build/test/package abaixo agora produzem Fase27.3:26 suítes e smoke Windows38 verificações, conforme logs finais.
+
+Playtest humano completo permanece pendente. As instruções históricas seguintes continuam úteis ao gameplay; para este pacote usar o EXE Fase27.3.
+
+---
+
 # Teste da Fase 27.2 — pipeline visual do Bastião
 
 Extraia EchoesOfAethel-Fase27.2-Windows-x64.zip e execute jogo/EchoesOfAethel-Fase27.2.exe com o PCK ao lado. O Bastião continua o PLACEHOLDER anterior por padrão. Nenhum modelo artístico externo final está disponível. Fonte editável: fonte/project.godot; especificação externa em art/source/bastiao/PRODUCTION_SPEC.md.

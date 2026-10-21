@@ -19,9 +19,9 @@ _surfaces = [{
 "vertex_data": PackedByteArray("AADAv5qZGUCamRk+AADAP5qZGUCamRm+AADAP5qZGUCamRk+AADAv5qZGUCamRm+AADAvwAAAACamRk+AADAPwAAAACamRm+AADAPwAAAACamRk+AADAvwAAAACamRm+AADAP5qZGUCamRk+AADAv5qZGUCamRm+AADAP5qZGUCamRm+AADAv5qZGUCamRk+AADAPwAAAACamRk+AADAvwAAAACamRm+AADAPwAAAACamRm+AADAvwAAAACamRk+AADAP5qZGUCamRk+AADAvwAAAACamRk+AADAv5qZGUCamRk+AADAPwAAAACamRk+AADAP5qZGUCamRm+AADAvwAAAACamRm+AADAv5qZGUCamRm+AADAPwAAAACamRm+/3//f////7//////AAD/v/9//3////+//////wAA/7//f/9/////v/////8AAP+//3//f////7//////AAD/v///AID/////AAAAgP9//7///wCA/////wAAAID/f/+///8AgP////8AAACA/3//v///AID/////AAAAgP9//78AgP//AAD/vwCAAAD///+/AID//wAA/78AgAAA////vwCA//8AAP+/AIAAAP///78AgP//AAD/vwCAAAD///+/")
 }]
 
-[node name="wall" type="Node3D" unique_id=1302216339]
+[node name="wall" type="Node3D" unique_id=11196186]
 
-[node name="Geometry" type="Node3D" parent="." unique_id=1631654888]
+[node name="Geometry" type="Node3D" parent="." unique_id=537258636]
 
-[node name="stone" type="MeshInstance3D" parent="Geometry" unique_id=2146026167]
+[node name="stone" type="MeshInstance3D" parent="Geometry" unique_id=1751154664]
 mesh = SubResource("ArrayMesh_ier57")
