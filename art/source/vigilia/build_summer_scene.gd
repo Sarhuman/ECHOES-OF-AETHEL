@@ -82,12 +82,12 @@ func arch(node: Node3D,at: Vector3,width:=1.8,height:=2.4,depth:=0.25) -> void:
 	for segment in 9:
 		var angle:=PI*segment/8
 		beam(node,"stone",at+Vector3(cos(angle)*radius,height*0.8+sin(angle)*radius,0),Vector3(0.32,0.24,depth),Vector3(0,0,angle-PI/2))
-func window(node: Node3D,at: Vector3,echo:=false) -> void:
+func window(node: Node3D,at: Vector3,echo:=false,outward_z:=-1.0) -> void:
 	beam(node,"iron",at,Vector3(0.6,0.85,0.055))
-	for side in [-1,1]: beam(node,"timber",at+Vector3(side*0.35,0,-0.04),Vector3(0.1,1.0,0.09))
-	beam(node,"bronze",at+Vector3(0,0,-0.05),Vector3(0.045,0.8,0.04))
-	beam(node,"bronze",at+Vector3(0,0.08,-0.05),Vector3(0.58,0.045,0.04))
-	beam(node,"stone",at+Vector3(0,-0.5,-0.025),Vector3(0.87,0.13,0.18))
+	for side in [-1,1]: beam(node,"timber",at+Vector3(side*0.35,0,0.04*outward_z),Vector3(0.1,1.0,0.09))
+	beam(node,"bronze",at+Vector3(0,0,0.05*outward_z),Vector3(0.045,0.8,0.04))
+	beam(node,"bronze",at+Vector3(0,0.08,0.05*outward_z),Vector3(0.58,0.045,0.04))
+	beam(node,"stone",at+Vector3(0,-0.5,0.025*outward_z),Vector3(0.87,0.13,0.18))
 	if echo:
 		for side in [-1,1]: beam(node,"echo",at+Vector3(side*0.43,0.16,0.005),Vector3(0.045,1.14,0.04))
 		beam(node,"echo",at+Vector3(0,0.73,0.005),Vector3(0.9,0.045,0.04))
@@ -111,8 +111,11 @@ func house(parent: Node3D,index: int,rectangle: Array) -> void:
 		beam(node,"timber",Vector3(side*(w/2-0.07),1.45,-d/2-0.06),Vector3(0.14,2.5,0.13))
 	beam(node,"timber",Vector3(0,2.53,-d/2-0.07),Vector3(w+0.1,0.14,0.15))
 	window(node,Vector3(0,1.6,-d/2-0.07),index==3)
-	beam(node,"timber",Vector3(0,0.75,d/2+0.025),Vector3(0.68,1.5,0.055))
-	for y in [0.35,1.1]: beam(node,"iron",Vector3(0,y,d/2+0.065),Vector3(0.7,0.05,0.045))
+	window(node,Vector3(-w*0.25,1.5,d/2+0.07),index==3,1.0)
+	for side in [-1,1]: beam(node,"timber",Vector3(side*(w/2-0.07),1.45,d/2+0.06),Vector3(0.14,2.5,0.13))
+	beam(node,"timber",Vector3(0,2.53,d/2+0.07),Vector3(w+0.1,0.14,0.15))
+	beam(node,"timber",Vector3(w*0.23,0.75,d/2+0.025),Vector3(0.68,1.5,0.055))
+	for y in [0.35,1.1]: beam(node,"iron",Vector3(w*0.23,y,d/2+0.065),Vector3(0.7,0.05,0.045))
 	if index==0:
 		beam(node,"timber",Vector3(0,2.8,0),Vector3(2.15,0.16,2.15))
 		for x in [-0.72,0.72]:
@@ -169,8 +172,8 @@ func vigilia() -> bool:
 	# Two imperfect rings: architectural echo motif, no new narrative interaction.
 	for n in 20:
 		var angle:=TAU*n/20
-		beam(paving,"bronze",Vector3(cos(angle)*3.1,0.04,sin(angle)*3.1+4),Vector3(0.45,0.02,0.055),Vector3(0,-angle,0))
-		if n%3!=0: beam(paving,"echo",Vector3(cos(angle)*3.3+0.18,0.04,sin(angle)*3.3+4),Vector3(0.32,0.02,0.035),Vector3(0,-angle,0))
+		beam(paving,"bronze",Vector3(cos(angle)*3.1,0.04,sin(angle)*3.1+4),Vector3(0.85,0.02,0.055),Vector3(0,-angle-PI/2,0))
+		if n%3!=0: beam(paving,"echo",Vector3(cos(angle)*3.3+0.18,0.04,sin(angle)*3.3+4),Vector3(0.5,0.02,0.035),Vector3(0,-angle-PI/2,0))
 	finish(paving)
 	var canopy:=group(scene,"ForgeCanopy",Vector3(-11,0,-3))
 	for side in [-1,1]: beam(canopy,"timber",Vector3(side*1.0,1.25,0),Vector3(0.13,2.5,0.13))

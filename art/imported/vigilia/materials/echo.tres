@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "echo"
+albedo_color = Color(0.3254902, 0.41960785, 0.45490196, 1)
+roughness = 0.9

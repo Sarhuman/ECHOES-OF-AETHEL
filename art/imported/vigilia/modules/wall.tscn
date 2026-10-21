@@ -1,0 +1,27 @@
+[gd_scene format=4]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dfjwk"]
+resource_name = "stone"
+albedo_color = Color(0.5411765, 0.5058824, 0.44313726, 1)
+roughness = 0.9
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_ier57"]
+_surfaces = [{
+"aabb": AABB(-1.5, 0, -0.15, 3, 2.4, 0.3),
+"attribute_data": PackedByteArray("AAAAAAAAAACrqio/AAAAAKuqqj4AAAAAAACAPwAAAAAAAAAAAAAAP6uqKj8AAAA/q6qqPgAAAD8AAIA/AAAAP6uqqj4AAAAAAAAAAAAAAD+rqio/AAAAAKuqqj4AAAA/q6qqPgAAAD8AAAAAAACAP6uqKj8AAAA/q6qqPgAAgD+rqqo+AAAAP6uqKj8AAAA/q6oqPwAAAD8AAIA/AAAAP6uqqj4AAIA/q6oqPwAAgD+rqio/AACAPwAAgD8AAIA/"),
+"format": 34359742487,
+"index_count": 36,
+"index_data": PackedByteArray("AAACAAQAAgAGAAQAAQADAAUAAwAHAAUACAAKAAwACgAOAAwACQALAA0ACwAPAA0AEAASABQAEgAWABQAEQATABUAEwAXABUA"),
+"material": SubResource("StandardMaterial3D_dfjwk"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("AADAv5qZGUCamRk+AADAP5qZGUCamRm+AADAP5qZGUCamRk+AADAv5qZGUCamRm+AADAvwAAAACamRk+AADAPwAAAACamRm+AADAPwAAAACamRk+AADAvwAAAACamRm+AADAP5qZGUCamRk+AADAv5qZGUCamRm+AADAP5qZGUCamRm+AADAv5qZGUCamRk+AADAPwAAAACamRk+AADAvwAAAACamRm+AADAPwAAAACamRm+AADAvwAAAACamRk+AADAP5qZGUCamRk+AADAvwAAAACamRk+AADAv5qZGUCamRk+AADAPwAAAACamRk+AADAP5qZGUCamRm+AADAvwAAAACamRm+AADAv5qZGUCamRm+AADAPwAAAACamRm+/3//f////7//////AAD/v/9//3////+//////wAA/7//f/9/////v/////8AAP+//3//f////7//////AAD/v///AID/////AAAAgP9//7///wCA/////wAAAID/f/+///8AgP////8AAACA/3//v///AID/////AAAAgP9//78AgP//AAD/vwCAAAD///+/AID//wAA/78AgAAA////vwCA//8AAP+/AIAAAP///78AgP//AAD/vwCAAAD///+/")
+}]
+
+[node name="wall" type="Node3D" unique_id=1302216339]
+
+[node name="Geometry" type="Node3D" parent="." unique_id=1631654888]
+
+[node name="stone" type="MeshInstance3D" parent="Geometry" unique_id=2146026167]
+mesh = SubResource("ArrayMesh_ier57")

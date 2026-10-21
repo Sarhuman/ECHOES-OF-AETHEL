@@ -24,6 +24,7 @@ var veil_label: Label
 var _tick := 0.0
 var pending_connector := ""
 var _occluders: Array[GeometryInstance3D]=[]
+var active_vigilia_variant := "GREYBOX"
 
 func setup(owner_world: Node3D) -> void:
 	world=owner_world
@@ -54,9 +55,13 @@ func load_region(id: String) -> bool:
 		remove_child(level)
 		level.free()
 	connectors.clear()
-	level=load(definitions[id].scene).instantiate()
+	var scene_path: String=definitions[id].scene
+	if id=="map_01" and str(ProjectSettings.get_setting("aethel/world/vigilia_variant","GREYBOX"))=="SUMMER" and ResourceLoader.exists("res://scenes/regions/map_01_summer.tscn"):
+		scene_path="res://scenes/regions/map_01_summer.tscn"
+	level=load(scene_path).instantiate()
 	level.seed_value=world_seed
 	add_child(level)
+	if id=="map_01": active_vigilia_variant="SUMMER" if level.presentation_asset!=null else "GREYBOX"
 	if not id in visited: visited.append(id)
 	for row: Dictionary in definitions[id].exits:
 		var marker := Area3D.new()
@@ -212,6 +217,14 @@ func tick(delta: float) -> void:
 	for enemy in world.enemies:
 		if is_instance_valid(enemy) and enemy.position.distance_to(world.player.position)<12: targets.append(enemy.global_position+Vector3(0,0.8,0))
 	for target: Vector3 in targets:
+		# Bounds include roofs above the unchanged gameplay collider. No new physics layer.
+		for visual_root: Node3D in level.presentation_occluders:
+			var bounds: AABB=visual_root.get_meta("occlusion_bounds",AABB())
+			var inverse:=visual_root.global_transform.affine_inverse()
+			if bounds.intersects_segment(inverse*camera.global_position,inverse*target)!=null:
+				for mesh: GeometryInstance3D in visual_root.find_children("*","GeometryInstance3D",true,false):
+					set_faded(mesh,true)
+					if not mesh in _occluders: _occluders.append(mesh)
 		var query := PhysicsRayQueryParameters3D.create(camera.global_position,target,1)
 		# Up to four successive walls; leave walkable floor opaque.
 		for obstruction in 4:
@@ -297,6 +310,8 @@ func set_faded(mesh: GeometryInstance3D,faded: bool) -> void:
 	# GeometryInstance transparency is renderer-dependent; material alpha works in Compatibility.
 	if not mesh.has_meta("aethel_solid_material"):
 		var original: Material=mesh.material_override
+		mesh.set_meta("aethel_had_override",original!=null)
+		if original==null and mesh.mesh!=null and mesh.mesh.get_surface_count()==1: original=mesh.get_active_material(0)
 		if not original is StandardMaterial3D: return
 		mesh.set_meta("aethel_solid_material",original)
 		var translucent:=original.duplicate() as StandardMaterial3D
@@ -304,4 +319,4 @@ func set_faded(mesh: GeometryInstance3D,faded: bool) -> void:
 		translucent.albedo_color.a=0.2
 		translucent.depth_draw_mode=BaseMaterial3D.DEPTH_DRAW_DISABLED
 		mesh.set_meta("aethel_faded_material",translucent)
-	mesh.material_override=mesh.get_meta("aethel_faded_material") if faded else mesh.get_meta("aethel_solid_material")
+	mesh.material_override=mesh.get_meta("aethel_faded_material") if faded else mesh.get_meta("aethel_solid_material") if mesh.get_meta("aethel_had_override",true) else null
