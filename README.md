@@ -1,3 +1,11 @@
+# Fase 27.2 — pipeline de personagens, arte final pendente
+
+Bastião mantém o protótipo anterior como padrão. Contrato de importação, validação de orçamento/rig/animações/sockets e troca reversível via adaptador existente. GLB azul de teste explicitamente provisório, sem modelo humano final ou aprovação artística.
+
+Pacote: EchoesOfAethel-Fase27.2-Windows-x64.zip, jogo/EchoesOfAethel-Fase27.2.exe. Fontes do projeto e fixture incluídas. [Pipeline](docs/FASE27_2_PIPELINE.md), [auditoria](docs/FASE27_2_AUDIT.md), [produção externa](art/source/bastiao/PRODUCTION_SPEC.md), [validação](docs/FASE27_2_VALIDATION.md). PR Draft dependente da Fase27, sem merge automático.
+
+---
+
 # Fase 27 — primeira sequência de mundo explorável
 
 Windows 0.27.0 / Godot 4.7.2. Cenas iniciais distintas: **Vigília ⇄ Bairro que Faltava ⇄ Pátio dos Endereços ⇄ Arquivo das Portas Seladas**. Navegação com desvios e altura, hub seguro, fog/minimapa por piso e persistência integrada. Mantém os sistemas e correções da Fase26. HUD enxuta com barras superiores e barra única de ações, conforme a nova proposta.

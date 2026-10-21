@@ -164,4 +164,3 @@ func run() -> void:
 	for failure in failures: print("FALHA: "+failure)
 	print("PHASE27.2: %d checks, %d failures"%[checks,failures.size()])
 	quit(0 if failures.is_empty() else 1)
-

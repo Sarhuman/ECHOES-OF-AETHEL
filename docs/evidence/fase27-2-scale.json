@@ -1,0 +1,44 @@
+{
+  "bastion": {
+    "depth": 1.3199999332428,
+    "height": 2.19000029563904,
+    "lowest_y": -0.0965506881475449,
+    "scope": "all mesh variants including hidden equipment, current rest/idle pose; not canonical dimensions",
+    "width": 1.95500004291534
+  },
+  "champion": {
+    "depth": 1.15200018882751,
+    "height": 2.05505275726318,
+    "lowest_y": 0.0600000619888306,
+    "scope": "all mesh variants including hidden equipment, current rest/idle pose; not canonical dimensions",
+    "width": 1.47231495380402
+  },
+  "doma": {
+    "depth": 1.27279222011566,
+    "height": 2.00000023841858,
+    "lowest_y": 0.000749886035919189,
+    "scope": "all mesh variants including hidden equipment, current rest/idle pose; not canonical dimensions",
+    "width": 1.14904844760895
+  },
+  "elite": {
+    "depth": 1.39200007915497,
+    "height": 2.67406320571899,
+    "lowest_y": 0.0724999904632568,
+    "scope": "all mesh variants including hidden equipment, current rest/idle pose; not canonical dimensions",
+    "width": 1.77904760837555
+  },
+  "maera": {
+    "depth": 0.622499942779541,
+    "height": 1.87499988079071,
+    "lowest_y": 0.155749887228012,
+    "scope": "all mesh variants including hidden equipment, current rest/idle pose; not canonical dimensions",
+    "width": 1.1800000667572
+  },
+  "rasura": {
+    "depth": 0.960000038146973,
+    "height": 1.65000009536743,
+    "lowest_y": 0.050000011920929,
+    "scope": "all mesh variants including hidden equipment, current rest/idle pose; not canonical dimensions",
+    "width": 1.22692942619324
+  }
+}

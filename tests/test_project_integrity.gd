@@ -30,4 +30,3 @@ func _initialize() -> void:
 	print("PROJECT INTEGRITY: %d checks, %d failures" % [checks, failures.size()])
 	for failure in failures: printerr("FALHA: ",failure)
 	quit(0 if failures.is_empty() else 1)
-
