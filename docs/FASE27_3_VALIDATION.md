@@ -39,8 +39,6 @@ Mediana+1,3%, p95+4,3%, draw calls+11,2%; não há regressão relevante de tempo
 
 Primitivas são contadores da cena/passes, não triângulos únicos de assets. Custo isolado de materiais/luzes/GPU e custo de cada consulta individual: NOT_MEASURED. Sete materiais no recurso arquitetônico e batching por edifício/material evitam centenas de chamadas por pedra; a fixture completa inclui personagens/objetos anteriores. Não comprova60FPS. Manter GREYBOX disponível e reavaliar se novos assets elevarem os tempos significativamente.
 
-## Oclusão e limites visuais
-
 ## Executável Windows
 
 Exportação pela Godot oficial concluída e EXE executado com **38 verificações aprovadas**, incluindo as35 anteriores e três de arquitetura/nav/oclusão de Vigília. O teste usa o PCK exportado; não depende da pasta de desenvolvimento nem de Summer instalado. Menu, combate, comércio, exploração, persistência, transições e seleção visual do Bastião continuam cobertos. Logs em release-smoke-final.log e exportacao-release.log no pacote.
