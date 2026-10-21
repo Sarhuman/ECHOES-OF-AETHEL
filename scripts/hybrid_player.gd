@@ -62,6 +62,9 @@ var has_move_target: bool = false
 var attack_target: Node3D = null
 var stand_attack: bool = false
 var stand_direction: Vector3 = Vector3.ZERO
+var navigation_path := PackedVector3Array()
+var navigation_index := 0
+var navigation_repath := 0.0
 var _stuck_time: float = 0.0
 var attack_recovery := 0.0
 
@@ -197,7 +200,16 @@ func roll_damage(multiplier: float = 1.0) -> int:
 
 # ---------------------------------------------------------------- comandos do mouse
 func command_move(point: Vector3) -> void:
-	move_target = Vector3(point.x, global_position.y, point.z)
+	var world := get_parent()
+	if world.get("regions") != null:
+		if has_move_target and move_target.distance_to(point)<0.35: return
+		navigation_path=world.regions.level.path(global_position,point)
+		if navigation_path.is_empty():
+			clear_commands()
+			world._show_message("Destino fora da navegação")
+			return
+		navigation_index=0
+	move_target = point
 	has_move_target = true
 	attack_target = null
 	stand_attack = false
@@ -223,6 +235,7 @@ func stop_stand_attack() -> void:
 
 func clear_commands() -> void:
 	has_move_target = false
+	navigation_path.clear()
 	attack_target = null
 	stand_attack = false
 
@@ -263,11 +276,11 @@ func _physics_process(delta: float) -> void:
 	elif is_instance_valid(attack_target) and attack_target.hp > 0 and not attack_target.is_queued_for_deletion():
 		var offset: Vector3 = attack_target.global_position - global_position
 		offset.y = 0.0
-		if offset.length() <= ATTACK_REACH:
+		if offset.length() <= ATTACK_REACH+0.04:
 			facing = offset.normalized() if offset.length() > 0.01 else facing
 			_try_attack()
 		else:
-			direction = offset.normalized() * minf(1, maxf(0, offset.length() - ATTACK_REACH) / maxf(0.001, speed * move_speed_mult * delta))
+			direction = path_direction(attack_target.global_position,delta) * minf(1, maxf(0, offset.length() - ATTACK_REACH) / maxf(0.001, speed * move_speed_mult * delta))
 	elif attack_target != null:
 		attack_target = null
 	elif stand_attack:
@@ -277,7 +290,7 @@ func _physics_process(delta: float) -> void:
 		var offset: Vector3 = move_target - global_position
 		offset.y = 0.0
 		if offset.length() < 0.25: has_move_target = false
-		else: direction = offset.normalized()
+		else: direction = path_direction(move_target,delta)
 	if direction.length() > 0.1 and attack_recovery <= 0: facing = direction
 	if not interaction_input_locked and Input.is_action_pressed("dodge") and dash_remaining <= 0.0 and invulnerability <= 0.0 and stamina >= DASH_STAMINA_COST:
 		_visual_action(&"dodge", 0.2)
@@ -290,7 +303,11 @@ func _physics_process(delta: float) -> void:
 	var current_speed: float = 15.0 if dash_remaining > 0.0 else speed * move_speed_mult
 	velocity = move_direction * current_speed * (0.35 if manual_block else 1.0)
 	if attack_recovery > 0: velocity = Vector3.ZERO
+	velocity.y=-8.0 if is_on_floor() else -12.0
 	move_and_slide()
+	if global_position.y < -5 and get_parent().get("regions") != null:
+		global_position=get_parent().regions.level.safe_position(Vector3.INF)
+		clear_commands()
 	if has_move_target:
 		if get_real_velocity().length() < 0.4: _stuck_time += delta
 		else: _stuck_time = 0.0
@@ -307,6 +324,7 @@ var _ether_fraction: float = 0.0
 
 # ---------------------------------------------------------------- combate
 func _try_attack() -> void:
+	if not combat_allowed(): return
 	if attack_cooldown > 0.0 or manual_block or hp <= 0: return
 	combo_step = (combo_step + 1) % 2
 	attack_cooldown = 0.55 / attack_speed_mult
@@ -337,6 +355,7 @@ func _sync_equipment_visuals() -> void:
 			adapter.apply_equipment(StringName(mapping[slot]), item.definition.appearance_id, adapter.RARITIES[clampi(item.get_quality(), 0, 4)])
 
 func perform_attack(multiplier: float, radius: float, full_circle: bool) -> int:
+	if not combat_allowed(): return 0
 	var candidates: int = 0
 	var targeted: int = 0
 	var landed: int = 0
@@ -347,7 +366,9 @@ func perform_attack(multiplier: float, radius: float, full_circle: bool) -> int:
 		var distance: float = offset.length()
 		if distance <= radius + 1.25: candidates += 1
 		var in_arc: bool = full_circle or distance < 0.01 or facing.dot(offset.normalized()) >= 0.1
-		if distance <= radius and in_arc:
+		var clear_hit := true
+		if get_parent().get("regions")!=null: clear_hit=get_parent().exploration.reachable(node) and absf(node.position.y-position.y)<1.4
+		if distance <= radius and in_arc and clear_hit:
 			targeted += 1
 			if node.receive_hit(roll_damage(multiplier), attack_rating, character_level): landed += 1
 	if candidates > 0 and targeted == 0:
@@ -357,6 +378,7 @@ func perform_attack(multiplier: float, radius: float, full_circle: bool) -> int:
 func skill_problem(skill: AethelSkillData) -> String:
 	if skill == null or not String(skill.skill_id) in ["heavy_strike", "iron_guard", "echo_cleave"]: return "Habilidade indisponível"
 	if hp <= 0: return "Personagem derrotado"
+	if String(skill.skill_id)!="iron_guard" and not combat_allowed(): return "Zona segura: ataque indisponível"
 	var skill_id := String(skill.skill_id)
 	if skill_id == "iron_guard" and guard_remaining > 0: return ""
 	if float(skill_cooldowns.get(skill_id, 0.0)) > 0: return "Em recarga"
@@ -453,3 +475,23 @@ func _emit_ui_state() -> void:
 	if signature != _ui_signature:
 		_ui_signature = signature
 		skills_changed.emit()
+
+func combat_allowed() -> bool:
+	var owner_world := get_parent()
+	return owner_world.get("regions")==null or owner_world.regions.allows_combat()
+
+func path_direction(destination: Vector3,delta: float) -> Vector3:
+	var owner_world := get_parent()
+	if owner_world.get("regions")==null: return (destination-global_position).normalized()
+	if is_instance_valid(attack_target):
+		navigation_repath-=delta
+		if navigation_repath<=0:
+			navigation_path=owner_world.regions.level.path(global_position,destination)
+			navigation_index=0
+			navigation_repath=0.3
+	while navigation_index<navigation_path.size():
+		var offset := navigation_path[navigation_index]-global_position
+		offset.y=0
+		if offset.length()>0.25: return offset.normalized()
+		navigation_index+=1
+	return Vector3.ZERO

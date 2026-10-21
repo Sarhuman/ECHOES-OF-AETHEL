@@ -84,9 +84,9 @@
         {
           "id": "elite_1",
           "position": [
-            -8,
+            -10,
             0,
-            3
+            -8
           ],
           "level": 1,
           "rank": 2,
@@ -103,9 +103,9 @@
         {
           "id": "minion_1",
           "position": [
-            -6,
+            -12,
             0,
-            3
+            -7
           ],
           "level": 1,
           "rank": 0,
@@ -117,9 +117,9 @@
         {
           "id": "minion_2",
           "position": [
-            -7,
+            -9,
             0,
-            5
+            -10
           ],
           "level": 1,
           "rank": 0,
@@ -130,6 +130,89 @@
         }
       ],
       "reward_scale": 1.0
+    },
+    {
+      "id": "map_03_patrol",
+      "region": "map_03",
+      "kind": "common",
+      "quest_required": true,
+      "reward_scale": 1.0,
+      "members": [
+        {
+          "id": "map_03_guard_0",
+          "position": [
+            -3,
+            0,
+            0
+          ],
+          "level": 2,
+          "rank": 0,
+          "table": "normal",
+          "modifiers": [],
+          "type": "rasura"
+        },
+        {
+          "id": "map_03_guard_1",
+          "position": [
+            3,
+            0,
+            -8
+          ],
+          "level": 2,
+          "rank": 1,
+          "table": "champion",
+          "modifiers": [],
+          "type": "rasura"
+        }
+      ]
+    },
+    {
+      "id": "map_04_patrol",
+      "region": "map_04",
+      "kind": "common",
+      "quest_required": true,
+      "reward_scale": 1.0,
+      "members": [
+        {
+          "id": "map_04_guard_0",
+          "position": [
+            0,
+            0,
+            1
+          ],
+          "level": 2,
+          "rank": 0,
+          "table": "normal",
+          "modifiers": [],
+          "type": "rasura"
+        },
+        {
+          "id": "map_04_guard_1",
+          "position": [
+            -9,
+            0,
+            -3
+          ],
+          "level": 2,
+          "rank": 1,
+          "table": "champion",
+          "modifiers": [],
+          "type": "rasura"
+        },
+        {
+          "id": "map_04_guard_2",
+          "position": [
+            9,
+            0,
+            -3
+          ],
+          "level": 2,
+          "rank": 0,
+          "table": "normal",
+          "modifiers": [],
+          "type": "rasura"
+        }
+      ]
     }
   ],
   "objects": [
@@ -247,6 +330,81 @@
       "ether": 0.5,
       "stamina": 1.0,
       "uses": 2
+    },
+    {
+      "id": "courtyard_anchor",
+      "region": "map_03",
+      "kind": "anchor",
+      "position": [
+        -3,
+        0,
+        10
+      ]
+    },
+    {
+      "id": "archive_anchor",
+      "region": "map_04",
+      "kind": "anchor",
+      "position": [
+        2,
+        0,
+        11
+      ]
+    },
+    {
+      "id": "archive_door",
+      "region": "map_04",
+      "kind": "door",
+      "position": [
+        0,
+        0,
+        6
+      ]
+    },
+    {
+      "id": "archive_reward",
+      "region": "map_04",
+      "kind": "chest",
+      "position": [
+        11,
+        0,
+        -3
+      ],
+      "table": "special_chest",
+      "requires_encounter": "map_04_patrol"
+    },
+    {
+      "id": "district_trace",
+      "region": "map_02",
+      "kind": "lore",
+      "position": [
+        -12,
+        0,
+        -11
+      ],
+      "text": "Duas placas atribuem épocas diferentes ao mesmo endereço. Vestígio registrado; evento narrativo futuro."
+    },
+    {
+      "id": "postal_trace",
+      "region": "map_03",
+      "kind": "lore",
+      "position": [
+        10,
+        1.5,
+        -9
+      ],
+      "text": "Cartas sem destinatário apontam para o Arquivo das Portas Seladas. Inscrição encontrada; interpretação narrativa futura."
+    },
+    {
+      "id": "archive_record",
+      "region": "map_04",
+      "kind": "lore",
+      "position": [
+        -11,
+        0,
+        -3
+      ],
+      "text": "O registro permanece lacrado. Ponto preparado para evento futuro, sem decisão canônica aplicada."
     }
   ]
 }

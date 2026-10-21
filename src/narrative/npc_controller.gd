@@ -129,7 +129,9 @@ func request(id: String) -> bool:
 	if world.player.global_position.distance_to(actors[id].global_position) <= RANGE and reachable(id):
 		open_dialogue(id)
 	else:
-		world.player.command_move(actors[id].global_position)
+		var destination: Vector3=world.regions.level.approach(world.player.global_position,actors[id].global_position)
+		if not destination.is_finite(): pending_id=""; world._show_message("Caminho bloqueado até o NPC"); return false
+		world.player.command_move(destination)
 	return true
 
 func close() -> void:

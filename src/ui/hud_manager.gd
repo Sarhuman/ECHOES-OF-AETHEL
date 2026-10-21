@@ -1,17 +1,23 @@
 class_name AethelHUDManager
 extends CanvasLayer
 signal skill_selected(index: int)
+signal potion_selected(index: int)
+signal secondary_selected
+var action_row: HBoxContainer
+var secondary_button: Button
+var status_header: Label
+var status_column: VBoxContainer
+var mission_tracker: Label
+var quick_buttons: Dictionary={}
 var skill_buttons: Array[Button] = []
 
 var resource_panel: PanelContainer
-var hp_bar: Range
-var ether_bar: Range
+var hp_bar: ProgressBar
+var ether_bar: ProgressBar
 var hp_text: Label
 var ether_text: Label
 var stamina_bar: ProgressBar
 var stamina_text: Label
-var life_globe: AethelGlobe
-var ether_globe: AethelGlobe
 var stamina_row: VBoxContainer
 var skill_row: HBoxContainer
 var effect_row: HBoxContainer
@@ -53,12 +59,7 @@ func _ready() -> void:
 func _make_skill_bar() -> void:
 	skill_row = HBoxContainer.new()
 	var row := skill_row
-	root.add_child(row)
-	row.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	row.offset_left = -210
-	row.offset_right = 210
-	row.offset_top = -166
-	row.offset_bottom = -110
+	action_row.add_child(row)
 	for index in 3:
 		var button := Button.new()
 		button.focus_mode = Control.FOCUS_NONE
@@ -66,12 +67,18 @@ func _make_skill_bar() -> void:
 		button.expand_icon = true
 		button.add_theme_constant_override("icon_max_width",24)
 		button.text = ["F1 Golpe", "F2 Guarda", "F3 Eco"][index]
-		button.custom_minimum_size = Vector2(138, 54)
+		button.custom_minimum_size = Vector2(126, 54)
 		button.tooltip_text = "Clique ou F1–F3: executar. Botão direito repete a última técnica."
 		var selected := index
 		button.pressed.connect(func() -> void: skill_selected.emit(selected))
 		row.add_child(button)
 		skill_buttons.append(button)
+	secondary_button=Button.new()
+	secondary_button.focus_mode=Control.FOCUS_NONE
+	secondary_button.custom_minimum_size=Vector2(126,54)
+	secondary_button.add_theme_font_size_override("font_size",12)
+	secondary_button.pressed.connect(func() -> void: secondary_selected.emit())
+	action_row.add_child(secondary_button)
 
 func update_skills(selected: String, unlocked: Dictionary, ids: Array, actor: Node = null, catalog: Dictionary = {}) -> void:
 	var cache: Array = []
@@ -93,9 +100,9 @@ func update_skills(selected: String, unlocked: Dictionary, ids: Array, actor: No
 					state = "Recarga %.1fs" % float(actor.skill_cooldowns.get(id, 0))
 					color = Color("e4c083")
 				elif not issue.is_empty():
-					state = issue
+					state = "Zona segura" if issue.begins_with("Zona segura") else issue
 					color = Color("e7a5a5")
-				else: state = "Pronto · %d Éter" % skill.ether_cost
+				else: state = "%d Éter · Pronto" % skill.ether_cost
 		var snapshot: Array = [id,state,color,unlocked.has(id),actor.hp <= 0 if actor != null else false,id == selected]
 		cache.append(snapshot)
 		if index < _skill_cache.size() and _skill_cache[index] == snapshot: continue
@@ -110,40 +117,45 @@ func update_skills(selected: String, unlocked: Dictionary, ids: Array, actor: No
 		button.add_theme_stylebox_override("normal", style)
 
 	_skill_cache = cache
+	if secondary_button!=null and catalog.has(selected):
+		secondary_button.text="M2 · %s\n%d Éter"%[{"heavy_strike":"Golpe","iron_guard":"Guarda","echo_cleave":"Eco"}.get(selected,selected),catalog[selected].ether_cost]
+		secondary_button.tooltip_text="Botão direito repete: "+str(catalog[selected].display_name)
 
 func _make_resource_panel() -> void:
-	resource_panel = PanelContainer.new()
-	resource_panel.name = "ResourcePanel"
-	resource_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	resource_panel=PanelContainer.new()
+	resource_panel.name="ResourcePanel"
+	resource_panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	root.add_child(resource_panel)
-	resource_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	resource_panel.offset_left = 18
-	resource_panel.offset_right = 350
-	resource_panel.offset_top = -194
-	resource_panel.offset_bottom = -18
+	resource_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	resource_panel.anchor_left=0.015
+	resource_panel.anchor_right=0.265
+	resource_panel.anchor_top=0.02
+	resource_panel.anchor_bottom=0.235
 	resource_panel.add_theme_stylebox_override("panel",AethelUI.panel(AethelUI.BACKGROUND,AethelUI.BRASS))
-	var column := VBoxContainer.new()
-	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	column.add_theme_constant_override("separation",2)
-	resource_panel.add_child(column)
-	var row := HBoxContainer.new()
-	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	column.add_child(row)
-	life_globe = AethelGlobe.new()
-	life_globe.resource_title = "VIDA"
-	life_globe.liquid_color = AethelUI.LIFE
-	row.add_child(life_globe)
-	ether_globe = AethelGlobe.new()
-	ether_globe.resource_title = "ÉTER"
-	ether_globe.liquid_color = AethelUI.ETHER
-	row.add_child(ether_globe)
-	hp_bar = life_globe.progress
-	hp_text = life_globe.amount_label
-	ether_bar = ether_globe.progress
-	ether_text = ether_globe.amount_label
-	var stamina := _resource_row(column,"FÔLEGO",AethelUI.STAMINA,22)
-	stamina_bar = stamina[0]
-	stamina_text = stamina[1]
+	status_column=VBoxContainer.new()
+	status_column.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	status_column.add_theme_constant_override("separation",3)
+	resource_panel.add_child(status_column)
+	status_header=Label.new()
+	status_header.text="Bastião · Nv 1 · 0 ouro"
+	status_header.add_theme_font_size_override("font_size",14)
+	status_header.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	status_column.add_child(status_header)
+	var life:=_resource_row(status_column,"VIDA",AethelUI.LIFE,22)
+	hp_bar=life[0];hp_text=life[1]
+	var ether:=_resource_row(status_column,"ÉTER",AethelUI.ETHER,22)
+	ether_bar=ether[0];ether_text=ether[1]
+	var stamina:=_resource_row(status_column,"FÔLEGO",Color("3f6a22"),20)
+	stamina_bar=stamina[0];stamina_text=stamina[1]
+	mission_tracker=Label.new()
+	mission_tracker.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	mission_tracker.add_theme_stylebox_override("normal",AethelUI.panel())
+	mission_tracker.add_theme_font_size_override("font_size",14)
+	mission_tracker.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	root.add_child(mission_tracker)
+	mission_tracker.anchor_left=0.015;mission_tracker.anchor_right=0.28
+	mission_tracker.anchor_top=0.29;mission_tracker.anchor_bottom=0.38
+	mission_tracker.text="Missão · Vigília\nConverse com Maera."
 
 func _resource_row(parent: Control, title: String, color: Color, height: int) -> Array:
 	var bar := ProgressBar.new()
@@ -175,7 +187,8 @@ func _resource_row(parent: Control, title: String, color: Color, height: int) ->
 func _update_resource(bar: ProgressBar, text: Label, current: float, maximum: float) -> void:
 	bar.max_value = maxf(1, maximum)
 	bar.value = clampf(current, 0, maximum)
-	text.text = "%s  %d / %d" % [text.get_meta("resource_title"), roundi(current), roundi(maximum)]
+	text.text = "%s  %d / %d" % [text.get_meta("resource_title"), roundi(current), roundi(maximum)] + " · %d%%"%roundi(clampf(current/maxf(1,maximum),0,1)*100)
+	text.tooltip_text="%d%%"%roundi(clampf(current/maxf(1,maximum),0,1)*100)
 
 func setup_player_listeners(player: Node) -> void:
 	if is_instance_valid(_player):
@@ -192,36 +205,36 @@ func setup_player_listeners(player: Node) -> void:
 	_on_stamina_changed(player.stamina, player.max_stamina)
 
 func _on_hp_changed(current: float, maximum: float, _instant: bool = false) -> void:
-	life_globe.update_value(current,maximum,_instant)
+	_update_resource(hp_bar,hp_text,current,maximum)
 
 func _on_ether_changed(current: float, maximum: float, _instant: bool = false) -> void:
-	ether_globe.update_value(current,maximum,_instant)
+	_update_resource(ether_bar,ether_text,current,maximum)
 
 func _on_stamina_changed(current: float, maximum: float) -> void:
 	_update_resource(stamina_bar, stamina_text, current, maximum)
 	if current < 8: stamina_text.text += " · BAIXO"
 
 func _make_belt() -> void:
-	var container := Control.new()
-	container.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(container)
-	container.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	container.offset_left = -94.0
-	container.offset_right = 94.0
-	container.offset_top = -104.0
-	container.offset_bottom = -58.0
-	for index in range(4):
-		var slot := Panel.new()
-		slot.position = Vector2(float(index) * 48.0, 0.0)
-		slot.size = Vector2(44.0, 44.0)
-		slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		container.add_child(slot)
-		var label := Label.new()
-		label.position = Vector2(0.0, 2.0)
-		label.size = Vector2(44.0, 40.0)
-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		label.add_theme_font_size_override("font_size", 13)
-		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	action_row=HBoxContainer.new()
+	action_row.name="ActionRow"
+	action_row.add_theme_constant_override("separation",8)
+	root.add_child(action_row)
+	action_row.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	action_row.offset_left=-364;action_row.offset_right=364
+	action_row.offset_top=-76;action_row.offset_bottom=-16
+	for index in 4:
+		var slot:=Button.new()
+		slot.focus_mode=Control.FOCUS_NONE
+		slot.custom_minimum_size=Vector2(44,54)
+		slot.tooltip_text="Usar poção · "+str(index+1)
+		slot.pressed.connect(func() -> void: potion_selected.emit(index))
+		action_row.add_child(slot)
+		var label:=Label.new()
+		label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+		label.add_theme_font_size_override("font_size",13)
+		label.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		slot.add_child(label)
 		belt_labels.append(label)
 	update_belt([], {})
@@ -240,17 +253,18 @@ func update_belt(belt: Array, catalog: Dictionary) -> void:
 		label.add_theme_color_override("font_color", Color("ff6a6a") if is_life else Color("6a9cff"))
 
 func _make_xp_bar() -> void:
-	xp_bar = ProgressBar.new()
-	xp_bar.show_percentage = false
-	xp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	xp_bar.max_value = 100.0
-	root.add_child(xp_bar)
-	xp_bar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	xp_bar.offset_top = -8.0
-	xp_bar.offset_bottom = -2.0
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("d9b84a")
-	xp_bar.add_theme_stylebox_override("fill", style)
+	xp_bar=ProgressBar.new()
+	xp_bar.custom_minimum_size=Vector2(306,8)
+	xp_bar.show_percentage=false
+	xp_bar.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	status_column.add_child(xp_bar)
+	var fill:=StyleBoxFlat.new()
+	fill.bg_color=Color("d9a441")
+	xp_bar.add_theme_stylebox_override("fill",fill)
+	xp_text=Label.new()
+	xp_text.add_theme_font_size_override("font_size",12)
+	xp_text.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	status_column.add_child(xp_text)
 
 func set_xp(current: int, required: int) -> void:
 	if xp_bar == null: return
@@ -265,8 +279,8 @@ func _make_target_bar() -> void:
 	target_box.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	target_box.offset_left = -190.0
 	target_box.offset_right = 190.0
-	target_box.offset_top = 12.0
-	target_box.offset_bottom = 60.0
+	target_box.offset_top = 76.0
+	target_box.offset_bottom = 124.0
 	target_name = Label.new()
 	target_name.size = Vector2(380.0, 24.0)
 	target_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -298,8 +312,8 @@ func _make_target_bar() -> void:
 	boss_box.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	boss_box.offset_left = -220
 	boss_box.offset_right = 220
-	boss_box.offset_top = 88
-	boss_box.offset_bottom = 158
+	boss_box.offset_top = 140
+	boss_box.offset_bottom = 210
 	boss_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	boss_box.add_theme_stylebox_override("panel",AethelUI.panel(AethelUI.BACKGROUND,AethelUI.RARE,2))
 	var boss_column := VBoxContainer.new()
@@ -328,38 +342,21 @@ func hide_target() -> void:
 	if boss_box != null: boss_box.hide()
 
 func _make_skill_label() -> void:
-	skill_label = Label.new()
-	skill_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	skill_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	skill_label.add_theme_font_size_override("font_size", 14)
+	skill_label=Label.new() # Kept as an API alias; text is presented by the actual M2 slot.
+	skill_label.hide()
 	root.add_child(skill_label)
-	skill_label.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	skill_label.offset_left = -330.0
-	skill_label.offset_right = -18.0
-	skill_label.offset_top = -54.0
-	skill_label.offset_bottom = -18.0
 
 func set_right_skill(text_value: String) -> void:
-	if skill_label != null: skill_label.text = text_value
+	skill_label.text=text_value
+	if secondary_button!=null: secondary_button.tooltip_text=text_value
 
 func _make_effects() -> void:
-	effect_row = HBoxContainer.new()
+	effect_row=HBoxContainer.new()
 	effect_row.add_theme_constant_override("separation",6)
 	root.add_child(effect_row)
 	effect_row.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	effect_row.offset_left = -210
-	effect_row.offset_right = 210
-	effect_row.offset_top = -214
-	effect_row.offset_bottom = -178
-	xp_text = Label.new()
-	xp_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	xp_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(xp_text)
-	xp_text.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	xp_text.offset_left = -200
-	xp_text.offset_right = 200
-	xp_text.offset_top = -40
-	xp_text.offset_bottom = -15
+	effect_row.offset_left=-210;effect_row.offset_right=210
+	effect_row.offset_top=-120;effect_row.offset_bottom=-84
 
 func show_effect(id: String,remaining: float,intensity: float) -> void:
 	if remaining <= 0:
@@ -438,11 +435,14 @@ func _target_refresh() -> void:
 		target_box.hide()
 
 func apply_settings() -> void:
-	if resource_panel == null: return
-	resource_panel.pivot_offset = Vector2(0,resource_panel.size.y)
-	resource_panel.scale = Vector2.ONE*AethelSettings.hud_scale
-	if skill_row != null:
-		skill_row.pivot_offset = Vector2(210,54)
-		skill_row.scale = Vector2.ONE*AethelSettings.hud_scale
-	life_globe.set_shader_enabled(AethelSettings.shader_globes)
-	ether_globe.set_shader_enabled(AethelSettings.shader_globes)
+	if resource_panel==null: return
+	resource_panel.pivot_offset=Vector2.ZERO
+	resource_panel.scale=Vector2.ONE*AethelSettings.hud_scale
+	if action_row!=null:
+		action_row.pivot_offset=Vector2(action_row.size.x/2,action_row.size.y)
+		action_row.scale=Vector2.ONE*AethelSettings.hud_scale
+
+func set_status(level: int,gold: int) -> void:
+	status_header.text="Bastião · Nv %d · %d ouro"%[level,gold]
+
+func set_mission(text_value: String) -> void: mission_tracker.text=text_value

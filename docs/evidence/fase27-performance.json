@@ -1,0 +1,34 @@
+{
+  "fixture": "AI movement frozen; original light/shader settings",
+  "frame_cap": 60,
+  "map_01": {
+    "draw_calls": 267,
+    "enemy_count": 0,
+    "frame_median_ms": 35.721,
+    "frame_p95_ms": 43.042,
+    "objects": 942
+  },
+  "map_02": {
+    "draw_calls": 230,
+    "enemy_count": 5,
+    "frame_median_ms": 36.769,
+    "frame_p95_ms": 43.08,
+    "objects": 983
+  },
+  "map_03": {
+    "draw_calls": 208,
+    "enemy_count": 2,
+    "frame_median_ms": 36.086,
+    "frame_p95_ms": 41.144,
+    "objects": 755
+  },
+  "map_04": {
+    "draw_calls": 222,
+    "enemy_count": 3,
+    "frame_median_ms": 36.286,
+    "frame_p95_ms": 40.042,
+    "objects": 933
+  },
+  "renderer": "AMD Radeon RX 580 2048SP",
+  "resolution": "1920x1080"
+}

@@ -102,12 +102,15 @@ func _ready() -> void:
 		name_label.text = display_name()
 		name_label.modulate = RANK_COLORS[rank]
 		name_label.position.y = 2.4 * float(RANK_SCALE[rank])
-		name_label.font_size = 36
+		name_label.font_size = 24
 		name_label.pixel_size = 0.008
 		name_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 		add_child(name_label)
 
 func _physics_process(delta: float) -> void:
+	if get_parent().get("regions")!=null and not get_parent().regions.allows_combat():
+		velocity=Vector3.ZERO
+		return
 	_tick_modifiers(delta)
 	if not _home_initialized:
 		home_position = global_position
@@ -160,6 +163,7 @@ func _physics_process(delta: float) -> void:
 				if path_vector.length_squared() > 0.001: desired = path_vector.normalized()
 		desired = (desired + _separation() * 0.8).normalized()
 		velocity = desired * move_speed
+		velocity.y=-8 if is_on_floor() else -12
 		move_and_slide()
 	else:
 		_patrol_clock += delta
@@ -172,6 +176,7 @@ func _physics_process(delta: float) -> void:
 			ai_state = &"patrol"
 			var patrol_target := home_position + Vector3(sin(_patrol_clock * 0.35),0,cos(_patrol_clock * 0.35))
 			velocity = (patrol_target - global_position).normalized() * move_speed * 0.25
+		velocity.y=-8 if is_on_floor() else -12
 		move_and_slide()
 
 func _separation() -> Vector3:
@@ -220,6 +225,7 @@ func configure_modifiers(ids: Array,rules: Dictionary) -> void:
 	if not names.is_empty():
 		var label := Label3D.new()
 		label.text = " · ".join(names)
+		label.visible=false # Modifier descriptions are presented once in the target HUD.
 		label.font_size = 18
 		label.pixel_size = 0.005
 		label.position.y = 2.8 * float(RANK_SCALE[rank])

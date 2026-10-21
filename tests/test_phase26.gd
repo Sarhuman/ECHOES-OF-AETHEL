@@ -19,18 +19,21 @@ func run() -> void:
  await frames(8)
  var hud: AethelHUDManager=world.hud
  var actor: CharacterBody3D=world.player
- check(hud.life_globe != null and hud.ether_globe != null,"two reused globes")
+ check(hud.hp_bar != null and hud.ether_bar != null,"compact resources reuse reactive HUD")
  actor.hp_changed.emit(45,100)
  actor.ether_changed.emit(12,40)
  actor.stamina_changed.emit(6,100)
  check(hud.hp_bar.value==45 and hud.ether_bar.value==12 and hud.stamina_bar.value==6,"three resource events")
  check("45%" in hud.hp_text.text and "30%" in hud.ether_text.text,"resource percentages visible")
  check("BAIXO" in hud.stamina_text.text,"insufficient stamina text")
- hud.life_globe.update_value(10,0,true)
- check(hud.life_globe.progress.value==0 and hud.life_globe.display_ratio==0,"zero maximum safe")
- hud.life_globe.set_shader_enabled(false)
- check(not hud.life_globe.surface.visible and hud.life_globe.progress.visible,"shader-free fallback")
- hud.life_globe.set_shader_enabled(true)
+ hud._on_hp_changed(10,0,true)
+ check(hud.hp_bar.value==0,"zero maximum safe")
+ var globe:=AethelGlobe.new()
+ root.add_child(globe)
+ globe.hide()
+ globe.set_shader_enabled(false)
+ check(not globe.surface.visible and globe.progress.visible,"reusable globe fallback remains available independently")
+ globe.queue_free()
  actor.restore_full()
  await frames(3)
  hud.setup_player_listeners(actor)
@@ -42,6 +45,10 @@ func run() -> void:
  var updates: int=hud.presentation_updates
  await frames(30)
  check(hud.presentation_updates==updates,"stable HUD avoids skill/style rebuilds")
+ # Offensive presentation is now exercised in a hostile region, not the safe hub.
+ world.region_id="map_03"
+ world._update_region()
+ actor.position=Vector3.ZERO
  actor.skill_used.connect(func(_id: String) -> void: skill_events+=1)
  actor.cooldown_changed.connect(func(_id: String,_remaining: float) -> void: cooldown_events+=1)
  actor.ether=actor.max_ether
@@ -105,7 +112,7 @@ func run() -> void:
  check(AethelSettings.channel_volumes.UI==0.25 and AethelSettings.hud_scale==1.1 and not AethelSettings.shader_globes,"preferences persisted separately")
  check(absf(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("UI"))-linear_to_db(0.25))<0.01,"bus gain applied")
  hud.apply_settings()
- check(not hud.life_globe.surface.visible,"HUD settings applied")
+ check(hud.resource_panel.scale==Vector2.ONE*1.1,"HUD settings applied")
  for row: Dictionary in world.inventory.entries(): world.inventory.remove_item(row.instance.instance_id)
  var potion:=AethelItemInstance.new(world.item_catalog.hp_small,"discard-stack")
  potion.quantity=7

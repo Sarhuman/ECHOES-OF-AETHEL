@@ -19,6 +19,15 @@ func _initialize() -> void:
 	var catalog: Dictionary = AethelItemCatalog.create_catalog()
 	var world := Node3D.new()
 	root.add_child(world)
+	# Standalone combat fixture now needs a physical floor because Player uses gravity.
+	var floor_body := StaticBody3D.new()
+	var floor_collision := CollisionShape3D.new()
+	var floor_shape := BoxShape3D.new()
+	floor_shape.size=Vector3(80,1,80)
+	floor_collision.shape=floor_shape
+	floor_collision.position.y=-0.5
+	floor_body.add_child(floor_collision)
+	world.add_child(floor_body)
 	var player := CharacterBody3D.new()
 	player.set_script(load("res://scripts/hybrid_player.gd"))
 	world.add_child(player)
