@@ -182,6 +182,8 @@ func open_dialogue(id: String) -> void:
 	world.player.velocity = Vector3.ZERO
 	world.player.keyboard_active = false
 	world.player.interaction_input_locked = true
+	var visual:=world.player.get_node_or_null("BastiaoVisual") as AethelCharacterVisual
+	if visual!=null: visual.present_interaction()
 	var offset: Vector3 = actors[id].global_position - world.player.global_position
 	offset.y = 0
 	if offset.length() > 0.01: world.player.facing = offset.normalized()

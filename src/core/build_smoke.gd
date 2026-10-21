@@ -137,6 +137,13 @@ func run() -> void:
 		check(world.regions.transition(connector),"release canonical transition "+connector)
 		await frames(3)
 	check(world.region_id=="map_04" and world.regions.allows_combat(),"release archive offensive policy")
+	var visual: AethelCharacterVisual=player.get_node("BastiaoVisual")
+	check(visual.mode=="PLACEHOLDER","release keeps original character default")
+	var production_definition:=visual.definition
+	visual.definition=load("res://data/characters/bastion_fixture_visual.tres")
+	check(visual.select_mode("IMPORTED_MODEL") and visual.last_validation.valid,"release imports rig clips sockets and provenance")
+	visual.definition=production_definition
+	check(visual.select_mode("PLACEHOLDER"),"release reversible visual fallback")
 	world.pause_menu.open()
 	check(get_tree().paused, "pause")
 	get_tree().paused = false

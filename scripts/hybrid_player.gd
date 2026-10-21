@@ -83,7 +83,8 @@ func _ready() -> void:
 	add_child(collision)
 	var visual := AethelCharacterVisual.new()
 	visual.name = "BastiaoVisual"
-	visual.model_scene = preload("res://scenes/characters/bastion_placeholder.tscn")
+	visual.definition = preload("res://data/characters/bastion_visual.tres")
+	visual.model_scene = visual.definition.model_scene
 	add_child(visual)
 	recalculate_stats()
 	restore_full()

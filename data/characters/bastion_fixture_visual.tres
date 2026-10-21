@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="AethelCharacterVisualDefinition" load_steps=4 format=3]
+[ext_resource type="Script" path="res://src/characters/character_visual_definition.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/characters/bastion_placeholder.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/characters/bastion_import_fixture.tscn" id="3"]
+[resource]
+script = ExtResource("1")
+character_id = &"bastion_test_only"
+display_name = "TEST ONLY — não é arte do Bastião"
+model_scene = ExtResource("2")
+imported_scene = ExtResource("3")
+provenance_path = "res://art/source/bastiao/TEST_FIXTURE_PROVENANCE.md"
+provenance_status = "DOCUMENTED_TEST_ONLY"

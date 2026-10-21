@@ -1,3 +1,13 @@
+# Teste da Fase 27.2 — pipeline visual do Bastião
+
+Extraia EchoesOfAethel-Fase27.2-Windows-x64.zip e execute jogo/EchoesOfAethel-Fase27.2.exe com o PCK ao lado. O Bastião continua o PLACEHOLDER anterior por padrão. Nenhum modelo artístico externo final está disponível. Fonte editável: fonte/project.godot; especificação externa em art/source/bastiao/PRODUCTION_SPEC.md.
+
+A seleção IMPORTED_MODEL da definição de produção sem candidato deve voltar ao placeholder. Para testar o pipeline no editor, atribua explicitamente bastion_fixture_visual.tres ao adaptador de apresentação e chame select_mode("IMPORTED_MODEL") em ferramenta de desenvolvimento; a fixture azul é TEST ONLY, nunca personagem final. Alterar a seleção não deve alterar HP/Éter/Fôlego, equipamentos, cápsula, timers, posição ou save v6. Rever FASE27_2_PIPELINE.md e FASE27_2_VALIDATION.md antes de promover um asset externo.
+
+Não ativar candidato acima do orçamento como padrão sem aprovação explícita. Homologação humana de arte e gameplay permanece pendente. Os roteiros seguintes continuam aplicáveis ao gameplay preservado; onde mencionam o EXE Fase27, usar Fase27.2 nesta entrega.
+
+---
+
 # Teste da Fase 27 — mundo inicial e HUD enxuta
 
 Extraia EchoesOfAethel-Fase27-Windows-x64.zip inteiro em uma pasta nova. Execute jogo/EchoesOfAethel-Fase27.exe com o PCK ao lado. Fonte editável: fonte/project.godot. Engine Godot4.7.2.stable.official.ed1daf0bf; build pré-alpha Windows sem assinatura/instalador.

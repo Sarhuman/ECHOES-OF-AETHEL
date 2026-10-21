@@ -1,4 +1,4 @@
-name: Windows Fase 27
+name: Windows Fase 27.2
 on:
   workflow_dispatch:
   pull_request:
@@ -11,6 +11,7 @@ on:
       - 'src/**'
       - 'scenes/**'
       - 'assets/**'
+      - 'art/**'
       - 'data/**'
       - 'tests/**'
       - 'tools/**'
@@ -45,8 +46,8 @@ jobs:
         run: python tools/package_windows.py
       - uses: actions/upload-artifact@v4
         with:
-          name: EchoesOfAethel-Fase27-Windows-x64
-          path: EchoesOfAethel-Fase27-Windows-x64.zip
+          name: EchoesOfAethel-Fase27.2-Windows-x64
+          path: EchoesOfAethel-Fase27.2-Windows-x64.zip
       - uses: actions/upload-artifact@v4
         if: always()
         with:
