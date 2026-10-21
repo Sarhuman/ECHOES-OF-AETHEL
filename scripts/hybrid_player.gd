@@ -75,8 +75,9 @@ func _ready() -> void:
 	rng.randomize()
 	var collision := CollisionShape3D.new()
 	var capsule := CapsuleShape3D.new()
-	capsule.radius = 0.32
-	capsule.height = 1.6
+	var presentation := AethelActorPresentationContract.install(self,"hero")
+	capsule.radius = presentation.radius
+	capsule.height = presentation.height
 	collision.shape = capsule
 	collision.position.y = 0.8
 	add_child(collision)

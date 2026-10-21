@@ -78,8 +78,11 @@ func load_region(id: String) -> bool:
 		var title := Label3D.new()
 		title.text="E/F · "+str(definitions[row.destination].name)
 		title.position.y=3
-		title.font_size=22
-		title.pixel_size=0.007
+		title.font_size=30
+		title.pixel_size=0.008
+		title.modulate=Color("fff0ca")
+		title.outline_size=10
+		title.no_depth_test=true
 		title.billboard=BaseMaterial3D.BILLBOARD_ENABLED
 		marker.add_child(title)
 		connectors[str(row.id)]=marker
@@ -210,11 +213,16 @@ func tick(delta: float) -> void:
 		if is_instance_valid(enemy) and enemy.position.distance_to(world.player.position)<12: targets.append(enemy.global_position+Vector3(0,0.8,0))
 	for target: Vector3 in targets:
 		var query := PhysicsRayQueryParameters3D.create(camera.global_position,target,1)
-		var hit := world.get_world_3d().direct_space_state.intersect_ray(query)
-		if not hit.is_empty() and not hit.collider.get_meta("walkable_ground",false):
+		# Up to four successive walls; leave walkable floor opaque.
+		for obstruction in 4:
+			var hit := world.get_world_3d().direct_space_state.intersect_ray(query)
+			if hit.is_empty() or hit.collider.get_meta("walkable_ground",false): break
 			for mesh: GeometryInstance3D in hit.collider.find_children("*","GeometryInstance3D",true,false):
 				set_faded(mesh,true)
 				_occluders.append(mesh)
+			var excluded := query.exclude
+			excluded.append(hit.collider.get_rid())
+			query.exclude=excluded
 	world.exploration.present_object_labels()
 	if minimap!=null: minimap.queue_redraw()
 

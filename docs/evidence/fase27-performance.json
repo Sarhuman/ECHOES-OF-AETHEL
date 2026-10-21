@@ -4,30 +4,30 @@
   "map_01": {
     "draw_calls": 267,
     "enemy_count": 0,
-    "frame_median_ms": 35.506,
-    "frame_p95_ms": 42.886,
-    "objects": 874
+    "frame_median_ms": 35.287,
+    "frame_p95_ms": 42.418,
+    "objects": 891
   },
   "map_02": {
-    "draw_calls": 229,
+    "draw_calls": 231,
     "enemy_count": 5,
-    "frame_median_ms": 35.773,
-    "frame_p95_ms": 43.272,
-    "objects": 887
+    "frame_median_ms": 36.752,
+    "frame_p95_ms": 43.089,
+    "objects": 885
   },
   "map_03": {
-    "draw_calls": 207,
+    "draw_calls": 211,
     "enemy_count": 2,
-    "frame_median_ms": 35.896,
-    "frame_p95_ms": 42.231,
-    "objects": 700
+    "frame_median_ms": 35.216,
+    "frame_p95_ms": 41.094,
+    "objects": 719
   },
   "map_04": {
-    "draw_calls": 222,
+    "draw_calls": 226,
     "enemy_count": 3,
-    "frame_median_ms": 36.006,
-    "frame_p95_ms": 40.426,
-    "objects": 846
+    "frame_median_ms": 35.427,
+    "frame_p95_ms": 38.419,
+    "objects": 866
   },
   "renderer": "AMD Radeon RX 580 2048SP",
   "resolution": "1920x1080"

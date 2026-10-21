@@ -68,8 +68,9 @@ func _ready() -> void:
 	add_child(navigation_agent)
 	var collision := CollisionShape3D.new()
 	var capsule := CapsuleShape3D.new()
-	capsule.radius = 0.34 * float(RANK_SCALE[rank])
-	capsule.height = 1.6 * float(RANK_SCALE[rank])
+	var presentation := AethelActorPresentationContract.install(self,"enemy",rank)
+	capsule.radius = presentation.radius
+	capsule.height = presentation.height
 	collision.shape = capsule
 	collision.position.y = capsule.height * 0.5
 	add_child(collision)
@@ -89,19 +90,20 @@ func _ready() -> void:
 	visual = Node3D.new()
 	visual.name = "RasuraVisual"
 	visual.set_script(preload("res://scripts/procedural_rasura.gd"))
+	visual.set("presentation_rank",rank)
 	visual.scale = Vector3.ONE * float(RANK_SCALE[rank])
 	add_child(visual)
-	if rank > 0:
+	if rank >= 0:
 		var glow := OmniLight3D.new()
 		glow.light_color = RANK_COLORS[rank]
-		glow.light_energy = 1.1
+		glow.light_energy = 1.1 if rank>0 else 0.0
 		glow.omni_range = 3.4
 		glow.position.y = 1.2
 		add_child(glow)
 		var name_label := Label3D.new()
 		name_label.text = display_name()
 		name_label.modulate = RANK_COLORS[rank]
-		name_label.position.y = 2.4 * float(RANK_SCALE[rank])
+		name_label.position = presentation.label
 		name_label.font_size = 24
 		name_label.pixel_size = 0.008
 		name_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED

@@ -53,6 +53,17 @@ func run() -> void:
 	world=load("res://scenes/main.tscn").instantiate()
 	root.add_child(world)
 	await frames(8)
+	var visual: AethelCharacterVisual=world.player.get_node("BastiaoVisual")
+	var actor_position: Vector3=world.player.position
+	var actor_hp: int=world.player.hp
+	var actor_shape: Shape3D=world.player.find_children("*","CollisionShape3D",false,false)[0].shape
+	visual.replace_model(preload("res://scenes/characters/bastion_placeholder.tscn"))
+	await frames()
+	check(world.player.position.distance_to(actor_position)<0.05 and world.player.hp==actor_hp,"model replacement preserves actor position and health")
+	check(world.player.find_children("*","CollisionShape3D",false,false)[0].shape==actor_shape,"model replacement preserves physical shape")
+	check(world.player.has_node("PresentationAnchors/weapon") and world.player.has_node("PresentationAnchors/health"),"stable gameplay independent anchors")
+	var presentation_toolbar: Control=world.hud.root.get_node("WorldToolbar")
+	check(absf(presentation_toolbar.get_global_rect().end.x-world.regions.minimap.get_global_rect().end.x)<1,"toolbar aligned with minimap right edge")
 	var manager: AethelRegionManager=world.regions
 	check(manager.validate_graph().is_empty(),"graph destination scene arrival and reverse links")
 	world.hud.set_xp(50,100)

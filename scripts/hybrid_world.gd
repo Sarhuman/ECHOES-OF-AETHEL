@@ -169,6 +169,7 @@ func _build_narrative_nodes() -> void:
 	npc.name = "MaeraVoss"
 	add_child(npc)
 	npc.position = Vector3(-4,0,2)
+	AethelActorPresentationContract.install(npc,"npc")
 	var npc_visual: Node3D = Node3D.new()
 	npc_visual.name = "MaeraVisual"
 	npc_visual.set_script(preload("res://scripts/procedural_npc.gd"))
@@ -191,8 +192,9 @@ func _build_merchant() -> void:
 	var body := CollisionShape3D.new()
 	body.name = "BodyCollision"
 	var capsule := CapsuleShape3D.new()
-	capsule.radius = 0.4
-	capsule.height = 1.8
+	var presentation := AethelActorPresentationContract.install(merchant,"npc")
+	capsule.radius = presentation.radius
+	capsule.height = presentation.height
 	body.shape = capsule
 	body.position.y = 0.9
 	merchant.add_child(body)
@@ -617,7 +619,7 @@ func _process(delta: float) -> void:
 	var mission_title := "Missão · Maera"
 	if quest_started and not map_02_cleared:
 		mission_title="Missão · Bairro que Faltava"
-		objective="Derrote Rasuras: %d/5"%mini(slain,5) if region_id=="map_02" else "Pendência no Bairro: %d/5"%mini(slain,5)
+		objective="Derrote Rasuras: %d/5"%mini(slain,5) if region_id=="map_02" else "Derrote 5 Rasuras no Bairro (%d/5)"%mini(slain,5)
 	elif quest_started: objective="Retorne a Maera em Vigília."
 	if quest_completed: objective="Investigação concluída · U"
 	hud.set_mission(mission_title+"\n"+objective)
@@ -945,7 +947,7 @@ func _setup_rpg_systems() -> void:
 	progression.name = "ProgressionManager"
 	player.add_child(progression)
 	progression.leveled_up.connect(_on_level_up)
-	progression.experience_gained.connect(func(amount: int) -> void: _on_combat_event(player.global_position+Vector3(0,2,0),"+%d XP" % amount,"xp"))
+	progression.experience_gained.connect(func(amount: int) -> void: _on_combat_event(player.global_position+Vector3(0,3.3,0),"+%d XP" % amount,"xp"))
 	skill_tree = AethelSkillTree.new()
 	skill_tree.name = "SkillTree"
 	player.add_child(skill_tree)
@@ -1412,14 +1414,19 @@ func _setup_reactive_ui() -> void:
 	toolbar.name="WorldToolbar"
 	hud.root.add_child(toolbar)
 	toolbar.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	toolbar.offset_left = -196
-	toolbar.offset_right = -18
+	toolbar.anchor_left=0.84
+	toolbar.anchor_right=0.84
+	toolbar.offset_left = 0
+	toolbar.offset_right = 176
+	toolbar.add_theme_constant_override("separation",2)
 	toolbar.offset_top = 174
 	toolbar.offset_bottom = 208
 	for entry: Array in [["I","inventory"],["C","character"],["U","quests"],["H","help"],["Esc","pause"]]:
 		var button := Button.new()
 		button.text = entry[0]
-		button.custom_minimum_size=Vector2(30,28)
+		button.custom_minimum_size=Vector2(27,28)
+		AethelUI.style_slot(button,0)
+		button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		button.tooltip_text={"inventory":"Mochila","character":"Atributos","quests":"Missões","help":"Ajuda","pause":"Pausa"}[entry[1]]
 		hud.quick_buttons[entry[1]]=button
 		button.add_theme_font_size_override("font_size",12)

@@ -118,7 +118,7 @@ func update_skills(selected: String, unlocked: Dictionary, ids: Array, actor: No
 
 	_skill_cache = cache
 	if secondary_button!=null and catalog.has(selected):
-		secondary_button.text="M2 · %s\n%d Éter"%[{"heavy_strike":"Golpe","iron_guard":"Guarda","echo_cleave":"Eco"}.get(selected,selected),catalog[selected].ether_cost]
+		secondary_button.text="M2 · %s\n%d Éter"%[{"heavy_strike":"Golpe Pesado","iron_guard":"Guarda","echo_cleave":"Eco"}.get(selected,selected),catalog[selected].ether_cost]
 		secondary_button.tooltip_text="Botão direito repete: "+str(catalog[selected].display_name)
 
 func _make_resource_panel() -> void:

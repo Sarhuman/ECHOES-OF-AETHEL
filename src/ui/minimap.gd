@@ -53,6 +53,7 @@ func _draw() -> void:
 		if manager.floor_id(manager.point(row.position))==manager.active_floor and manager.known_pois.has(str(row.id)) and manager.discovered(manager.point(row.position)):
 			draw_circle(project(manager.point(row.position)),3,Color("b8a058"))
 	draw_circle(project(world.player.position),4,Color("a3e6be"))
-	draw_string(ThemeDB.fallback_font,Vector2(9,17),(str(manager.definitions[world.region_id].name) if str(manager.definitions[world.region_id].name).length()<=22 else str(manager.definitions[world.region_id].name).left(20)+"…")+" · P%d"%manager.active_floor,HORIZONTAL_ALIGNMENT_LEFT,-1,11,Color("d3c3a3"))
+	var short_name: String={"map_01":"Vigília","map_02":"Bairro","map_03":"Pátio","map_04":"Arquivo"}.get(world.region_id,"Mapa")
+	draw_string(ThemeDB.fallback_font,Vector2(9,17),(str(manager.definitions[world.region_id].name) if expanded else short_name)+" · P%d"%manager.active_floor,HORIZONTAL_ALIGNMENT_LEFT,size.x-18,12,Color("d3c3a3"))
 
 	if expanded: draw_string(ThemeDB.fallback_font,Vector2(7,size.y-6),"● Você  □ Saída  ● Âncora  • Vestígio",HORIZONTAL_ALIGNMENT_LEFT,-1,10,Color("d3c3a3"))
