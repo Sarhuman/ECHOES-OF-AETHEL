@@ -1,0 +1,5 @@
+[gd_scene load_steps=3 format=3]
+[ext_resource type="PackedScene" path="res://scenes/regions/map_01.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://art/imported/vigilia/vigilia_summer.tscn" id="2"]
+[node name="map_01" instance=ExtResource("1")]
+presentation_scene = ExtResource("2")

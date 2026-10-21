@@ -1,4 +1,4 @@
-param([string]$Executable = (Join-Path $PSScriptRoot '../teste-fase20/EchoesOfAethel-Fase27.2.exe'))
+param([string]$Executable = (Join-Path $PSScriptRoot '../teste-fase20/EchoesOfAethel-Fase27.3.exe'))
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
 $logsPath = Join-Path $taskRoot 'relatorios-fase20'
@@ -14,7 +14,7 @@ try {
     $process.Refresh()
     if ($process.ExitCode -ne 0) { throw 'Windows executable smoke failed' }
     $log = Get-Content -LiteralPath $logPath -Raw
-    if ($log -notmatch 'SMOKE MENU READY' -or $log -notmatch 'BUILD SMOKE: 35 checks, 0 failures' -or $log -match 'SCRIPT ERROR|Parse Error|FALHA:') {
+    if ($log -notmatch 'SMOKE MENU READY' -or $log -notmatch 'BUILD SMOKE: 38 checks, 0 failures' -or $log -match 'SCRIPT ERROR|Parse Error|FALHA:') {
         throw 'Windows executable did not finish the gameplay smoke checks'
     }
 } finally { $env:AETHEL_TEST_SAVE_DIR = $oldSaveDir }

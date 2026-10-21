@@ -1,3 +1,11 @@
+# Fase 27.3 — Vigília, arquitetura modular inicial
+
+Cenas editáveis autoradas com Summer Engine0.7.3 local e integradas à Godot oficial4.7.2. Praça, fachadas/telhados, torre dos sinos, oficina e arco leste usam a navegação, colisores, NPCs, IDs e save existentes. GREYBOX continua recuperável. Somente Vigília foi reconstruída; arte inicial, sem aprovação humana.
+
+Pacote EchoesOfAethel-Fase27.3-Windows-x64.zip: jogo/EchoesOfAethel-Fase27.3.exe com PCK, fontes, relatório e capturas reais. [Pipeline Summer](docs/FASE27_3_SUMMER_PIPELINE.md), [layout](docs/FASE27_3_VIGILIA_LAYOUT.md), [auditoria](docs/FASE27_3_AUDIT.md), [validação](docs/FASE27_3_VALIDATION.md). Summer não é necessário para executar o jogo. PR Draft sobre Fase27.2, sem merge automático.
+
+---
+
 # Fase 27.2 — pipeline de personagens, arte final pendente
 
 Bastião mantém o protótipo anterior como padrão. Contrato de importação, validação de orçamento/rig/animações/sockets e troca reversível via adaptador existente. GLB azul de teste explicitamente provisório, sem modelo humano final ou aprovação artística.

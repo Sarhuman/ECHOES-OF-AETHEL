@@ -1,0 +1,49 @@
+[gd_scene format=4]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mkbi2"]
+resource_name = "roof"
+albedo_color = Color(0.23529412, 0.27450982, 0.30588236, 1)
+roughness = 0.9
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_wst60"]
+_surfaces = [{
+"aabb": AABB(-1.2, 0, -1.2, 2.4, 0.8, 2.4),
+"attribute_data": PackedByteArray("q6oqPgAAAABWVVU/AAAAAKuqKj4AAAAAVlVVPwAAAAAAAAAAAAAAP6uqKj8AAAA/q6qqPgAAAD8AAIA/AAAAP6uqqj4AAAAAAAAAAAAAAD+rqio/AAAAAKuqqj4AAAA/q6qqPgAAAD8AAAAAAACAP6uqKj8AAAA/q6qqPgAAgD+rqio/AAAAPwAAgD8AAAA/q6oqPwAAgD8AAIA/AACAPw=="),
+"format": 34359742487,
+"index_count": 24,
+"index_data": PackedByteArray("AgAGAAQAAwAHAAUACAAKAAwACgAOAAwACQALAA0ACwAPAA0AEAARABIAEQATABIA"),
+"material": SubResource("StandardMaterial3D_mkbi2"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 20,
+"vertex_data": PackedByteArray("AAAAAM3MTD+amZk/AAAAAM3MTD+amZm/AAAAAM3MTD+amZk/AAAAAM3MTD+amZm/mpmZvwAAAACamZk/mpmZPwAAAACamZm/mpmZPwAAAACamZk/mpmZvwAAAACamZm/AAAAAM3MTD+amZk/AAAAAM3MTD+amZm/AAAAAM3MTD+amZm/AAAAAM3MTD+amZk/mpmZPwAAAACamZk/mpmZvwAAAACamZm/mpmZPwAAAACamZm/mpmZvwAAAACamZk/mpmZvwAAAACamZk/mpmZPwAAAACamZk/mpmZvwAAAACamZm/mpmZPwAAAACamZm//3//f////7//////AAD/v/9//3////+//////wAA/7//f/9/////v/////8AAP+//3//f////7//////AAD/vzKzysz/////zEzKzP9//78ys8rM/////8xMysz/f/+/MrPKzP/////MTMrM/3//vzKzysz/////zEzKzP9//78AgAAA////vwCAAAD///+/AIAAAP///78AgAAA////vw==")
+}]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l8ag6"]
+resource_name = "timber"
+albedo_color = Color(0.25882354, 0.19215687, 0.15686275, 1)
+roughness = 0.9
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_ic2kp"]
+_surfaces = [{
+"aabb": AABB(-1.227735, -0.041602522, -1.275, 2.45547, 0.88320506, 0.119999886),
+"attribute_data": PackedByteArray("AAAAAAAAAACrqio/AAAAAKuqqj4AAAAAAACAPwAAAAAAAAAAAAAAP6uqKj8AAAA/q6qqPgAAAD8AAIA/AAAAP6uqqj4AAAAAAAAAAAAAAD+rqio/AAAAAKuqqj4AAAA/q6qqPgAAAD8AAAAAAACAP6uqKj8AAAA/q6qqPgAAgD+rqqo+AAAAP6uqKj8AAAA/q6oqPwAAAD8AAIA/AAAAP6uqqj4AAIA/q6oqPwAAgD+rqio/AACAPwAAgD8AAIA/AAAAAAAAAACrqio/AAAAAKuqqj4AAAAAAACAPwAAAAAAAAAAAAAAP6uqKj8AAAA/q6qqPgAAAD8AAIA/AAAAP6uqqj4AAAAAAAAAAAAAAD+rqio/AAAAAKuqqj4AAAA/q6qqPgAAAD8AAAAAAACAP6uqKj8AAAA/q6qqPgAAgD+rqqo+AAAAP6uqKj8AAAA/q6oqPwAAAD8AAIA/AAAAP6uqqj4AAIA/q6oqPwAAgD+rqio/AACAPwAAgD8AAIA/"),
+"format": 34359742487,
+"index_count": 72,
+"index_data": PackedByteArray("AAACAAQAAgAGAAQAAQADAAUAAwAHAAUACAAKAAwACgAOAAwACQALAA0ACwAPAA0AEAASABQAEgAWABQAEQATABUAEwAXABUAGAAaABwAGgAeABwAGQAbAB0AGwAfAB0AIAAiACQAIgAmACQAIQAjACUAIwAnACUAKAAqACwAKgAuACwAKQArAC0AKwAvAC0A"),
+"material": SubResource("StandardMaterial3D_l8ag6"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 48,
+"vertex_data": PackedByteArray("bCadv2hnKj0L15O/gDTjvERzVz8zM6O/gDTjvERzVz8L15O/bCadv2hnKj0zM6O/yAyWv2hnKr0L15O/gDTjPFYmQj8zM6O/gDTjPFYmQj8L15O/yAyWv2hnKr0zM6O/gDTjvERzVz8L15O/bCadv2hnKj0zM6O/gDTjvERzVz8zM6O/bCadv2hnKj0L15O/gDTjPFYmQj8L15O/yAyWv2hnKr0zM6O/gDTjPFYmQj8zM6O/yAyWv2hnKr0L15O/gDTjvERzVz8L15O/yAyWv2hnKr0L15O/bCadv2hnKj0L15O/gDTjPFYmQj8L15O/gDTjvERzVz8zM6O/yAyWv2hnKr0zM6O/bCadv2hnKj0zM6O/gDTjPFYmQj8zM6O/gDTjPERzVz8L15O/bCadP2hnKj0zM6O/bCadP2hnKj0L15O/gDTjPERzVz8zM6O/gDTjvFYmQj8L15O/yAyWP2hnKr0zM6O/yAyWP2hnKr0L15O/gDTjvFYmQj8zM6O/bCadP2hnKj0L15O/gDTjPERzVz8zM6O/bCadP2hnKj0zM6O/gDTjPERzVz8L15O/yAyWP2hnKr0L15O/gDTjvFYmQj8zM6O/yAyWP2hnKr0zM6O/gDTjvFYmQj8L15O/bCadP2hnKj0L15O/gDTjvFYmQj8L15O/gDTjPERzVz8L15O/yAyWP2hnKr0L15O/bCadP2hnKj0zM6O/gDTjvFYmQj8zM6O/gDTjPERzVz8zM6O/yAyWP2hnKr0zM6O//3/+f8zMmNn/////MjNlpv9//n/MzJjZ/////zIzZab/f/5/zMyY2f////8yM2Wm/3/+f8zMmNn/////MjNlpszMMrP/////MjPMTP9//r/MzDKz/////zIzzEz/f/6/zMwys/////8yM8xM/3/+v8zMMrP/////MjPMTP9//r/MTMzMMjNlpjKzMjPMzJjZzEzMzDIzZaYyszIzzMyY2cxMzMwyM2WmMrMyM8zMmNnMTMzMMjNlpjKzMjPMzJjZ/n//f8zMZab/////MjOY2f5//3/MzGWm/////zIzmNn+f/9/zMxlpv////8yM5jZ/n//f8zMZab/////MjOY2czMzEz/////MjMys/5//7/MzMxM/////zIzMrP+f/+/zMzMTP////8yMzKz/n//v8zMzEz/////MjMys/5//78ys8zMMjOY2cxMMjPMzGWmMrPMzDIzmNnMTDIzzMxlpjKzzMwyM5jZzEwyM8zMZaYys8zMMjOY2cxMMjPMzGWm")
+}]
+
+[node name="roof" type="Node3D" unique_id=350990759]
+
+[node name="Geometry" type="Node3D" parent="." unique_id=1640840692]
+
+[node name="roof" type="MeshInstance3D" parent="Geometry" unique_id=1577228874]
+mesh = SubResource("ArrayMesh_wst60")
+
+[node name="timber" type="MeshInstance3D" parent="Geometry" unique_id=1256279207]
+mesh = SubResource("ArrayMesh_ic2kp")

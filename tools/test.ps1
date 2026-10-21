@@ -7,6 +7,7 @@ New-Item -ItemType Directory -Path $logsPath -Force | Out-Null
 $oldSaveDir = $env:AETHEL_TEST_SAVE_DIR
 $results = @()
 $markers = @{
+    test_phase27_3="PHASE27.3:"; test_phase27_3_gui="PHASE27.3 GUI:"; test_phase27_3_isolated="SUMMER ISOLATED:"
     test_phase27_2="PHASE27.2:"; test_phase27_2_gui="PHASE27.2 GUI:"
     test_phase27_gui='PHASE27 GUI:'; test_phase27='PHASE27:'; test_phase26_gui='PHASE26 GUI:'; test_phase26='PHASE26:'; test_phase25='PHASE25:'; test_phase25_gui='PHASE25 GUI:'; test_phase24='PHASE24:'; test_phase24_gui='PHASE24 GUI:'; test_phase23='PHASE23:'; test_phase23_gui='PHASE23 GUI:'
     test_gothic_ui='GOTHIC UI:'; test_project_integrity='PROJECT INTEGRITY:'
@@ -21,7 +22,7 @@ try {
     $graphLog = Join-Path $logsPath 'region-graph-final.log'
     & $enginePath --headless --path $taskRoot --script res://tools/validate_regions.gd --log-file $graphLog | Out-Host
     if ($LASTEXITCODE -ne 0 -or (Select-String -LiteralPath $graphLog -Pattern 'SCRIPT ERROR|Parse Error' -Quiet)) { throw 'Region graph validation failed' }
-    foreach ($testName in @('test_phase27_2','test_phase27_2_gui','test_phase27_gui','test_phase27','test_phase26_gui','test_phase26','test_phase25','test_phase25_gui','test_phase24','test_phase24_gui','test_phase23','test_phase23_gui','test_gothic_ui','test_project_integrity','test_items','test_combat','test_gameplay','test_ui_smoke','test_rpg_systems','test_hud_revision','test_consolidation','test_playability','balance_bot')) {
+    foreach ($testName in @('test_phase27_3_isolated','test_phase27_3','test_phase27_3_gui','test_phase27_2','test_phase27_2_gui','test_phase27_gui','test_phase27','test_phase26_gui','test_phase26','test_phase25','test_phase25_gui','test_phase24','test_phase24_gui','test_phase23','test_phase23_gui','test_gothic_ui','test_project_integrity','test_items','test_combat','test_gameplay','test_ui_smoke','test_rpg_systems','test_hud_revision','test_consolidation','test_playability','balance_bot')) {
         $env:AETHEL_TEST_SAVE_DIR = Join-Path $logsPath "profiles/$testName"
         New-Item -ItemType Directory -Path $env:AETHEL_TEST_SAVE_DIR -Force | Out-Null
         $logPath = Join-Path $logsPath "$testName-final.log"

@@ -8,6 +8,10 @@
 
 config_version=5
 
+[aethel]
+
+world/vigilia_variant="SUMMER"
+
 [animation]
 
 compatibility/default_parent_skeleton_in_mesh_instance_3d=true
@@ -15,7 +19,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Echoes of Aethel - Hybrid 2.5D"
-config/version="0.27.2"
+config/version="0.27.3"
 run/main_scene="res://scenes/main_menu.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 

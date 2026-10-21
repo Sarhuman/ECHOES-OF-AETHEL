@@ -1,0 +1,27 @@
+[gd_scene format=4]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4k7by"]
+resource_name = "dark_stone"
+albedo_color = Color(0.29411766, 0.28235295, 0.2627451, 1)
+roughness = 0.9
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_efynu"]
+_surfaces = [{
+"aabb": AABB(-0.5, 0, -0.1, 1, 0.12, 0.2),
+"attribute_data": PackedByteArray("AAAAAAAAAACrqio/AAAAAKuqqj4AAAAAAACAPwAAAAAAAAAAAAAAP6uqKj8AAAA/q6qqPgAAAD8AAIA/AAAAP6uqqj4AAAAAAAAAAAAAAD+rqio/AAAAAKuqqj4AAAA/q6qqPgAAAD8AAAAAAACAP6uqKj8AAAA/q6qqPgAAgD+rqqo+AAAAP6uqKj8AAAA/q6oqPwAAAD8AAIA/AAAAP6uqqj4AAIA/q6oqPwAAgD+rqio/AACAPwAAgD8AAIA/"),
+"format": 34359742487,
+"index_count": 36,
+"index_data": PackedByteArray("AAACAAQAAgAGAAQAAQADAAUAAwAHAAUACAAKAAwACgAOAAwACQALAA0ACwAPAA0AEAASABQAEgAWABQAEQATABUAEwAXABUA"),
+"material": SubResource("StandardMaterial3D_4k7by"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("AAAAv4/C9T3NzMw9AAAAP4/C9T3NzMy9AAAAP4/C9T3NzMw9AAAAv4/C9T3NzMy9AAAAvwAAAADNzMw9AAAAPwAAAADNzMy9AAAAPwAAAADNzMw9AAAAvwAAAADNzMy9AAAAP4/C9T3NzMw9AAAAv4/C9T3NzMy9AAAAP4/C9T3NzMy9AAAAv4/C9T3NzMw9AAAAPwAAAADNzMw9AAAAvwAAAADNzMy9AAAAPwAAAADNzMy9AAAAvwAAAADNzMw9AAAAP4/C9T3NzMw9AAAAvwAAAADNzMw9AAAAv4/C9T3NzMw9AAAAPwAAAADNzMw9AAAAP4/C9T3NzMy9AAAAvwAAAADNzMy9AAAAv4/C9T3NzMy9AAAAPwAAAADNzMy9/3//f////7//////AAD/v/9//3////+//////wAA/7//f/9/////v/////8AAP+//3//f////7//////AAD/v///AID/////AAAAgP9//7///wCA/////wAAAID/f/+///8AgP////8AAACA/3//v///AID/////AAAAgP9//78AgP//AAD/vwCAAAD///+/AID//wAA/78AgAAA////vwCA//8AAP+/AIAAAP///78AgP//AAD/vwCAAAD///+/")
+}]
+
+[node name="curb" type="Node3D" unique_id=627797959]
+
+[node name="Geometry" type="Node3D" parent="." unique_id=1210503871]
+
+[node name="dark_stone" type="MeshInstance3D" parent="Geometry" unique_id=1760951216]
+mesh = SubResource("ArrayMesh_efynu")

@@ -1,0 +1,10 @@
+{
+  "mode": "ISOLATED",
+  "editorVersion": "0.7.3",
+  "engine": "Welcome to Summer Engine (c) built on the awesome work by Godot 2007-present Juan Linietsky, Ariel Manzur & Godot Contributors.\r\n\r\nSUMMER AUTHORING: {\"binary\":\"C:/Users/Sarumano/AppData/Local/SummerEngine/current/Summer.exe\",\"engine\":\"4.7.2-stable (custom_build)\",\"mode\":\"ISOLATED\",\"success\":true}",
+  "executableSha256": "07ad5b69732c86384b91f54c027c5f6c83a415b824536d064fbbdde5a477bd47",
+  "generated": {
+    "sha256": "5c26023f6f864d37091cf5399d4606711f9333f4214f260535921bbcc78b1376",
+    "file": "integration_test.tscn"
+  }
+}

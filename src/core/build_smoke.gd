@@ -132,6 +132,9 @@ func run() -> void:
 	await frames(3)
 	check(world.regions.validate_graph().is_empty(),"release graph connections")
 	check(not world.regions.allows_combat(),"release safe hub")
+	check(world.regions.active_vigilia_variant=="SUMMER" and world.regions.level.presentation_asset!=null,"release Summer-authored architecture")
+	check(world.regions.level.presentation_occluders.size()==7,"release roof occlusion bounds")
+	check(world.regions.level.cells.size()==988,"release unchanged hub navigation cells")
 	for connector: String in ["map_01_to_map_02","map_02_to_map_03","map_03_to_map_04"]:
 		player.position=world.regions.connectors[connector].position
 		check(world.regions.transition(connector),"release canonical transition "+connector)

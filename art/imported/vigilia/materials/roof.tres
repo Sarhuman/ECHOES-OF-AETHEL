@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "roof"
+albedo_color = Color(0.23529412, 0.27450982, 0.30588236, 1)
+roughness = 0.9

@@ -2,6 +2,9 @@ class_name AethelRegionLevel
 extends Node3D
 ## Authored region composition. Physics, navigation and map outline share one definition.
 @export var region_id := "map_01"
+@export var presentation_scene: PackedScene
+var presentation_asset: Node3D
+var presentation_occluders: Array[Node3D]=[]
 var definition: Dictionary
 var cells: Dictionary = {}
 var graph := AStar3D.new()
@@ -21,6 +24,7 @@ func _ready() -> void:
 	build_geometry()
 	batch_boundaries()
 	build_navigation()
+	apply_presentation()
 	build_usec = Time.get_ticks_usec()-started
 
 func height_at(x: float,z: float) -> float:
@@ -98,6 +102,7 @@ func build_geometry() -> void:
 	mat.vertex_color_use_as_albedo=true
 	instance.material_override=mat
 	instance.multimesh=batch
+	instance.set_meta("region_floor",true)
 	add_child(instance)
 	var n := 0
 	for key: Vector2i in cells:
@@ -123,6 +128,7 @@ func build_geometry() -> void:
 	for obstacle: Array in definition.blocks:
 		var center := Vector3(obstacle[0]+obstacle[2]/2.0,1.2,obstacle[1]+obstacle[3]/2.0)
 		var structure:=box(center,Vector3(obstacle[2],2.4,obstacle[3]),Color("53505a"))
+		structure.set_meta("region_block_index",definition.blocks.find(obstacle))
 		var roof:=box(center+Vector3(0,1.3,0),Vector3(obstacle[2]+0.2,0.2,obstacle[3]+0.2),Color("74656c"),false)
 		remove_child(roof)
 		structure.add_child(roof)
@@ -141,9 +147,9 @@ func build_geometry() -> void:
 	if region_id == "map_01":
 		# Bell tower, inhabited bronze lanterns, repair benches; services keep their established positions.
 		for x in [-10.0,10.0]:
-			box(Vector3(x,1.7,-10),Vector3(2,3.4,2),Color("62575a"))
-		box(Vector3(-10,4,-10),Vector3(1.4,1.3,1.4),Color("9a7b45"),false)
-		box(Vector3(-10,5,-10),Vector3(2.5,0.4,2.5),Color("3a3226"),false)
+			box(Vector3(x,1.7,-10),Vector3(2,3.4,2),Color("62575a")).set_meta("legacy_hub_detail",true)
+		box(Vector3(-10,4,-10),Vector3(1.4,1.3,1.4),Color("9a7b45"),false).set_meta("legacy_hub_detail",true)
+		box(Vector3(-10,5,-10),Vector3(2.5,0.4,2.5),Color("3a3226"),false).set_meta("legacy_hub_detail",true)
 		for z in [-8.0,8.0]:
 			box(Vector3(-13,0.5,z),Vector3(2,1,2),Color("7e6b54"))
 	elif region_id == "map_03":
@@ -183,6 +189,28 @@ func build_geometry() -> void:
 		lamp.omni_range=7
 		lamp.shadow_enabled=false
 		add_child(lamp)
+
+func apply_presentation() -> void:
+	if presentation_scene==null or region_id!="map_01": return
+	var asset:=presentation_scene.instantiate() as Node3D
+	if asset==null: return
+	# This layer is presentation only. Reject geometry that could change routes/state.
+	for kind: String in ["CollisionObject3D","CollisionShape3D","NavigationRegion3D","NavigationAgent3D","Camera3D"]:
+		if not asset.find_children("*",kind,true,false).is_empty():
+			asset.free();return
+	add_child(asset);presentation_asset=asset
+	for body: Node3D in get_children():
+		if body.get_meta("region_floor",false): body.hide()
+		if body.has_meta("region_block_index"):
+			var replacement:=asset.get_node_or_null("BlockVisual%d"%int(body.get_meta("region_block_index"))) as Node3D
+			if replacement!=null:
+				for mesh: GeometryInstance3D in body.find_children("*","GeometryInstance3D",true,false): mesh.hide()
+				replacement.reparent(body,true)
+				presentation_occluders.append(replacement)
+		if body.get_meta("legacy_hub_detail",false):
+			for mesh: GeometryInstance3D in body.find_children("*","GeometryInstance3D",true,false): mesh.hide()
+	for child: Node3D in asset.get_children():
+		if child.has_meta("occlusion_bounds"): presentation_occluders.append(child)
 
 func build_navigation() -> void:
 	navigation=NavigationRegion3D.new()
