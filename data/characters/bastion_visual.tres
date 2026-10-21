@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="AethelCharacterVisualDefinition" load_steps=3 format=3]
+[ext_resource type="Script" path="res://src/characters/character_visual_definition.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/characters/bastion_placeholder.tscn" id="2"]
+[resource]
+script = ExtResource("1")
+character_id = &"bastion"
+display_name = "Bastião do Crepúsculo"
+model_scene = ExtResource("2")
+provenance_path = "res://art/source/bastiao/PRODUCTION_SPEC.md"
