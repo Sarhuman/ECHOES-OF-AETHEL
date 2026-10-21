@@ -4,12 +4,28 @@ signal skill_selected(index: int)
 var skill_buttons: Array[Button] = []
 
 var resource_panel: PanelContainer
-var hp_bar: ProgressBar
-var ether_bar: ProgressBar
+var hp_bar: Range
+var ether_bar: Range
 var hp_text: Label
 var ether_text: Label
 var stamina_bar: ProgressBar
 var stamina_text: Label
+var life_globe: AethelGlobe
+var ether_globe: AethelGlobe
+var stamina_row: VBoxContainer
+var skill_row: HBoxContainer
+var effect_row: HBoxContainer
+var effect_badges: Dictionary = {}
+var xp_text: Label
+var target_details: Label
+var boss_box: PanelContainer
+var boss_name: Label
+var boss_bar: ProgressBar
+var target_actor: CharacterBody3D
+var _world: Node3D
+var _progression: Node
+var _skill_cache: Array = []
+var presentation_updates := 0
 var _player: Node
 
 var root: Control
@@ -31,9 +47,12 @@ func _ready() -> void:
 	_make_target_bar()
 	_make_skill_label()
 	_make_skill_bar()
+	_make_effects()
+	apply_settings()
 
 func _make_skill_bar() -> void:
-	var row := HBoxContainer.new()
+	skill_row = HBoxContainer.new()
+	var row := skill_row
 	root.add_child(row)
 	row.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	row.offset_left = -210
@@ -43,6 +62,9 @@ func _make_skill_bar() -> void:
 	for index in 3:
 		var button := Button.new()
 		button.focus_mode = Control.FOCUS_NONE
+		button.icon = [preload("res://assets/ui/skills/strike.svg"),preload("res://assets/ui/skills/guard.svg"),preload("res://assets/ui/skills/cleave.svg")][index]
+		button.expand_icon = true
+		button.add_theme_constant_override("icon_max_width",24)
 		button.text = ["F1 Golpe", "F2 Guarda", "F3 Eco"][index]
 		button.custom_minimum_size = Vector2(138, 54)
 		button.tooltip_text = "Clique ou F1–F3: executar. Botão direito repete a última técnica."
@@ -52,6 +74,7 @@ func _make_skill_bar() -> void:
 		skill_buttons.append(button)
 
 func update_skills(selected: String, unlocked: Dictionary, ids: Array, actor: Node = null, catalog: Dictionary = {}) -> void:
+	var cache: Array = []
 	for index in skill_buttons.size():
 		var button := skill_buttons[index]
 		var id: String = ids[index]
@@ -73,6 +96,10 @@ func update_skills(selected: String, unlocked: Dictionary, ids: Array, actor: No
 					state = issue
 					color = Color("e7a5a5")
 				else: state = "Pronto · %d Éter" % skill.ether_cost
+		var snapshot: Array = [id,state,color,unlocked.has(id),actor.hp <= 0 if actor != null else false,id == selected]
+		cache.append(snapshot)
+		if index < _skill_cache.size() and _skill_cache[index] == snapshot: continue
+		presentation_updates += 1
 		button.text = "%s\n%s" % [["F1 GOLPE", "F2 GUARDA", "F3 ECO"][index], state]
 		button.disabled = not unlocked.has(id) or (actor != null and actor.hp <= 0)
 		button.add_theme_font_size_override("font_size", 13)
@@ -82,6 +109,8 @@ func update_skills(selected: String, unlocked: Dictionary, ids: Array, actor: No
 		style.set_content_margin_all(4)
 		button.add_theme_stylebox_override("normal", style)
 
+	_skill_cache = cache
+
 func _make_resource_panel() -> void:
 	resource_panel = PanelContainer.new()
 	resource_panel.name = "ResourcePanel"
@@ -90,28 +119,29 @@ func _make_resource_panel() -> void:
 	resource_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	resource_panel.offset_left = 18
 	resource_panel.offset_right = 350
-	resource_panel.offset_top = -158
+	resource_panel.offset_top = -194
 	resource_panel.offset_bottom = -18
-	var backing := AethelUI.panel(AethelUI.BACKGROUND,AethelUI.BRASS)
-	resource_panel.add_theme_stylebox_override("panel", backing)
-	var ornament := AethelOrnament.new()
-	root.add_child(ornament)
-	ornament.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	ornament.offset_left = 18
-	ornament.offset_right = 350
-	ornament.offset_top = -158
-	ornament.offset_bottom = -18
-	var rows := VBoxContainer.new()
-	rows.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rows.add_theme_constant_override("separation", 6)
-	resource_panel.add_child(rows)
-	var life := _resource_row(rows, "VIDA", AethelUI.LIFE, 28)
-	hp_bar = life[0]
-	hp_text = life[1]
-	var ether := _resource_row(rows, "ÉTER", AethelUI.ETHER, 24)
-	ether_bar = ether[0]
-	ether_text = ether[1]
-	var stamina := _resource_row(rows, "FÔLEGO", AethelUI.STAMINA, 24)
+	resource_panel.add_theme_stylebox_override("panel",AethelUI.panel(AethelUI.BACKGROUND,AethelUI.BRASS))
+	var column := VBoxContainer.new()
+	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	column.add_theme_constant_override("separation",2)
+	resource_panel.add_child(column)
+	var row := HBoxContainer.new()
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	column.add_child(row)
+	life_globe = AethelGlobe.new()
+	life_globe.resource_title = "VIDA"
+	life_globe.liquid_color = AethelUI.LIFE
+	row.add_child(life_globe)
+	ether_globe = AethelGlobe.new()
+	ether_globe.resource_title = "ÉTER"
+	ether_globe.liquid_color = AethelUI.ETHER
+	row.add_child(ether_globe)
+	hp_bar = life_globe.progress
+	hp_text = life_globe.amount_label
+	ether_bar = ether_globe.progress
+	ether_text = ether_globe.amount_label
+	var stamina := _resource_row(column,"FÔLEGO",AethelUI.STAMINA,22)
 	stamina_bar = stamina[0]
 	stamina_text = stamina[1]
 
@@ -148,7 +178,7 @@ func _update_resource(bar: ProgressBar, text: Label, current: float, maximum: fl
 	text.text = "%s  %d / %d" % [text.get_meta("resource_title"), roundi(current), roundi(maximum)]
 
 func setup_player_listeners(player: Node) -> void:
-	if _player != null:
+	if is_instance_valid(_player):
 		if _player.hp_changed.is_connected(_on_hp_changed): _player.hp_changed.disconnect(_on_hp_changed)
 		if _player.ether_changed.is_connected(_on_ether_changed): _player.ether_changed.disconnect(_on_ether_changed)
 		if _player.stamina_changed.is_connected(_on_stamina_changed): _player.stamina_changed.disconnect(_on_stamina_changed)
@@ -162,13 +192,14 @@ func setup_player_listeners(player: Node) -> void:
 	_on_stamina_changed(player.stamina, player.max_stamina)
 
 func _on_hp_changed(current: float, maximum: float, _instant: bool = false) -> void:
-	_update_resource(hp_bar, hp_text, current, maximum)
+	life_globe.update_value(current,maximum,_instant)
 
 func _on_ether_changed(current: float, maximum: float, _instant: bool = false) -> void:
-	_update_resource(ether_bar, ether_text, current, maximum)
+	ether_globe.update_value(current,maximum,_instant)
 
 func _on_stamina_changed(current: float, maximum: float) -> void:
 	_update_resource(stamina_bar, stamina_text, current, maximum)
+	if current < 8: stamina_text.text += " · BAIXO"
 
 func _make_belt() -> void:
 	var container := Control.new()
@@ -225,6 +256,7 @@ func set_xp(current: int, required: int) -> void:
 	if xp_bar == null: return
 	xp_bar.max_value = float(maxi(1, required))
 	xp_bar.value = float(current)
+	if xp_text != null: xp_text.text = "Nível %d · XP %d / %d" % [_progression.current_level if is_instance_valid(_progression) else 1,current,required]
 
 func _make_target_bar() -> void:
 	target_box = Control.new()
@@ -253,6 +285,34 @@ func _make_target_bar() -> void:
 	style.bg_color = Color("b8302f")
 	target_bar.add_theme_stylebox_override("fill", style)
 	target_box.add_child(target_bar)
+	target_details = Label.new()
+	target_details.position = Vector2(-50,48)
+	target_details.size = Vector2(480,40)
+	target_details.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	target_details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	target_details.add_theme_font_size_override("font_size",12)
+	target_details.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	target_box.add_child(target_details)
+	boss_box = PanelContainer.new()
+	root.add_child(boss_box)
+	boss_box.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	boss_box.offset_left = -220
+	boss_box.offset_right = 220
+	boss_box.offset_top = 88
+	boss_box.offset_bottom = 158
+	boss_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	boss_box.add_theme_stylebox_override("panel",AethelUI.panel(AethelUI.BACKGROUND,AethelUI.RARE,2))
+	var boss_column := VBoxContainer.new()
+	boss_column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	boss_box.add_child(boss_column)
+	boss_name = Label.new()
+	boss_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	boss_column.add_child(boss_name)
+	boss_bar = ProgressBar.new()
+	boss_bar.custom_minimum_size = Vector2(416,22)
+	boss_bar.show_percentage = true
+	boss_column.add_child(boss_bar)
+	boss_box.hide()
 	target_box.visible = false
 
 func show_target(display_name: String, current: int, maximum: int, color: Color) -> void:
@@ -265,6 +325,7 @@ func show_target(display_name: String, current: int, maximum: int, color: Color)
 
 func hide_target() -> void:
 	if target_box != null: target_box.visible = false
+	if boss_box != null: boss_box.hide()
 
 func _make_skill_label() -> void:
 	skill_label = Label.new()
@@ -280,3 +341,108 @@ func _make_skill_label() -> void:
 
 func set_right_skill(text_value: String) -> void:
 	if skill_label != null: skill_label.text = text_value
+
+func _make_effects() -> void:
+	effect_row = HBoxContainer.new()
+	effect_row.add_theme_constant_override("separation",6)
+	root.add_child(effect_row)
+	effect_row.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	effect_row.offset_left = -210
+	effect_row.offset_right = 210
+	effect_row.offset_top = -214
+	effect_row.offset_bottom = -178
+	xp_text = Label.new()
+	xp_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	xp_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(xp_text)
+	xp_text.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	xp_text.offset_left = -200
+	xp_text.offset_right = 200
+	xp_text.offset_top = -40
+	xp_text.offset_bottom = -15
+
+func show_effect(id: String,remaining: float,intensity: float) -> void:
+	if remaining <= 0:
+		if effect_badges.has(id): effect_badges[id].queue_free(); effect_badges.erase(id)
+		return
+	if not effect_badges.has(id):
+		var badge := Button.new()
+		badge.focus_mode = Control.FOCUS_NONE
+		badge.custom_minimum_size = Vector2(160,32)
+		badge.icon = preload("res://assets/ui/aethel_portal.svg")
+		badge.expand_icon = true
+		badge.add_theme_constant_override("icon_max_width",20)
+		effect_row.add_child(badge)
+		effect_badges[id] = badge
+	var name: String = {"guard":"Guarda","altar":"Altar de Ardósia"}.get(id,id)
+	effect_badges[id].text = "%s · %ds" % [name,ceili(remaining)]
+	effect_badges[id].tooltip_text = "%s\nDuração: %ds\nRedução de dano: %d%%" % [name,ceili(remaining),roundi(intensity*100)]
+
+func bind_world(world: Node3D) -> void:
+	if _world == world: return
+	_world = world
+	_progression = world.progression
+	_progression.xp_changed.connect(set_xp)
+	_progression.leveled_up.connect(_level_up)
+	world.player.skills_changed.connect(refresh_skills)
+	world.player.effect_changed.connect(show_effect)
+	world.exploration.effect_changed.connect(show_effect)
+	world.target_changed.connect(bind_target)
+	world.skill_tree.skills_updated.connect(refresh_skills)
+	set_xp(_progression.current_xp,_progression.required_xp(_progression.current_level))
+	refresh_skills()
+
+func refresh_skills() -> void:
+	if is_instance_valid(_world): update_skills(_world.right_skill_id,_world.skill_tree.unlocked,_world.SKILL_IDS,_world.player,_world.skill_tree.catalog)
+
+func _level_up(_level: int) -> void:
+	set_xp(_progression.current_xp,_progression.required_xp(_progression.current_level))
+	if not AethelSettings.reduced_motion:
+		xp_text.modulate = AethelUI.FOCUS
+		create_tween().tween_property(xp_text,"modulate",Color.WHITE,0.5)
+
+func bind_target(actor: CharacterBody3D) -> void:
+	if target_actor == actor: return
+	if is_instance_valid(target_actor):
+		if target_actor.damaged.is_connected(_target_damaged): target_actor.damaged.disconnect(_target_damaged)
+		if target_actor.presentation_changed.is_connected(_target_refresh): target_actor.presentation_changed.disconnect(_target_refresh)
+		if target_actor.tree_exiting.is_connected(_target_removed): target_actor.tree_exiting.disconnect(_target_removed)
+	target_actor = actor
+	if not is_instance_valid(actor): hide_target(); return
+	actor.damaged.connect(_target_damaged)
+	actor.presentation_changed.connect(_target_refresh)
+	actor.tree_exiting.connect(_target_removed)
+	_target_refresh()
+
+func _target_damaged(_actor: CharacterBody3D) -> void:
+	_target_refresh()
+
+func _target_removed() -> void:
+	target_actor = null
+	hide_target()
+
+func _target_refresh() -> void:
+	if not is_instance_valid(target_actor) or target_actor.hp <= 0: hide_target(); return
+	var category: String = str(target_actor.get_meta("category",["common","champion","elite"][target_actor.rank]))
+	var title: String = {"common":"Comum","champion":"Campeão","elite":"Elite","miniboss":"Mini-chefe","boss":"Chefe"}.get(category,"Comum")
+	show_target(target_actor.monster_name+" · "+title,target_actor.hp,target_actor.max_hp,AethelUI.RARITY_TEXT[mini(target_actor.rank,4)])
+	var modifiers: Array[String] = []
+	for id: String in target_actor.modifiers: modifiers.append(str(target_actor.modifier_rules[id].name))
+	target_details.text = " · ".join(modifiers)
+	if target_actor.ward_remaining > 0: target_details.text += " · Proteção %ds" % ceili(target_actor.ward_remaining)
+	boss_box.visible = category in ["miniboss","boss"]
+	if boss_box.visible:
+		boss_name.text = target_actor.monster_name+" · "+title
+		boss_bar.max_value = target_actor.max_hp
+		boss_bar.value = maxi(0,target_actor.hp)
+		target_box.hide()
+
+func apply_settings() -> void:
+	if resource_panel == null: return
+	resource_panel.pivot_offset = Vector2(0,resource_panel.size.y)
+	resource_panel.scale = Vector2.ONE*AethelSettings.hud_scale
+	if skill_row != null:
+		skill_row.pivot_offset = Vector2(210,54)
+		skill_row.scale = Vector2.ONE*AethelSettings.hud_scale
+	life_globe.set_shader_enabled(AethelSettings.shader_globes)
+	ether_globe.set_shader_enabled(AethelSettings.shader_globes)

@@ -1,5 +1,6 @@
 class_name AethelProgressionManager
 extends Node
+signal experience_gained(amount: int)
 signal leveled_up(new_level: int)
 signal xp_changed(current_xp: int, required_xp: int)
 signal points_changed(points: int)
@@ -14,6 +15,7 @@ func required_xp(level: int) -> int:
 func gain_xp(amount: int) -> void:
  if amount <= 0 or current_level >= MAX_LEVEL: return
  current_xp += amount
+ experience_gained.emit(amount)
  while current_level < MAX_LEVEL and current_xp >= required_xp(current_level):
   current_xp -= required_xp(current_level)
   current_level += 1

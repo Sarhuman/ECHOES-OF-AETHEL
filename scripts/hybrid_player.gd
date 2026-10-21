@@ -3,6 +3,11 @@ extends CharacterBody3D
 signal hp_changed(current: float, maximum: float)
 signal ether_changed(current: float, maximum: float)
 signal stamina_changed(current: float, maximum: float)
+signal skills_changed
+signal skill_used(id: String)
+signal cooldown_changed(id: String,remaining: float)
+signal effect_changed(id: String,remaining: float,intensity: float)
+signal equipment_changed
 signal died
 signal combat_event(position: Vector3, message: String, kind: String)
 
@@ -44,6 +49,9 @@ var invulnerability: float = 0.0
 var dash_remaining: float = 0.0
 var guard_remaining: float = 0.0
 var skill_cooldowns: Dictionary = {}
+var _ui_signature: Array = []
+var _cooldown_display: Dictionary = {}
+var _guard_display := -1
 var exploration_reduction := 0.0
 var interaction_input_locked := false
 var facing := Vector3(0, 0, -1)
@@ -126,6 +134,7 @@ func equip_item(item: AethelItemInstance, target_slot: String = "") -> Dictionar
 	var replaced: AethelItemInstance = equipped.get(slot)
 	equipped[slot] = item
 	recalculate_stats()
+	equipment_changed.emit()
 	return {"ok": true, "slot": slot, "replaced": replaced}
 
 func unequip_slot(slot: String) -> AethelItemInstance:
@@ -133,6 +142,7 @@ func unequip_slot(slot: String) -> AethelItemInstance:
 	if item == null: return null
 	equipped.erase(slot)
 	recalculate_stats()
+	equipment_changed.emit()
 	return item
 
 func recalculate_stats() -> void:
@@ -242,6 +252,7 @@ func _physics_process(delta: float) -> void:
 			_ether_fraction -= float(whole)
 			ether = mini(max_ether, ether + whole)
 			ether_changed.emit(float(ether), float(max_ether))
+	_emit_ui_state()
 	if hp <= 0:
 		velocity = Vector3.ZERO
 		return
@@ -302,6 +313,7 @@ func _try_attack() -> void:
 	attack_recovery = 0.18
 	velocity = Vector3.ZERO
 	_play_attack_animation()
+	combat_event.emit(global_position, "", "attack")
 	perform_attack(1.0, ATTACK_RADIUS, false)
 
 func _play_attack_animation() -> void:
@@ -358,6 +370,7 @@ func use_skill(skill: AethelSkillData) -> String:
 	var skill_id := String(skill.skill_id)
 	if skill_id == "iron_guard" and guard_remaining > 0:
 		guard_remaining = 0
+		_emit_ui_state()
 		combat_event.emit(global_position + Vector3(0,2.2,0), "GUARDA ENCERRADA", "buff")
 		return ""
 	clear_commands()
@@ -365,6 +378,7 @@ func use_skill(skill: AethelSkillData) -> String:
 	ether -= skill.ether_cost
 	ether_changed.emit(float(ether), float(max_ether))
 	skill_cooldowns[skill_id] = skill.cooldown
+	skill_used.emit(skill_id)
 	match skill_id:
 		"heavy_strike":
 			attack_cooldown = 0.7 / attack_speed_mult
@@ -380,6 +394,7 @@ func use_skill(skill: AethelSkillData) -> String:
 			guard_remaining = 8
 			_visual_action(&"block", 0.3)
 			combat_event.emit(global_position + Vector3(0, 2.2, 0), "GUARDA DE FERRO", "buff")
+	_emit_ui_state()
 	return ""
 
 func drink_potion(life: int, mana: int) -> void:
@@ -422,3 +437,19 @@ func take_damage(amount: int) -> void:
 		died.emit()
 	else:
 		_visual_action(&"hit", 0.2)
+
+func _emit_ui_state() -> void:
+	var signature: Array = [hp,ether,manual_block,ceili(attack_cooldown*10),ceili(guard_remaining*10)]
+	for id: String in ["heavy_strike","iron_guard","echo_cleave"]:
+		var ticks: int = ceili(float(skill_cooldowns.get(id,0))*10)
+		signature.append(ticks)
+		if int(_cooldown_display.get(id,-1)) != ticks:
+			_cooldown_display[id] = ticks
+			cooldown_changed.emit(id,ticks/10.0)
+	var seconds: int = ceili(guard_remaining)
+	if seconds != _guard_display:
+		_guard_display = seconds
+		effect_changed.emit("guard",guard_remaining,0.4)
+	if signature != _ui_signature:
+		_ui_signature = signature
+		skills_changed.emit()

@@ -1,3 +1,13 @@
+# Fase 26 — HUD, menus e feedback integrados
+
+Versão Windows 0.26.0, Godot 4.7.2. Continua a Fase 25, preservando combate, inventário multicélula e save v6. HUD por sinais, globos Vida/Éter, Fôlego, habilidades, efeitos, alvos, XP, diário U, opções persistentes e cinco canais de áudio.
+
+Corrigida a oscilação dos tooltips na loja e mochila. Selecione um item da mochila e use **Largar [Del]**, ou dê foco nele e pressione Delete: a pilha inteira vai ao chão e pode ser recolhida. Itens de missão/protegidos são bloqueados; desequipe antes de largar.
+
+Extraia o ZIP completo e abra `jogo/EchoesOfAethel-Fase26.exe`, mantendo o PCK ao lado. Fonte em `fonte/project.godot`. [Teste](docs/TESTING.md), [arquitetura e limites](docs/FASE26_HUD_EVENTS.md), [auditoria](docs/FASE26_AUDIT.md). Arte/sons provisórios; playtest humano pendente. PR Draft sem merge automático.
+
+---
+
 # Fase 25 — exploração, loot e interações
 
 Versão Windows 0.25.0, Godot 4.7.2. Base: Fase 24 / PR #12. Loot por tabelas, cinco raridades, filtro, campeão e elite com dois lacaios, contêineres, altar, poço e Âncoras de Travessia funcionais. Mortes, fontes consumidas, âncoras e loot pendente persistem no mesmo save do personagem.

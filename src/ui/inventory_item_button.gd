@@ -47,6 +47,10 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 	_hover_token = -1
 
 func _gui_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_DELETE and not uid.is_empty() and equipment_slot.is_empty():
+		view.discard_requested.emit(uid)
+		accept_event()
+		return
 	if not uid.is_empty() and view.tooltip.visible:
 		if event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP,MOUSE_BUTTON_WHEEL_DOWN]:
 			view.tooltip.scroll_by(-100 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 100)

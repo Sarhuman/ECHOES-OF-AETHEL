@@ -2,6 +2,9 @@ extends Node3D
 ## Mundo híbrido 2.5D de Echoes of Aethel — Fase 20: núcleo de jogabilidade de ARPG clássico.
 ## Clique: mover/atacar/pegar | Shift: atacar parado | Botão direito: habilidade | 1-4: poções | Alt: nomes dos itens.
 
+signal target_changed(actor: CharacterBody3D)
+signal mission_changed
+
 const PLAYER_SCRIPT = preload("res://scripts/hybrid_player.gd")
 const ENEMY_SCRIPT = preload("res://scripts/hybrid_enemy.gd")
 const SAVE_VERSION: int = 6
@@ -58,6 +61,12 @@ var last_drink_time: float = 0.0
 var merchant: StaticBody3D
 var help_panel: PanelContainer
 var message_label: Label
+var audio: AethelAudioManager
+var presented_target: CharacterBody3D
+var quest_panel: PanelContainer
+var quest_text: RichTextLabel
+var death_overlay: Control
+var _mission_signature: Array = []
 var exploration: AethelExploration
 var narrative: AethelNPCController
 var workshop: Node3D
@@ -66,6 +75,8 @@ var pause_menu: AethelPauseMenu
 
 func _ready() -> void:
 	AethelInput.ensure_defaults()
+	audio = AethelAudioManager.new()
+	add_child(audio)
 	rng.seed = 2047
 	item_catalog = AethelItemCatalog.create_catalog()
 	loot_generator = AethelLootGenerator.new(item_catalog)
@@ -84,6 +95,7 @@ func _ready() -> void:
 	exploration = AethelExploration.new()
 	add_child(exploration)
 	exploration.setup(self)
+	_setup_reactive_ui()
 	var new_game: bool = bool(Engine.get_meta("aethel_new_game", false))
 	Engine.remove_meta("aethel_new_game")
 	if new_game or not _load_state(): _give_starting_gear()
@@ -91,6 +103,8 @@ func _ready() -> void:
 	pause_menu = AethelPauseMenu.new()
 	add_child(pause_menu)
 	pause_menu.save_requested.connect(_save_state)
+	pause_menu.inspect_requested.connect(func() -> void: character_panel.show())
+	pause_menu.options.preferences_changed.connect(hud.apply_settings)
 	_roll_shop_stock()
 	_refresh_all()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -329,6 +343,18 @@ func _on_enemy_defeated(enemy: CharacterBody3D) -> void:
 func _on_player_died() -> void:
 	game_over = true
 	player.clear_commands()
+	left_held = false
+	narrative.close()
+	exploration.pending = ""
+	exploration.travel_panel.hide()
+	for panel in [inventory_view,character_panel,skills_panel,shop_panel,quest_panel]: panel.hide()
+	audio.play_cue("death")
+	death_overlay.show()
+	var buttons := death_overlay.find_children("*","Button",true,false)
+	if not buttons.is_empty():
+		buttons[0].disabled = not FileAccess.file_exists(SAVE_PATH)
+		buttons[1 if buttons[0].disabled else 0].grab_focus()
+	hud.refresh_skills()
 
 # ---------------------------------------------------------------- interface
 func _build_ui() -> void:
@@ -407,10 +433,15 @@ func _build_resource_hud() -> void:
 	hud.skill_selected.connect(func(index: int) -> void: _activate_skill(SKILL_IDS[index]))
 
 func _on_combat_event(world_position: Vector3, message: String, kind: String) -> void:
-	var colors: Dictionary = {"damage": Color("ffda75"), "hurt": Color("ff7777"), "heal": Color("77ff99"), "mana": Color("77aaff"), "buff": Color("ffd24a"), "miss": Color("d4d4d4")}
+	audio.play_cue({"damage":"hit","hurt":"hurt","heal":"heal","mana":"heal","attack":"attack","miss":"ui"}.get(kind,"buff"))
+	if message.is_empty(): return
+	if active_popups.size() >= 32:
+		active_popups[0].label.queue_free()
+		active_popups.pop_front()
+	var colors: Dictionary = {"damage": Color("ffda75"), "hurt": Color("ff7777"), "heal": Color("77ff99"), "mana": Color("77aaff"), "buff": Color("ffd24a"), "miss": Color("d4d4d4"),"elemental": Color("9ad6ff"),"critical": Color("f0d999"),"immune": Color("cccccc"),"xp": Color("c6aff0"),"gold": Color("e8cc65")}
 	var label := Label.new()
 	label.text = message
-	label.add_theme_font_size_override("font_size", 24)
+	label.add_theme_font_size_override("font_size",24 if kind == "critical" else 20)
 	label.add_theme_color_override("font_color", colors.get(kind, Color("d4d4d4")))
 	label.add_theme_color_override("font_shadow_color", Color.BLACK)
 	label.add_theme_constant_override("shadow_offset_x", 2)
@@ -428,7 +459,6 @@ func _refresh_all() -> void:
 	if progression_label != null:
 		progression_label.text = "Bastião · Nível %d · Ouro %d" % [progression.current_level, gold]
 	if hud != null:
-		hud.set_xp(progression.current_xp, progression.required_xp(progression.current_level))
 		hud.update_skills(right_skill_id, skill_tree.unlocked, SKILL_IDS, player, skill_tree.catalog)
 		hud.update_belt(belt, item_catalog)
 	if inventory_view != null:
@@ -436,8 +466,11 @@ func _refresh_all() -> void:
 		inventory_view.refresh()
 	if character_panel != null: character_panel.refresh()
 	_refresh_skills_panel()
+	_check_mission_change()
 
 func _mouse_over_ui(position: Vector2) -> bool:
+	if death_overlay != null and death_overlay.visible: return true
+	if quest_panel != null and quest_panel.visible and quest_panel.get_global_rect().has_point(position): return true
 	if exploration != null and exploration.blocks_ui(position): return true
 	if narrative != null and narrative.view.visible: return true
 	for panel in [inventory_view, character_panel, skills_panel, shop_panel, help_panel]:
@@ -584,7 +617,6 @@ func _process(delta: float) -> void:
 	if narrative != null: narrative.tick(delta)
 	if exploration != null: exploration.tick(delta)
 	var camera := get_viewport().get_camera_3d()
-	hud.update_skills(right_skill_id, skill_tree.unlocked, SKILL_IDS, player, skill_tree.catalog)
 	for index in range(active_popups.size() - 1, -1, -1):
 		var popup: Dictionary = active_popups[index]
 		popup["age"] += delta
@@ -605,10 +637,10 @@ func _process(delta: float) -> void:
 		if is_instance_valid(drop): drop.set_label_visible(alt_held or drop.default_label_visible() or drop == hovered_drop)
 	if exploration != null: exploration.present_drops(alt_held)
 	var focus: CharacterBody3D = player.attack_target as CharacterBody3D if is_instance_valid(player.attack_target) else hovered_enemy
-	if is_instance_valid(focus) and not game_over:
-		hud.show_target(focus.display_name(), focus.hp, focus.max_hp, RANK_NAME_COLORS[focus.rank])
-	else:
-		hud.hide_target()
+	var selected: CharacterBody3D = focus if is_instance_valid(focus) and not game_over else null
+	if selected != presented_target:
+		presented_target = selected
+		target_changed.emit(selected)
 	if left_held and not Input.is_action_pressed("primary"): _on_left_release()
 	if left_held and not game_over: _apply_hold()
 	if is_instance_valid(pickup_target):
@@ -641,6 +673,7 @@ func _process(delta: float) -> void:
 # ---------------------------------------------------------------- teclas
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return
+	if game_over and event.is_action_pressed("pause"): return
 	if narrative != null and narrative.view.visible:
 		if event.is_action_pressed("pause") or event.is_action_pressed("interact"):
 			narrative.close()
@@ -657,7 +690,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				return
 	if event.is_action_pressed("pause") and narrative != null: narrative.close()
 	if event.is_action_pressed("pause"):
-		for panel in [inventory_view, character_panel, skills_panel, shop_panel]: panel.visible = false
+		for panel in [inventory_view, character_panel, skills_panel, shop_panel,quest_panel]: panel.visible = false
 		player.clear_commands()
 		left_held = false
 		pause_menu.open()
@@ -668,7 +701,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			Engine.set_meta("aethel_new_game", true)
 			get_tree().reload_current_scene()
 		return
-	if event.is_action_pressed("inventory"):
+	if event.is_action_pressed("quests"):
+		quest_panel.visible = not quest_panel.visible
+		_refresh_quest_panel()
+	elif event.is_action_pressed("inventory"):
+		audio.play_cue("inventory",true)
 		inventory_view.visible = not inventory_view.visible
 		if inventory_view.visible: inventory_view.refresh()
 	elif event.is_action_pressed("character"): _toggle_left_panel(character_panel)
@@ -770,6 +807,7 @@ func _setup_inventory() -> void:
 	inventory_view.equip_requested.connect(_on_equip_requested)
 	inventory_view.unequip_requested.connect(_on_unequip_requested)
 	inventory_view.sell_requested.connect(_on_sell_requested)
+	inventory_view.discard_requested.connect(_on_discard_requested)
 	inventory_view.inventory_drop_requested.connect(_on_inventory_drop)
 	inventory_view.equipment_drop_requested.connect(_on_equipment_drop)
 
@@ -933,6 +971,7 @@ func _on_sell_requested(uid: String) -> void:
 	var price: int = maxi(1, item.gold_value() / 4) * item.quantity
 	if not inventory.remove_item(uid): return
 	gold += price
+	audio.play_cue("trade")
 	_show_message("Vendido: %s por %d ouro" % [item.display_name(), price])
 	_refresh_shop()
 	_refresh_all()
@@ -943,7 +982,7 @@ func _setup_rpg_systems() -> void:
 	progression.name = "ProgressionManager"
 	player.add_child(progression)
 	progression.leveled_up.connect(_on_level_up)
-	progression.xp_changed.connect(func(_xp: int, _needed: int) -> void: _refresh_all())
+	progression.experience_gained.connect(func(amount: int) -> void: _on_combat_event(player.global_position+Vector3(0,2,0),"+%d XP" % amount,"xp"))
 	skill_tree = AethelSkillTree.new()
 	skill_tree.name = "SkillTree"
 	player.add_child(skill_tree)
@@ -976,6 +1015,7 @@ func _on_level_up(level: int) -> void:
 	player.recalculate_stats()
 	player.restore_full()
 	_roll_shop_stock()
+	audio.play_cue("level")
 	_show_message("Nível %d! +%d atributos, +1 habilidade" % [level, AethelCharacterStats.POINTS_PER_LEVEL])
 	_refresh_all()
 
@@ -1148,6 +1188,7 @@ func _purchase(item: AethelItemInstance, is_stock_potion: bool) -> void:
 		return
 	gold -= price
 	if not is_stock_potion: shop_stock.erase(item)
+	audio.play_cue("trade")
 	_show_message("Compra realizada: " + bought.display_name())
 	_refresh_shop()
 	_refresh_all()
@@ -1327,6 +1368,7 @@ func _load_state() -> bool:
 	player.hp_changed.emit(float(player.hp), float(player.max_hp))
 	player.ether_changed.emit(float(player.ether), float(player.max_ether))
 	game_over = player.hp <= 0
+	if death_overlay != null: death_overlay.visible = game_over
 	player.clear_commands()
 	_show_message("Save carregado")
 	return true
@@ -1379,3 +1421,123 @@ func _build_workshop() -> void:
 	for x in [-0.32,0.32]:
 		_box(rack,Vector3(x,1.4,-0.42),Vector3(0.1,1.3,0.08),Color("8c9290"),false)
 		_box(rack,Vector3(x,0.95,-0.42),Vector3(0.4,0.09,0.09),Color("9f8552"),false)
+
+func _setup_reactive_ui() -> void:
+	hud.bind_world(self)
+	player.skill_used.connect(func(_id: String) -> void: audio.play_cue("skill"))
+	player.equipment_changed.connect(func() -> void: hud.refresh_skills())
+	var canvas := CanvasLayer.new()
+	canvas.layer = 7
+	add_child(canvas)
+	quest_panel = PanelContainer.new()
+	quest_panel.position = Vector2(20,150)
+	quest_panel.custom_minimum_size = Vector2(410,250)
+	canvas.add_child(quest_panel)
+	var column := VBoxContainer.new()
+	quest_panel.add_child(column)
+	var title := Label.new()
+	title.text = "MISSÕES · U"
+	column.add_child(title)
+	quest_text = RichTextLabel.new()
+	quest_text.custom_minimum_size = Vector2(386,185)
+	quest_text.bbcode_enabled = true
+	quest_text.scroll_active = true
+	column.add_child(quest_text)
+	var close := Button.new()
+	close.text = "Fechar"
+	close.pressed.connect(quest_panel.hide)
+	column.add_child(close)
+	quest_panel.hide()
+	mission_changed.connect(_refresh_quest_panel)
+	var toolbar := HBoxContainer.new()
+	hud.root.add_child(toolbar)
+	toolbar.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	toolbar.offset_left = -370
+	toolbar.offset_right = -18
+	toolbar.offset_top = -180
+	toolbar.offset_bottom = -138
+	for entry: Array in [["I Mochila","inventory"],["C Atributos","character"],["U Missões","quests"],["Esc Pausa","pause"]]:
+		var button := Button.new()
+		button.text = entry[0]
+		button.add_theme_font_size_override("font_size",12)
+		button.focus_mode = Control.FOCUS_NONE
+		button.pressed.connect(func() -> void:
+			if game_over: return
+			match str(entry[1]):
+				"inventory": inventory_view.visible = not inventory_view.visible
+				"character": _toggle_left_panel(character_panel)
+				"quests": quest_panel.visible = not quest_panel.visible; _refresh_quest_panel()
+				"pause": player.clear_commands(); pause_menu.open()
+			audio.play_cue("ui",true))
+		toolbar.add_child(button)
+	_build_death_interface()
+
+func _check_mission_change() -> void:
+	if narrative == null: return
+	var signature: Array = [quest_started,quest_completed,map_02_cleared,slain,narrative.reward_claimed]
+	if signature == _mission_signature: return
+	_mission_signature = signature
+	mission_changed.emit()
+
+func _refresh_quest_panel() -> void:
+	if quest_text == null: return
+	if not quest_started:
+		quest_text.text = "Converse com Maera Voss para conhecer o objetivo disponível."
+		return
+	quest_text.text = "[b]Investigação do Bairro — provisória[/b]\n"
+	quest_text.text += "Uma Porta para Ninguém: âncoras e decisão canônica ainda não implementadas.\n\n"
+	if quest_completed:
+		quest_text.text += "Relatório entregue a Maera.\nRecompensa recebida: 60 ouro." if narrative.reward_claimed else "Investigação registrada em save legado; sem recompensa retroativa."
+	elif map_02_cleared: quest_text.text += "Objetivo: retornar e relatar a Maera.\nRasuras: 5 / 5.\nRecompensa prevista: 60 ouro, uma vez."
+	else: quest_text.text += "Objetivo: atravessar o portal e investigar as Rasuras.\nRasuras: %d / 5.\nRecompensa prevista: 60 ouro, uma vez." % mini(slain,5)
+
+func _build_death_interface() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 60
+	add_child(layer)
+	death_overlay = ColorRect.new()
+	(death_overlay as ColorRect).color = Color(AethelUI.BACKGROUND,0.92)
+	layer.add_child(death_overlay)
+	death_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var center := CenterContainer.new()
+	death_overlay.add_child(center)
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var column := VBoxContainer.new()
+	column.custom_minimum_size.x = 430
+	center.add_child(column)
+	var title := Label.new()
+	title.text = "DERROTA\nSeu último save permanece disponível."
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	column.add_child(title)
+	for text: String in ["CARREGAR ÚLTIMO SAVE","NOVO JOGO · R","MENU PRINCIPAL"]:
+		var button := Button.new()
+		button.text = text
+		button.custom_minimum_size.y = 44
+		button.disabled = text.begins_with("CARREGAR") and not FileAccess.file_exists(SAVE_PATH)
+		button.pressed.connect(func() -> void:
+			if text.begins_with("CARREGAR"):
+				if _load_state(): _refresh_all()
+			elif text.begins_with("NOVO"):
+				Engine.set_meta("aethel_new_game",true)
+				get_tree().reload_current_scene()
+			else: get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+		column.add_child(button)
+	death_overlay.hide()
+
+func _on_discard_requested(uid: String) -> void:
+	if game_over: return
+	var item: AethelItemInstance = inventory.find_item(uid)
+	if item == null: return
+	if item.definition.kind == "quest" or item.definition.sale_locked:
+		_inventory_failure("Este item protegido não pode ser largado")
+		return
+	var drop: AethelDroppedItem = _spawn_drop({"kind":"item","item":item},player.global_position)
+	drop.position = player.global_position
+	if not inventory.remove_item(uid):
+		dropped_items.erase(drop)
+		drop.queue_free()
+		return
+	inventory_view.selected_uid = ""
+	inventory_view.tooltip.hide_item()
+	_show_message("Largado no chão: " + item.display_name())
+	_refresh_all()

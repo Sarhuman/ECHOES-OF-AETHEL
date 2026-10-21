@@ -1,6 +1,7 @@
 class_name AethelPauseMenu
 extends CanvasLayer
 
+signal inspect_requested
 signal save_requested
 var overlay: Control
 var options: AethelOptionsPanel
@@ -25,6 +26,7 @@ func _ready() -> void:
 	title.add_theme_font_size_override("font_size", 28)
 	rows.add_child(title)
 	_button(rows, "RETOMAR", resume)
+	_button(rows, "ATRIBUTOS", func() -> void: resume(); inspect_requested.emit())
 	_button(rows, "SALVAR", func() -> void: save_requested.emit())
 	_button(rows, "OPÇÕES", func() -> void: options.visible = not options.visible)
 	options = AethelOptionsPanel.new()
@@ -44,6 +46,8 @@ func _button(parent: Node, text: String, action: Callable) -> void:
 func open() -> void:
 	overlay.show()
 	get_tree().paused = true
+	var first := overlay.find_children("*","Button",true,false)
+	if not first.is_empty(): first[0].grab_focus()
 
 func resume() -> void:
 	get_tree().paused = false
