@@ -101,13 +101,26 @@ func slot_for(item: AethelItemInstance) -> String:
 		return "ring1"
 	return slot
 
-func equip_item(item: AethelItemInstance) -> Dictionary:
+func equipment_problem(item: AethelItemInstance, target_slot: String = "") -> String:
 	if item == null or item.definition == null or item.definition.is_potion() or item.definition.slot.is_empty():
-		return {"ok": false, "reason": "Este item não pode ser equipado"}
+		return "Este item não pode ser equipado"
 	var problem: String = requirement_problem(item)
-	if not problem.is_empty(): return {"ok": false, "reason": problem}
-	var slot: String = slot_for(item)
-	if not (slot in SLOT_ORDER): return {"ok": false, "reason": "Slot inválido"}
+	if not problem.is_empty(): return problem
+	var slot: String = target_slot if not target_slot.is_empty() else slot_for(item)
+	if not slot in SLOT_ORDER: return "Slot inválido"
+	var expected := "ring" if slot in ["ring1","ring2"] else slot
+	if item.definition.slot != expected: return "Slot incompatível"
+	if item.quantity != 1: return "Separe a pilha antes de equipar"
+	for current: AethelItemInstance in equipped.values():
+		if current.instance_id == item.instance_id: return "Item já equipado"
+	if slot == "weapon" and item.definition.hands == 2 and equipped.has("shield"): return "Arma de duas mãos exige mão secundária livre"
+	if slot == "shield" and equipped.has("weapon") and equipped["weapon"].definition.hands == 2: return "Mão secundária ocupada pela arma"
+	return ""
+
+func equip_item(item: AethelItemInstance, target_slot: String = "") -> Dictionary:
+	var problem := equipment_problem(item,target_slot)
+	if not problem.is_empty(): return {"ok":false,"reason":problem}
+	var slot: String = target_slot if not target_slot.is_empty() else slot_for(item)
 	var replaced: AethelItemInstance = equipped.get(slot)
 	equipped[slot] = item
 	recalculate_stats()

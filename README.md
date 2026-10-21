@@ -1,5 +1,15 @@
 # ECHOES OF AETHEL
 
+## Fase 23 — inventário funcional da vertical slice
+
+Versão **0.23.0**, Godot **4.7.2.stable.official.ed1daf0bf**, branch `feat/fase23-inventario` sobre a fundação visual do PR #10. A `main` e os PRs anteriores não foram mesclados automaticamente. [Auditoria e implementação](docs/FASE23_INVENTORY_AUDIT.md) · [Roteiro de teste atual](docs/TESTING.md).
+
+**I/Tab** abre a mochila real: 40 células configuráveis, ícones individuais, quantidades, cinco raridades, seleção/foco, comparação numérica e botão Organizar. Arraste para mover/trocar/equipar/retirar; **M**, setas e Enter movem pelo teclado, Esc cancela. Slots canônicos funcionais, com cinto/talismã legados preservados. Requisitos, ocupação e compatibilidade de mãos são validados antes da transferência; falhas mantêm itens e posições. O mesmo gerenciador, cálculo de atributos, adaptador visual e save v4 continuam em uso.
+
+43 ícones vetoriais próprios são **placeholders**; materiais/objetos de missão têm registros reservados, sem novas recompensas ou sistemas de crafting. Comparação mostra deltas do item, separando dano base dos bônus do personagem. Equipamentos 3D usam apenas os modelos procedurais existentes; acessórios não recebem modelos falsos. Conjuntos/encaixes/Sigilos não foram antecipados.
+
+Pacote desta fase: **EchoesOfAethel-Fase23-Windows-x64.zip**. Extraia tudo e abra `jogo/EchoesOfAethel-Fase23.exe` com o PCK junto. Para editar, use o `project.godot` desta branch; no ZIP, `fonte/project.godot`. O workflow **Windows Fase 23** executa treze suítes, exporta e roda o EXE antes de publicar o artefato. Comandos de build permanecem em tools/build_windows.ps1 e tools/smoke_windows.ps1; veja docs/TESTING.md. As seções abaixo preservam o histórico da base anterior.
+
 ## Fundação visual gótica — Sino e Limiar
 
 Tema reutilizável aplicado à base da Fase 20.2: paleta de carvão/pedra/bronze, texto pergaminho, molduras de cinco raridades, foco visível e painel compacto com Vida/Éter/Fôlego independentes. Tooltips da mochila também abrem por teclado. Componentes de ícone, comparação e diálogo estão preparados para integração futura; retratos e interfaces definitivas continuam pendentes. [Design system, estados, tipografia e limites](docs/GOTHIC_UI_DESIGN_SYSTEM.md).

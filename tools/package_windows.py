@@ -5,7 +5,7 @@ from pathlib import Path
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "EchoesOfAethel-PreAlpha-Windows-x64.zip"
+OUTPUT = ROOT / "EchoesOfAethel-Fase23-Windows-x64.zip"
 SOURCE_DIRS = ("assets", "scenes", "scripts", "src", "tests", "tools", "docs", "data", "licenses", ".github")
 
 
@@ -15,8 +15,8 @@ def files_under(folder):
 
 def main():
     game = ROOT / "teste-fase20"
-    executable = game / "EchoesOfAethel-Fase20.exe"
-    pack = game / "EchoesOfAethel-Fase20.pck"
+    executable = game / "EchoesOfAethel-Fase23.exe"
+    pack = game / "EchoesOfAethel-Fase23.pck"
     if not executable.exists() or not pack.exists():
         raise RuntimeError("Export the Windows game before packaging")
     if executable.read_bytes()[:2] != b"MZ" or pack.stat().st_size < 100_000:
@@ -53,7 +53,7 @@ def main():
         error = archive.testzip()
         if error:
             raise RuntimeError("CRC failed: " + error)
-        for name in ("jogo/EchoesOfAethel-Fase20.exe", "jogo/EchoesOfAethel-Fase20.pck"):
+        for name in ("jogo/EchoesOfAethel-Fase23.exe", "jogo/EchoesOfAethel-Fase23.pck"):
             if hashlib.sha256(archive.read(name)).hexdigest() != manifest[name]:
                 raise RuntimeError("Hash mismatch: " + name)
     print(json.dumps({"archive": OUTPUT.name, "bytes": OUTPUT.stat().st_size, "entries": len(entries) + 2,

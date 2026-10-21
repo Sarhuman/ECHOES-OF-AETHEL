@@ -17,7 +17,7 @@ func _ready() -> void:
 	theme_type_variation = "AethelSpeech"
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	z_index = 100
-	custom_minimum_size = Vector2(260.0, 0.0)
+	custom_minimum_size = Vector2(340.0, 180.0)
 	var margin := MarginContainer.new()
 	for side in ["left", "right", "top", "bottom"]:
 		margin.add_theme_constant_override("margin_" + side, 10)
@@ -25,8 +25,9 @@ func _ready() -> void:
 	add_child(margin)
 	_text = RichTextLabel.new()
 	_text.bbcode_enabled = true
-	_text.fit_content = true
-	_text.scroll_active = false
+	_text.fit_content = false
+	_text.scroll_active = true
+	_text.add_theme_font_size_override("normal_font_size",14)
 	_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_text.custom_minimum_size = Vector2(240.0, 0.0)
 	margin.add_child(_text)
@@ -36,7 +37,19 @@ func build_text(item: AethelItemInstance) -> String:
 	var data: AethelItemData = item.definition
 	var quality: int = clampi(item.get_quality(), 0, QUALITY_HEX.size() - 1)
 	var lines: Array[String] = []
-	lines.append("[center][color=#%s][b]%s[/b][/color]" % [QUALITY_HEX[quality], item.display_name()])
+	lines.append("[center][color=#%s][b]%s · %s[/b][/color]" % [QUALITY_HEX[quality], item.display_name(),QUALITY_NAMES[quality]])
+	lines.append("Categoria: " + str({"equipment":"Equipamento","potion":"Poção","material":"Material","quest":"Missão"}.get(data.kind,data.kind)))
+	if data.slot == "weapon": lines.append("Empunhadura: %d mão(s)" % data.hands)
+	if not data.description.is_empty(): lines.append(data.description)
+	if data.max_stack > 1: lines.append("Quantidade: %d / %d" % [item.quantity,data.max_stack])
+	if requirement_source != null and data.kind == "equipment":
+		var is_equipped := false
+		for current: AethelItemInstance in requirement_source.equipped.values():
+			if current.instance_id == item.instance_id: is_equipped = true
+		if is_equipped: lines.append("[color=#f0d999]EQUIPADO[/color]")
+		else:
+			var issue: String = requirement_source.equipment_problem(item)
+			if not issue.is_empty(): lines.append("[color=#ed9385]Não é possível equipar: %s[/color]" % issue)
 	if item.display_name() != item.base_display_name():
 		lines.append("[color=#b5a88e]%s[/color]" % item.base_display_name())
 	if data.is_potion():
@@ -58,6 +71,7 @@ func build_text(item: AethelItemInstance) -> String:
 			lines.append("[color=#%s]%s[/color]" % [color, AethelAffixData.describe(str(row["stat"]), float(row["value"]))])
 		if data.slot != "": lines.append("[color=#a39780]%s · %s[/color]" % [QUALITY_NAMES[quality], SLOT_NAMES.get(data.slot, data.slot)])
 	lines.append("[color=#a39780]Valor: %d ouro[/color]" % item.gold_value())
+	lines.append("[color=#a39780]Venda: %d ouro / unidade · Pilha: %d[/color]" % [maxi(1,int(item.gold_value()/4)),maxi(1,int(item.gold_value()/4))*item.quantity])
 	return "\n".join(lines)
 
 func _current(kind: String) -> int:
@@ -95,11 +109,43 @@ func show_comparison(item: AethelItemInstance, equipped: AethelItemInstance) -> 
 		reset_size()
 		_update_position()
 
+func append_comparison(item: AethelItemInstance, equipped: AethelItemInstance) -> void:
+	var current := equipped.comparison_values() if equipped != null else {}
+	var proposed := item.comparison_values()
+	var keys := proposed.keys()
+	for key in current:
+		if not key in keys: keys.append(key)
+	keys.sort()
+	var comparison := "[b]Comparação com %s[/b]" % (equipped.display_name() if equipped != null else "slot vazio")
+	var changes := 0
+	for key in keys:
+		var difference := float(proposed.get(key,0))-float(current.get(key,0))
+		if absf(difference) < 0.001: continue
+		changes += 1
+		comparison += "\n[color=#%s]%s: %+.1f[/color]" % ["a3d8ad" if difference > 0 else "ed9385",key,difference]
+	if changes == 0: comparison += "\nSem diferenças nos valores comparados."
+	comparison += "\nDeltas do item; dano base sem bônus do personagem."
+	var lines := _text.text.split("\n")
+	_text.text = lines[0] + "\n\n" + comparison + "\n\n" + "\n".join(lines.slice(1))
+	_fit_to_viewport()
+
 func hide_item() -> void:
 	visible = false
 
+func scroll_by(amount: float) -> void:
+	var bar := _text.get_v_scroll_bar()
+	bar.value += amount
+
 func _process(_delta: float) -> void:
-	if visible: _update_position()
+	if visible:
+		_fit_to_viewport()
+		_update_position()
+
+func _fit_to_viewport() -> void:
+	var limits := get_viewport_rect().size-Vector2(24,24)
+	custom_minimum_size = Vector2(minf(340,limits.x),minf(180,limits.y))
+	size.x = custom_minimum_size.x
+	size.y = clampf(float(_text.get_content_height())+28,custom_minimum_size.y,limits.y)
 
 func _update_position() -> void:
 	var viewport_size: Vector2 = get_viewport_rect().size

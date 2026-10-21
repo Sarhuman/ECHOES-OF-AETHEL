@@ -6,19 +6,27 @@ $logsPath = Join-Path $taskRoot 'relatorios-fase20'
 New-Item -ItemType Directory -Path $logsPath -Force | Out-Null
 $oldSaveDir = $env:AETHEL_TEST_SAVE_DIR
 $results = @()
+$markers = @{
+    test_phase23='PHASE23:'; test_phase23_gui='PHASE23 GUI:'
+    test_gothic_ui='GOTHIC UI:'; test_project_integrity='PROJECT INTEGRITY:'
+    test_items='ITEMS TEST OK'; test_combat='COMBAT TEST OK'; test_gameplay='GAMEPLAY TEST OK'
+    test_ui_smoke='UI SMOKE TEST OK'; test_rpg_systems='RPG SYSTEMS TEST OK'; test_hud_revision='HUD REVISION TEST OK'
+    test_consolidation='CONSOLIDATION:'; test_playability='PLAYABILITY:'; balance_bot='VITÓRIAS: 10/10'
+}
 try {
     & $enginePath --headless --path $taskRoot --editor --import --quit --log-file (Join-Path $logsPath 'importacao-final.log') | Out-Host
     if ($LASTEXITCODE -ne 0) { throw 'Importacao falhou' }
     if (Select-String -LiteralPath (Join-Path $logsPath 'importacao-final.log') -Pattern 'SCRIPT ERROR|Parse Error|Failed to load script' -Quiet) { throw 'Erro de script na importacao' }
-    foreach ($testName in @('test_gothic_ui','test_project_integrity','test_items','test_combat','test_gameplay','test_ui_smoke','test_rpg_systems','test_hud_revision','test_consolidation','test_playability','balance_bot')) {
+    foreach ($testName in @('test_phase23','test_phase23_gui','test_gothic_ui','test_project_integrity','test_items','test_combat','test_gameplay','test_ui_smoke','test_rpg_systems','test_hud_revision','test_consolidation','test_playability','balance_bot')) {
         $env:AETHEL_TEST_SAVE_DIR = Join-Path $logsPath "profiles/$testName"
         New-Item -ItemType Directory -Path $env:AETHEL_TEST_SAVE_DIR -Force | Out-Null
         $logPath = Join-Path $logsPath "$testName-final.log"
-        & $enginePath --headless --fixed-fps 60 --path $taskRoot --script "res://tests/$testName.gd" --log-file $logPath | Out-Host
+        & $enginePath --headless --fixed-fps 60 --quit-after 18000 --path $taskRoot --script "res://tests/$testName.gd" --log-file $logPath | Out-Host
         $testExit = $LASTEXITCODE
         $results += [pscustomobject]@{ Test=$testName; ExitCode=$testExit }
         if ($testExit -ne 0) { throw "Falha em $testName" }
         if (Select-String -LiteralPath $logPath -Pattern 'SCRIPT ERROR|Parse Error|FALHA:|Assertion failed' -Quiet) { throw "Erro registrado por $testName" }
+        if (-not (Select-String -LiteralPath $logPath -Pattern $markers[$testName] -SimpleMatch -Quiet)) { throw "Teste nao concluiu: $testName" }
     }
 } finally {
     $env:AETHEL_TEST_SAVE_DIR = $oldSaveDir
