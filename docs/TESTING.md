@@ -1,4 +1,4 @@
-# Teste da Fase 24 — inventário e equipamentos
+# Teste da Fase 24 — NPCs, diálogos, comércio e progresso
 
 Extraia todo EchoesOfAethel-Fase24-Windows-x64.zip em uma pasta nova. Abra jogo/EchoesOfAethel-Fase24.exe com o PCK ao lado. Fonte editável em fonte/project.godot; Godot 4.7.2.stable.official.ed1daf0bf. O export é pré-alpha, sem assinatura/instalador.
 
@@ -27,7 +27,7 @@ python tools/fetch_windows_template.py
 python tools/package_windows.py
 ```
 
-O build executa tools/test.ps1 com quinze suítes e perfis separados. Para somente os testes, passe o mesmo GodotExe a tools/test.ps1. Os dois scripts novos são tests/test_phase23.gd e test_phase23_gui.gd. O segundo injeta eventos no protocolo nativo da GUI; não chama transações diretamente para simular arrastes.
+O build executa tools/test.ps1 com quinze suítes e perfis separados. Para somente os testes, passe o mesmo GodotExe a tools/test.ps1. As suítes da Fase 23 preservam os testes de inventário e arraste nativo. As novas suítes test_phase24.gd e test_phase24_gui.gd exercitam NPCs, narrativa, comércio e persistência.
 
 ## Estado artístico e limites
 

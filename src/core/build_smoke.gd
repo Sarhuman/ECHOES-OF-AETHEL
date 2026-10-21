@@ -62,6 +62,7 @@ func run() -> void:
 	player.ether = player.max_ether
 	player.attack_target = enemy
 	var hp_before: int = enemy.hp
+	prepare_hit()
 	await press(KEY_F1)
 	check(enemy.hp < hp_before, "F1 damage")
 	await press(KEY_F2)
@@ -70,6 +71,7 @@ func run() -> void:
 	player.attack_recovery = 0
 	player.ether = player.max_ether
 	hp_before = enemy.hp
+	prepare_hit()
 	await press(KEY_F3)
 	check(enemy.hp < hp_before, "F3 damage")
 	check(world.merchant.get_node_or_null("InteractionArea") != null, "Doma interaction")
@@ -96,3 +98,12 @@ func run() -> void:
 	print("BUILD SMOKE: %d checks, %d failures" % [checks,failures.size()])
 	for failure in failures: printerr("FALHA: ",failure)
 	get_tree().quit(0 if failures.is_empty() else 1)
+
+func prepare_hit() -> void:
+	# Enemy receive_hit uses global randf, independently of player.rng.
+	# Control only this diagnostic's next hit roll; preserve actual combat rules.
+	for candidate in range(100):
+		seed(candidate)
+		if randf() < 0.5:
+			seed(candidate)
+			return

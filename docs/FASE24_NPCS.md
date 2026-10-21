@@ -44,3 +44,6 @@ Permanecem pendentes: assets finais, expressões/retratos por ato, navegação d
 Quinze suítes locais exit 0: Fase 24 59 verificações, GUI 20 em headless; Fase 23 103 + GUI 19; fundação gótica 33; integridade 39; consolidação 5.117; jogabilidade 77; bot 10/10, além de itens/combate/gameplay/UI/RPG/HUD. Execução gráfica OpenGL/AMD RX 580: GUI 26 verificações, incluindo seis capturas gravadas e inspecionadas. Export Windows oficial executado: BUILD SMOKE 15 verificações, zero falhas, incluindo leitura de dados NPC/diálogo exportados, compra real e save/load de saldo/instância/estoque.
 
 O preset inclui explicitamente `data/*.json`; testes/docs/ferramentas continuam fora do PCK. A fonte e esses testes acompanham o ZIP. O smoke do EXE usa somente perfil isolado de teste e não escreve no save do usuário.
+
+
+Na repetição do smoke do ZIP extraído, um F3 errou pela probabilidade normal de acerto. O diagnóstico foi corrigido para preparar uma semente conhecida do gerador global usado por receive_hit antes de F1/F3; não altera as regras do jogo. A validação continua exigindo dano real, além do custo e funcionamento já cobertos nas suítes de combate.
