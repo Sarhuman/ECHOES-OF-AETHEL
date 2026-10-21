@@ -32,7 +32,7 @@ func run() -> void:
 	check(n.pick(screen) == "doma","camera ray selects Doma")
 	world._on_left_press(screen)
 	check(n.pending_id == "doma" and not n.view.visible,"distant click approaches without opening")
-	check(world.player.move_target.distance_to(world.merchant.position) < 0.1,"approach target is NPC, no reversed direction")
+	check(world.player.move_target.distance_to(world.merchant.position) < 2.6 and world.regions.level.valid_position(world.player.move_target),"approach target is navigable within NPC reach, no reversed direction")
 	for i in 240:
 		await physics_frame
 		if n.view.visible: break

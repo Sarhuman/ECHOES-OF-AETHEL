@@ -68,8 +68,9 @@ func _ready() -> void:
 	add_child(navigation_agent)
 	var collision := CollisionShape3D.new()
 	var capsule := CapsuleShape3D.new()
-	capsule.radius = 0.34 * float(RANK_SCALE[rank])
-	capsule.height = 1.6 * float(RANK_SCALE[rank])
+	var presentation := AethelActorPresentationContract.install(self,"enemy",rank)
+	capsule.radius = presentation.radius
+	capsule.height = presentation.height
 	collision.shape = capsule
 	collision.position.y = capsule.height * 0.5
 	add_child(collision)
@@ -89,25 +90,29 @@ func _ready() -> void:
 	visual = Node3D.new()
 	visual.name = "RasuraVisual"
 	visual.set_script(preload("res://scripts/procedural_rasura.gd"))
+	visual.set("presentation_rank",rank)
 	visual.scale = Vector3.ONE * float(RANK_SCALE[rank])
 	add_child(visual)
-	if rank > 0:
+	if rank >= 0:
 		var glow := OmniLight3D.new()
 		glow.light_color = RANK_COLORS[rank]
-		glow.light_energy = 1.1
+		glow.light_energy = 1.1 if rank>0 else 0.0
 		glow.omni_range = 3.4
 		glow.position.y = 1.2
 		add_child(glow)
 		var name_label := Label3D.new()
 		name_label.text = display_name()
 		name_label.modulate = RANK_COLORS[rank]
-		name_label.position.y = 2.4 * float(RANK_SCALE[rank])
-		name_label.font_size = 36
+		name_label.position = presentation.label
+		name_label.font_size = 24
 		name_label.pixel_size = 0.008
 		name_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 		add_child(name_label)
 
 func _physics_process(delta: float) -> void:
+	if get_parent().get("regions")!=null and not get_parent().regions.allows_combat():
+		velocity=Vector3.ZERO
+		return
 	_tick_modifiers(delta)
 	if not _home_initialized:
 		home_position = global_position
@@ -160,6 +165,7 @@ func _physics_process(delta: float) -> void:
 				if path_vector.length_squared() > 0.001: desired = path_vector.normalized()
 		desired = (desired + _separation() * 0.8).normalized()
 		velocity = desired * move_speed
+		velocity.y=-8 if is_on_floor() else -12
 		move_and_slide()
 	else:
 		_patrol_clock += delta
@@ -172,6 +178,7 @@ func _physics_process(delta: float) -> void:
 			ai_state = &"patrol"
 			var patrol_target := home_position + Vector3(sin(_patrol_clock * 0.35),0,cos(_patrol_clock * 0.35))
 			velocity = (patrol_target - global_position).normalized() * move_speed * 0.25
+		velocity.y=-8 if is_on_floor() else -12
 		move_and_slide()
 
 func _separation() -> Vector3:
@@ -220,6 +227,7 @@ func configure_modifiers(ids: Array,rules: Dictionary) -> void:
 	if not names.is_empty():
 		var label := Label3D.new()
 		label.text = " · ".join(names)
+		label.visible=false # Modifier descriptions are presented once in the target HUD.
 		label.font_size = 18
 		label.pixel_size = 0.005
 		label.position.y = 2.8 * float(RANK_SCALE[rank])

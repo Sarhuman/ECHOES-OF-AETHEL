@@ -1,72 +1,31 @@
-# Teste da Fase 26 — exploração e recompensas
+# Teste da Fase 27 — mundo inicial e HUD enxuta
 
-Extraia todo EchoesOfAethel-Fase26-Windows-x64.zip em uma pasta nova. Abra jogo/EchoesOfAethel-Fase26.exe com o PCK ao lado. Fonte editável em fonte/project.godot; Godot 4.7.2.stable.official.ed1daf0bf. O export é pré-alpha, sem assinatura/instalador.
+Extraia EchoesOfAethel-Fase27-Windows-x64.zip inteiro em uma pasta nova. Execute jogo/EchoesOfAethel-Fase27.exe com o PCK ao lado. Fonte editável: fonte/project.godot. Engine Godot4.7.2.stable.official.ed1daf0bf; build pré-alpha Windows sem assinatura/instalador.
 
-## Roteiro de playtest
+## Roteiro humano — pendente
 
-1. Inicie Novo jogo. Mova com WASD/setas ou clique. Procure Maera (azul), interaja com E/F, aceite explicitamente a investigação provisória na resposta e atravesse o portal a leste para o Bairro. A região de teste compartilha geometria com Vigília.
-2. Derrote Rasuras usando clique/J, F1 Golpe, F2 Guarda, F3 Eco; Shift+clique ataca parado. Q bloqueia com escudo, Espaço esquiva, 1–4 usam poções. R reinicia após derrota.
-3. Observe loot no chão. Alt revela rótulos; clique ou E/F perto para coletar. Ouro soma diretamente. Poções abastecem primeiro o cinto e vão para a mochila quando ele enche. As 40 células aceitam itens de tamanhos diferentes.
-4. Abra I/Tab. Confira ícone, moldura de raridade e quantidade em pilhas. Hover ou foco abre dados e comparação numérica. Roda do mouse sobre o item ou PgUp/PgDn com foco rola um tooltip longo. Os deltas mostram valores do item, não DPS final do personagem.
-5. Arraste entre células vazias e sobre outro item para trocar. Solte fora da mochila, além do limite ou sobre um slot incompatível: estado anterior deve permanecer. Itens grandes precisam de área livre para toda a forma; não se troca um item por múltiplos itens.
-6. Arraste para os slots: elmo, peitoral, luvas, botas, capa, arma principal, mão secundária, amuleto e dois anéis. Cinto e talismã legados permanecem funcionais. Slots com ✓ estão equipados. Joias não exigem modelos 3D.
-7. Clique/Enter também equipa; clique/Enter no slot retira para o primeiro espaço livre. Arrastar do slot para a grade desequipa em posição exata. Sem espaço, a operação falha sem remover o equipamento. Uma arma de duas mãos exige mão secundária livre; os tipos-base atuais continuam de uma mão.
-8. Pelo teclado, navegue com Tab/setas, use Enter para equipar/retirar. Com foco em um item da mochila, M inicia movimento; setas escolhem célula e Enter confirma. Esc cancela. Organizar usa as mesmas posições reais e preserva tudo se não conseguir reorganizar. Fechar ou I encerra a janela.
-9. Confira dano/defesa na mochila e em C após equipar. Verifique o visual do Bastião para os sete slots procedurais cadastrados. Não há modelos finais nem visual falso para acessórios.
-10. Encha o cinto e colete mais poções iguais: observe empilhamento até 20 na mochila. Clique na pilha para transferir uma unidade ao cinto; se cheio, a quantidade não muda. Venda com botão direito na mochila, com a loja de Doma aberta: a venda considera a pilha completa.
-11. F5 salva. Altere posição/itens/equipamentos, depois F9 recarrega. Confira IDs, quantidades, posições, raridade e afixos. Novo jogo só substitui um save ao salvar. O caminho de produção é o user:// da Godot; testes usam AETHEL_TEST_SAVE_DIR isolado.
-12. Esc abre pausa fora do modo de movimento de itens. Retorne a Vigília e interaja com Doma (avental/martelo) por clique ou E/F. Escolha Ver mercadorias; L é atalho perto dele. Confira compra/venda, comparação por hover/foco e rolagem do estoque. H abre ajuda; K técnicas; roda do mouse fora da UI ajusta câmera entre 10 e 18.
+1. Novo jogo: J/F1/F3 devem ser recusados em Vigília sem gasto. Fale com Maera, aceite explicitamente a investigação provisória e visite Doma. Equipamentos e comércio continuam disponíveis. Portal leste exige aceitação.
+2. E/F no portal entra no Bairro. Confirme F1/F3 com dano e custo reais. O grupo especial fica distante da chegada. Explorar rota principal/desvios, baús, altar, poço, vestígio e Âncora. Retornar pelo portal sul deve restaurar a regra de zona segura.
+3. Sair de novo e seguir ao portal nordeste do Bairro. O Pátio dos Endereços é a passagem obrigatória; não existe salto02→04. No Pátio, explorar terraço a leste pela escadaria visual com colisor de rampa. Subir/descer sem tremor, cliques errados ou queda. Observar pisos0/1 no minimapa.
+4. Portal norte do Pátio leva ao Arquivo. Descobrir Âncora, abrir porta com E/F, percorrer corredor e alas, derrotar guardas e abrir recompensa uma única vez. Arena reservada, sem chefe/cutscene/decisão definitiva. Regressar Arquivo→Pátio→Bairro→Vigília e falar com Doma.
+5. M alterna mapa compacto/ampliado/oculto. Só áreas exploradas e marcadores do piso ativo devem aparecer; legenda só no expandido. Status/XP e objetivo ficam à esquerda; menus I/C/U/H/Esc sob o minimapa; poções, F1–F3 e M2 na única barra inferior. Conferir cliques e atalhos e que Espaço continua esquivando depois de clicar habilidades. M2 repete a técnica escolhida.
+6. I/Tab abre a mochila. Hover/foco abre tooltip estável, inclusive Escudo de Madeira/Eco de Vidro. Roda sobre o item ou PgUp/PgDn rola texto longo. Enter equipa/retira, M+setas+Enter move, Esc cancela; arraste fora da grade deve cancelar. Largar[Del] transfere a pilha inteira ao chão e permite recolher. Itens de missão/protegidos não podem ser largados; desequipe antes. Comparação usa deltas de itens, não DPS final.
+7. F5/F9 no Arquivo/terraço: conferir região, altura, posição segura, mapa, porta, inventário, loot e âncoras. Recarregar duas vezes não repete recompensa. Salvar/recarregar após largar uma pilha deve manter uma única instância. Continuar no menu usa o save existente; Novo jogo não substitui até salvar.
+8. Testar1280×720 e1920×1080, HUD85/100/110%, mouse e teclado. Observar sobreposição, nome da Âncora, torso de inimigos atrás de prédios, chão nas bordas, menus roláveis, áudio e derrota. Registrar região/coordenada de qualquer bloqueio. Três recursos e cinco canais de áudio mantêm dados reais.
 
-## Testes e build reproduzível
+WASD/setas ou clique: mover; clique/J: ataque; Shift+clique: parado; F1Golpe/F2Guarda/F3Eco; botão direito repete técnica; Qbloqueia; Espaçoesquiva;1–4poções; E/Finteração configurável; Lloja perto de Doma; Catributos; Ktécnicas; Udiário; Htodos os controles; Oloot; Altitens; rodazoom; Escpausa; Rnovo jogo após derrota. Inventário multicélula10×4 e cinco raridades preservados.
+
+## Reprodução automatizada
 
 ```powershell
 ./tools/fetch_godot.ps1
 python tools/fetch_windows_template.py
-./tools/build_windows.ps1 -GodotExe "$pwd/.tools/Godot_v4.7.2-stable_win64_console.exe"
+./tools/test.ps1 -GodotExe <caminho-do-Godot-console>
+./tools/build_windows.ps1 -GodotExe <caminho-do-Godot-console>
 ./tools/smoke_windows.ps1
 python tools/package_windows.py
 ```
 
-O build executa tools/test.ps1 com dezessete suítes e perfis separados. Para somente os testes, passe o mesmo GodotExe a tools/test.ps1. As suítes da Fase 23 preservam os testes de inventário e arraste nativo. As novas suítes test_phase24.gd e test_phase24_gui.gd exercitam NPCs, narrativa, comércio e persistência.
+O validador tools/validate_regions.gd confere grafo e chegadas;21 suítes usam perfis isolados via AETHEL_TEST_SAVE_DIR. Smoke do EXE:32 verificações de menu/gameplay/comércio/exploração/transições. A automação GUI usa inputs nativos e movimento real para o circuito, com inimigos neutralizados nessa fixture de inspeção. Bot e regressões exercitam combate separadamente. Capturas reais em docs/evidence/fase27-*.png; métricas locais em fase27-performance.json. Sem garantia de60FPS. Scripts não alteram o save pessoal durante testes.
 
-## Estado artístico e limites
-
-43 ícones SVG próprios, explicitamente placeholders, em seis categorias. Armas, armaduras, joias e poções estão ligados ao catálogo real; materiais e objetos de missão têm definições reservadas e não foram introduzidos artificialmente nas recompensas atuais. Não há crafting, conjuntos novos, encaixes ou Sigilos. A comparação usa valores base e modificadores do item; não projeta o DPS final. Para anéis, compara o destino padrão de clique (primeiro livre, senão anel 1); arraste permite escolher anel 2.
-
-Organização é determinística por área e ID, sem rotação de itens; pode recusar uma disposição difícil em vez de perder itens. Grades configuradas maiores usam scroll. Modelos/animações/áudio finais, navmesh e campanha completa continuam pendentes. Testes gráficos automatizados e inspeção de capturas não substituem playtest humano completo; registre mapa, ação, mensagem e passos de qualquer falha.
-
-
-## Fase 24 — roteiro específico
-
-1. Clique em Doma a distância: observe aproximação em direção a ele, parada e orientação. Tente cancelar com clique no chão, WASD e Esc; tente um caminho bloqueado pela oficina e reposicione quando houver mensagem.
-2. Converse por E/F. Setas/Tab/Enter escolhem respostas sem mover o personagem. Esc encerra. Visite a resposta sobre oficina e registre a escolha; volte ao nó para ver a opção condicional.
-3. Abra mercadorias, navegue/role a lista, confira saldo e comparação. Compre, abra I e venda com botão direito. Ouro insuficiente, mochila cheia, loja fora de alcance e objetos de missão devem impedir transação sem perder nada.
-4. Com Maera, aceite a investigação explicitamente. Atravesse o portal, derrote cinco Rasuras, retorne e relate. Observe +60 ouro; repita conversa e F5/F9 para confirmar ausência de nova recompensa. Não é a conclusão canônica de Uma Porta para Ninguém.
-5. Salve após comprar e fazer a escolha da oficina. Compre outro item, carregue: primeiro permanece adquirido, o segundo retorna ao estado do último save, estoque e saldo juntos. Confira escolha condicional preservada.
-6. Repita em 1280×720 e 1920×1080. Verifique retratos provisórios, foco, rolagem e legibilidade. Confirme movimento/ataques/F1–F3 após fechar UI.
-
-Automação adicional: test_phase24.gd verifica serviços reais e persistência; test_phase24_gui.gd injeta E/setas/Enter/Esc/L em ambas as resoluções. Rodar o segundo sem --headless e com AETHEL_CAPTURE_DIR gera capturas. A inspeção dessas capturas e os inputs automatizados não substituem o playtest humano acima, que continua pendente. Detalhes em FASE24_NPCS.md.
-
-
-## Fase 26 — roteiro de exploração
-
-1. Em Novo jogo, aceite a investigação provisória de Maera. Ative a Âncora de Travessia de Vigília (próxima ao ponto inicial); descubra, feche a janela e atravesse o portal a leste.
-2. Enfrente comum, campeão e elite com dois lacaios. Observe os nomes/modificadores, proteção temporária e efeito periódico. O bot e as suítes automatizadas cobrem o combate; este roteiro exige avaliação humana adicional.
-3. Veja loot cair, use Alt e clique num item distante. Confira aproximação e transferência para mochila/cinto/saldo. Com mochila cheia, item deve ficar no chão. O abre filtro; desligue/religue categorias e confira que nada é destruído.
-4. Abra baú, barril, urna, restos e túmulo. O baú especial exige o grupo da elite completo. Tente reabrir antes/depois de F5/F9: nenhuma recompensa adicional.
-5. Use o Poço, observe os três recursos e o limite de dois usos. Use o Altar de Ardósia, observe duração e resistência; espere expirar ou salve/carregue para conferir os segundos restantes, sem novo uso.
-6. Descubra a Âncora do Bairro e volte à âncora descoberta de Vigília. Tente um destino não descoberto (não deve existir como opção). Gerencie equipamento e comércio de Doma; salve.
-7. Retorne ao Bairro: mortos continuam eliminados e loot deixado continua disponível. Salve/carregue várias vezes, colete, salve novamente: não deve reaparecer. Sobreviventes recuperam vida ao reentrar; Novo jogo reinicia o mundo.
-8. Repita em 1280×720 e 1920×1080. Verifique foco, mouse, nomes separados, filtros e retorno ao HUD. Os modelos/sons e a geometria compartilhada são provisórios.
-
-Novos testes: test_phase25.gd e test_phase25_gui.gd. O segundo aceita AETHEL_CAPTURE_DIR e gera seis capturas quando executado sem --headless. Inspeção dessas capturas e inputs automatizados não substituem playtest humano. tools/smoke_windows.ps1 executa o EXE exportado com 21 verificações, perfil isolado e teste de persistência de exploração. As taxas e a política de respawn estão em FASE25_EXPLORATION.md.
-
-
-## Verificações adicionais da Fase 26
-
-- Na loja de Doma, mantenha o cursor sobre Escudo de Madeira. Na mochila, faça o mesmo com Eco de Vidro. A caixa deve ficar estável; roda sobre o item ou PgUp/PgDn rola o texto.
-- Na mochila selecione por hover/foco e use Largar [Del], ou Delete com foco no item. Confira a pilha inteira no chão, F5/F9 e recolhimento sem duplicação. Desequipe antes de largar. Missões/protegidos não podem ser largados. Soltar um arrasto fora da grade continua cancelando o movimento.
-- Compare HUD em 1280×720, 1600×900 e 1920×1080, escala 85/100/110%, shader ligado/desligado. Confira Vida/Éter/Fôlego e cooldowns reais de F1–F3, Guarda e altar.
-- U abre o diário da investigação provisória; Esc pausa. Opções incluem canais Master/Music/SFX/UI/Ambience, resolução, escala HUD e redução de movimento. Setas ajustam sliders e Tab alcança opções na área rolável.
-- A derrota oferece carregar, novo jogo e menu; não existe cadáver com equipamentos. Music/Ambience têm canais preparados, sem trilhas finais.
-- Automação gráfica não substitui o playtest humano, que permanece pendente.
+Resultados e pendências: FASE27_VALIDATION.md. Arquitetura/limites: FASE27_WORLD.md, HUD_ENXUTA_FASE27.md. Sistemas anteriores: FASE24_NPCS.md e FASE25_EXPLORATION.md. Arte/sons/greybox iniciais, missão de Maera provisória, sem campanha definitiva. Automação e inspeção visual não são playtest humano: homologação humana completa continua pendente.

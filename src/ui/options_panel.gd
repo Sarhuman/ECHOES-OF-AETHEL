@@ -57,12 +57,6 @@ func _ready() -> void:
  motion.toggled.connect(func(value: bool) -> void: AethelSettings.reduced_motion=value; changed())
  rows.add_child(motion)
  controls.reduced_motion=motion
- var shader := CheckButton.new()
- shader.text = "Globos com shader (desligar: fallback)"
- shader.button_pressed=AethelSettings.shader_globes
- shader.toggled.connect(func(value: bool) -> void: AethelSettings.shader_globes=value; changed())
- rows.add_child(shader)
- controls.shader=shader
  var interaction := OptionButton.new()
  interaction.add_item("Interagir: E",KEY_E)
  interaction.add_item("Interagir: F",KEY_F)

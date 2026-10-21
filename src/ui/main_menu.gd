@@ -28,7 +28,7 @@ func _ready() -> void:
 	title.add_theme_font_size_override("font_size", 36)
 	rows.add_child(title)
 	var subtitle := Label.new()
-	subtitle.text = "O Direito ao Impossível | Pré-alpha — Fase 26"
+	subtitle.text = "O Direito ao Impossível | Pré-alpha — Fase 27"
 	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rows.add_child(subtitle)
 	var start := _button(rows, "NOVO JOGO", func() -> void: start_game(true))

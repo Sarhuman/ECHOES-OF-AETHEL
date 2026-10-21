@@ -14,6 +14,15 @@ var _state: StringName = &"idle"
 var _action_time := 0.0
 
 func _ready() -> void:
+    replace_model(model_scene)
+
+func replace_model(replacement: PackedScene) -> void:
+    if _model != null:
+        remove_child(_model)
+        _model.queue_free()
+        _model = null
+    _player = null
+    model_scene = replacement
     if model_scene == null:
         push_warning("CharacterVisual: model_scene is not assigned")
         return

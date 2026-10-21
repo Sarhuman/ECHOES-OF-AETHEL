@@ -1,3 +1,13 @@
+# Fase 27 — primeira sequência de mundo explorável
+
+Windows 0.27.0 / Godot 4.7.2. Cenas iniciais distintas: **Vigília ⇄ Bairro que Faltava ⇄ Pátio dos Endereços ⇄ Arquivo das Portas Seladas**. Navegação com desvios e altura, hub seguro, fog/minimapa por piso e persistência integrada. Mantém os sistemas e correções da Fase26. HUD enxuta com barras superiores e barra única de ações, conforme a nova proposta.
+
+Extraia o ZIP completo e abra `jogo/EchoesOfAethel-Fase27.exe` com o PCK ao lado. Fonte em `fonte/project.godot`. Aceite a investigação de Maera; use E/F nas entradas e objetos, M para ampliar/ocultar minimapa, F5/F9 para salvar/carregar e I/Del para mochila/descarte.
+
+Mapas em greybox/estrutura inicial, sem chefes ou campanha definitivos. [Auditoria](docs/FASE27_AUDIT.md), [arquitetura e limites](docs/FASE27_WORLD.md), [roteiro](docs/TESTING.md). Teste gráfico automatizado e inspeção de capturas não substituem playtest humano, pendente. PR Draft sem merge automático.
+
+---
+
 # Fase 26 — HUD, menus e feedback integrados
 
 Versão Windows 0.26.0, Godot 4.7.2. Continua a Fase 25, preservando combate, inventário multicélula e save v6. HUD por sinais, globos Vida/Éter, Fôlego, habilidades, efeitos, alvos, XP, diário U, opções persistentes e cinco canais de áudio.

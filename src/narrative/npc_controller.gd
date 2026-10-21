@@ -47,7 +47,7 @@ func setup(owner_world: Node3D) -> void:
 		var marker := Label3D.new()
 		marker.name = "NPCIndicator"
 		marker.text = definitions[id].name + (" ◇" if id == "maera" else " · E/F")
-		marker.position.y = 2.65
+		marker.position = actor.get_meta("presentation_contract").label
 		marker.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 		marker.font_size = 24
 		marker.pixel_size = 0.007
@@ -129,7 +129,9 @@ func request(id: String) -> bool:
 	if world.player.global_position.distance_to(actors[id].global_position) <= RANGE and reachable(id):
 		open_dialogue(id)
 	else:
-		world.player.command_move(actors[id].global_position)
+		var destination: Vector3=world.regions.level.approach(world.player.global_position,actors[id].global_position)
+		if not destination.is_finite(): pending_id=""; world._show_message("Caminho bloqueado até o NPC"); return false
+		world.player.command_move(destination)
 	return true
 
 func close() -> void:

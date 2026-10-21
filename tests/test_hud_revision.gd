@@ -18,8 +18,8 @@ func run() -> void:
 	await process_frame
 	var hud = world.hud
 	check(hud.root.find_children("ResourcePanel", "PanelContainer", true, false).size() == 1, "painel unico")
-	check(count_orbs(hud.root) == 2, "dois globos reativos ativos")
-	check(hud.resource_panel.find_children("*", "ProgressBar", true, false).size() == 1, "barra compacta de folego junto aos globos")
+	check(count_orbs(hud.root) == 0, "proposta enxuta usa barras, sem globos ativos")
+	check(hud.resource_panel.find_children("*", "ProgressBar", true, false).size() == 4, "vida eter folego e XP no mesmo painel")
 	world.player.hp_changed.emit(45, 100, true)
 	world.player.ether_changed.emit(12, 40, true)
 	world.player.stamina_changed.emit(30, 100)

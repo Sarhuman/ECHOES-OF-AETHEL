@@ -24,6 +24,7 @@ var active_popups: Array[Dictionary] = []
 var slain: int = 0
 var game_over: bool = false
 var region_id: String = "map_01"
+var regions: AethelRegionManager
 var quest_started: bool = false
 var quest_completed: bool = false
 var map_02_cleared: bool = false
@@ -96,6 +97,7 @@ func _ready() -> void:
 	add_child(exploration)
 	exploration.setup(self)
 	_setup_reactive_ui()
+	regions.attach_ui()
 	var new_game: bool = bool(Engine.get_meta("aethel_new_game", false))
 	Engine.remove_meta("aethel_new_game")
 	if new_game or not _load_state(): _give_starting_gear()
@@ -152,89 +154,22 @@ func _build_world() -> void:
 	env.fog_density = 0.009
 	environment.environment = env
 	add_child(environment)
-	_build_ground()
-	# Arquitectura autoral de Vigília: praça pavimentada, ruínas góticas e caminhos livres.
-	_build_vigilia_architecture()
-	for p in [Vector3(-12,0,-12),Vector3(12,0,-12),Vector3(-12,0,12),Vector3(12,0,12)]:
-		var torch := OmniLight3D.new()
-		torch.position = p + Vector3(0,3.1,0)
-		torch.light_color = Color("ff9944")
-		torch.light_energy = 2.0
-		torch.shadow_enabled = true
-		torch.omni_range = 10.0
-		add_child(torch)
-		_box(self,p+Vector3(0,1.2,0),Vector3(0.95,2.4,0.95),Color("555566"))
-		_box(self,p+Vector3(0,2.6,0),Vector3(1.22,0.3,1.22),Color("81716a"),false)
-		_box(self,p+Vector3(0,2.85,0),Vector3(0.42,0.25,0.42),Color("ed863e"),false)
-
-func _build_vigilia_architecture() -> void:
-	# A via central fica livre para deslocamento e interação.
-	for index in range(8):
-		var z: float = -12.0 + float(index)*3.3
-		for x in [-15.0,15.0]:
-			_box(self,Vector3(x,1.25,z),Vector3(1.9,2.5,1.9),Color("555363"))
-			_box(self,Vector3(x,2.62,z),Vector3(2.2,0.25,2.2),Color("89808a"),false)
-			_box(self,Vector3(x,0.22,z),Vector3(2.3,0.44,2.3),Color("393a47"),false)
-	# Seções de muralha em volta, interrompidas nas entradas.
-	for z in [-16.0,16.0]:
-		for x in [-12.0,-8.0,-4.0,4.0,8.0,12.0]:
-			_box(self,Vector3(x,1.15,z),Vector3(3.6,2.3,0.9),Color("454452"))
-			_box(self,Vector3(x,2.45,z),Vector3(3.8,0.28,1.12),Color("6d6470"),false)
-	for x in [-10.5,10.5]:
-		for z in [-9.0,9.0]:
-			# Pedestais e estátuas como marcos legíveis, fora do caminho principal.
-			_box(self,Vector3(x,0.45,z),Vector3(2.0,0.9,2.0),Color("615d66"))
-			_box(self,Vector3(x,1.7,z),Vector3(0.72,1.8,0.72),Color("77737d"),false)
-			_box(self,Vector3(x,2.75,z),Vector3(1.2,0.28,1.2),Color("99909a"),false)
-	# Piso de blocos individualizados no centro: evita textura ampliada e ruído excessivo.
-	var palette: Array[Color] = [Color("4d4a55"),Color("56515b"),Color("635b61"),Color("4a4752")]
-	for iz in range(22):
-		for ix in range(22):
-			var p_x: float = (float(ix)-10.5)*1.28 + (0.19 if iz%2==0 else -0.19)
-			var p_z: float = (float(iz)-10.5)*1.28
-			var stone := MeshInstance3D.new()
-			var stone_mesh := BoxMesh.new()
-			stone_mesh.size = Vector3(1.20,0.06,1.20)
-			stone.mesh = stone_mesh
-			stone.position = Vector3(p_x,0.035,p_z)
-			stone.material_override = _mat(palette[(ix*7+iz*3)%palette.size()])
-			add_child(stone)
-
 	var sun := DirectionalLight3D.new()
-	sun.rotation_degrees = Vector3(-50,-30,0)
-	sun.light_color = Color("8692c2")
-	sun.light_energy = 0.32
-	sun.shadow_enabled = true
+	sun.rotation_degrees=Vector3(-50,-30,0)
+	sun.light_energy=0.65
+	sun.shadow_enabled=true
 	add_child(sun)
-
-func _build_ground() -> void:
-	var body := StaticBody3D.new()
-	body.set_meta("walkable_ground", true)
-	body.position = Vector3(0,-0.28,0)
-	add_child(body)
-	var tile := MeshInstance3D.new()
-	var mesh := PlaneMesh.new()
-	mesh.size = Vector2(34,34)
-	mesh.subdivide_width = 12
-	mesh.subdivide_depth = 12
-	tile.mesh = mesh
-	tile.position.y = 0.28
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color("c8bac0")
-	mat.albedo_color = Color("373643")
-	tile.material_override = mat
-	body.add_child(tile)
-	var shape := CollisionShape3D.new()
-	var cube := BoxShape3D.new()
-	cube.size = Vector3(34,0.5,34)
-	shape.shape = cube
-	body.add_child(shape)
+	regions=AethelRegionManager.new()
+	add_child(regions)
+	regions.setup(self)
+	regions.load_region(region_id)
 
 func _build_narrative_nodes() -> void:
 	npc = Node3D.new()
 	npc.name = "MaeraVoss"
 	add_child(npc)
 	npc.position = Vector3(-4,0,2)
+	AethelActorPresentationContract.install(npc,"npc")
 	var npc_visual: Node3D = Node3D.new()
 	npc_visual.name = "MaeraVisual"
 	npc_visual.set_script(preload("res://scripts/procedural_npc.gd"))
@@ -243,7 +178,7 @@ func _build_narrative_nodes() -> void:
 	gate.name = "Portal"
 	add_child(gate)
 	gate.position = Vector3(11,0,0)
-	_box(gate, Vector3(0,1.4,0), Vector3(0.35,2.8,2.3), Color("7962bd"), false)
+	# Connector visuals are owned by the active region; gate remains a compatibility marker.
 	_update_region()
 
 func _build_merchant() -> void:
@@ -257,8 +192,9 @@ func _build_merchant() -> void:
 	var body := CollisionShape3D.new()
 	body.name = "BodyCollision"
 	var capsule := CapsuleShape3D.new()
-	capsule.radius = 0.4
-	capsule.height = 1.8
+	var presentation := AethelActorPresentationContract.install(merchant,"npc")
+	capsule.radius = presentation.radius
+	capsule.height = presentation.height
 	body.shape = capsule
 	body.position.y = 0.9
 	merchant.add_child(body)
@@ -324,8 +260,8 @@ func _spawn_enemy(at_position: Vector3, level: int, rank: int) -> CharacterBody3
 	var enemy := CharacterBody3D.new()
 	enemy.set_script(ENEMY_SCRIPT)
 	enemy.setup(level, rank)
-	add_child(enemy)
 	enemy.position = at_position
+	add_child(enemy)
 	enemy.target = player
 	enemy.defeated.connect(_on_enemy_defeated)
 	enemy.combat_event.connect(_on_combat_event)
@@ -335,7 +271,7 @@ func _spawn_enemy(at_position: Vector3, level: int, rank: int) -> CharacterBody3
 func _on_enemy_defeated(enemy: CharacterBody3D) -> void:
 	if exploration != null and not exploration.defeat(enemy): return
 	enemies.erase(enemy)
-	slain += 1
+	if region_id=="map_02": slain += 1
 	if region_id == "map_02" and slain >= 5: map_02_cleared = true
 	progression.gain_xp(enemy.xp_value)
 	_refresh_all()
@@ -386,13 +322,14 @@ func _build_ui() -> void:
 	message_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_readable_label(message_label)
 	root.add_child(message_label)
-	message_label.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	message_label.offset_left = -280
-	message_label.offset_right = 280
-	message_label.offset_top = -230
-	message_label.offset_bottom = -175
+	message_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	message_label.offset_left = -200
+	message_label.offset_right = 200
+	message_label.offset_top = 12
+	message_label.offset_bottom = 62
 	var help_button := Button.new()
 	help_button.text = "H · Ajuda"
+	help_button.hide()
 	help_button.focus_mode = Control.FOCUS_NONE
 	root.add_child(help_button)
 	help_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
@@ -413,7 +350,7 @@ func _build_ui() -> void:
 	for side in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + side, 20)
 	help_panel.add_child(margin)
 	var help := Label.new()
-	help.text = "CONTROLES — H para fechar\n\nWASD / setas ou clique no chão: mover\nClique no inimigo: aproximar e atacar\nShift + clique: atacar parado · J: ataque básico\nF1: Golpe · F2: Guarda (novamente: cancelar) · F3: Eco\nBotão direito: repetir a última habilidade\nQ: bloquear com escudo · Espaço: esquivar\nE / F: interagir (configurável) · L: loja de Doma\nI / Tab: mochila · C: personagem · K: habilidades\n1–4: poções · Alt: rótulos de itens\nRoda do mouse: zoom · F5/F9: salvar/carregar\nEsc: pausa · R: reiniciar após derrota"
+	help.text = "CONTROLES — H para fechar\n\nWASD / setas ou clique no chão: mover\nClique no inimigo: aproximar e atacar\nShift + clique: atacar parado · J: ataque básico\nF1: Golpe · F2: Guarda (novamente: cancelar) · F3: Eco\nBotão direito: repetir a última habilidade\nQ: bloquear com escudo · Espaço: esquivar\nE / F: interagir (configurável) · L: loja de Doma\nI / Tab: mochila · C: personagem · K: habilidades\n1–4: poções · Alt: rótulos de itens · O: filtro de loot\nM: ampliar/ocultar mapa · U: missões · Del: largar item\nRoda do mouse: zoom · F5/F9: salvar/carregar\nEsc: pausa · R: reiniciar após derrota"
 	help.add_theme_font_size_override("font_size", 16)
 	margin.add_child(help)
 	help_panel.hide()
@@ -431,6 +368,8 @@ func _build_resource_hud() -> void:
 	add_child(hud)
 	hud.setup_player_listeners(player)
 	hud.skill_selected.connect(func(index: int) -> void: _activate_skill(SKILL_IDS[index]))
+	hud.potion_selected.connect(_drink_belt)
+	hud.secondary_selected.connect(func() -> void: _activate_skill(right_skill_id))
 
 func _on_combat_event(world_position: Vector3, message: String, kind: String) -> void:
 	audio.play_cue({"damage":"hit","hurt":"hurt","heal":"heal","mana":"heal","attack":"attack","miss":"ui"}.get(kind,"buff"))
@@ -452,15 +391,16 @@ func _on_combat_event(world_position: Vector3, message: String, kind: String) ->
 func _show_message(text_value: String) -> void:
 	transient_message = text_value
 	message_label.text = text_value
-	message_until = Time.get_ticks_msec() / 1000.0 + 2.0
+	message_until = Time.get_ticks_msec() / 1000.0 + 3.0
 
 func _refresh_all() -> void:
 	if progression == null or player == null: return
 	if progression_label != null:
-		progression_label.text = "Bastião · Nível %d · Ouro %d" % [progression.current_level, gold]
+		progression_label.hide()
 	if hud != null:
 		hud.update_skills(right_skill_id, skill_tree.unlocked, SKILL_IDS, player, skill_tree.catalog)
 		hud.update_belt(belt, item_catalog)
+		hud.set_status(progression.current_level,gold)
 	if inventory_view != null:
 		inventory_view.gold_text = "Ouro: %d" % gold
 		inventory_view.refresh()
@@ -492,7 +432,7 @@ func ground_point_at(screen: Vector2) -> Variant:
 	var collider := hit["collider"] as Node
 	if collider == null or not collider.get_meta("walkable_ground", false): return null
 	var point: Vector3 = hit["position"]
-	return Vector3(point.x, 0, point.z)
+	return point
 
 func pick_enemy_at(screen: Vector2) -> CharacterBody3D:
 	var hit := _cursor_ray(screen, 1 | 4 | 16, true)
@@ -532,6 +472,10 @@ func _on_left_press(screen: Vector2) -> void:
 	if exploration != null: exploration.pending = ""
 	left_held = true
 	pickup_target = null
+	var connector_id: String=regions.pick(screen)
+	if not connector_id.is_empty():
+		regions.request(connector_id)
+		return
 	var enemy := pick_enemy_at(screen)
 	if Input.is_action_pressed("stand_attack"):
 		hold_mode = "stand"
@@ -616,6 +560,7 @@ func _grant_training_skills() -> void:
 func _process(delta: float) -> void:
 	if narrative != null: narrative.tick(delta)
 	if exploration != null: exploration.tick(delta)
+	regions.tick(delta)
 	var camera := get_viewport().get_camera_3d()
 	for index in range(active_popups.size() - 1, -1, -1):
 		var popup: Dictionary = active_popups[index]
@@ -653,7 +598,8 @@ func _process(delta: float) -> void:
 		pickup_target = null
 	if shop_panel.visible and (not narrative.available("doma") or not narrative.hub.get("doma",false) or player.global_position.distance_to(merchant.global_position) > 3.0):
 		shop_panel.visible = false
-	status_label.text = "VIGÍLIA / PRAÇA DOS SINOS" if region_id == "map_01" else "BAIRRO QUE FALTAVA  |  Rasuras %d / 5" % slain
+	status_label.hide()
+	hint_label.hide()
 	if region_id == "map_01":
 		hint_label.text = "E: conversar com Maera" if player.global_position.distance_to(npc.global_position) < 2.8 else "Procure Maera (marcador azul)."
 		if quest_started: hint_label.text = "Investigação provisória: atravesse o portal, derrote 5 Rasuras e retorne a Maera."
@@ -661,13 +607,22 @@ func _process(delta: float) -> void:
 		if player.global_position.distance_to(gate.global_position) < 2.8: hint_label.text = "E: entrar no Bairro que Faltava" if quest_started else "Converse com Maera antes de sair."
 		if player.global_position.distance_to(merchant.global_position) < 3.0: hint_label.text = "E: falar com Doma (L: loja)"
 	else:
-		hint_label.text = "Derrote 5 Rasuras. Clique nos itens para pegar. E: retornar pelo portal."
-		if slain >= 5: hint_label.text = "Bairro estabilizado! E perto do portal para voltar a Vigília."
+		hint_label.text = "Explore o Bairro. Via ao nordeste: Pátio dos Endereços. Portal sul: Vigília. M: minimapa."
+		if slain >= 5: hint_label.text = "Investigação provisória pronta. Retorne a Maera ou explore o Pátio pelo portal nordeste."
+	if region_id in ["map_03","map_04"]: hint_label.text="Explore o mapa · M: minimapa · E/F: portais e objetos. Arquivo: estrutura inicial, sem chefe."
 	if AethelSettings.interact_key == KEY_F: hint_label.text = hint_label.text.replace("E:", "F:")
 	if game_over:
 		status_label.text += "  |  DERROTA — R para reiniciar"
 	elif slain >= 5 and region_id == "map_02":
 		status_label.text += "  |  ÁREA LIBERADA"
+	var objective := "Converse com Maera."
+	var mission_title := "Missão · Maera"
+	if quest_started and not map_02_cleared:
+		mission_title="Missão · Bairro que Faltava"
+		objective="Derrote Rasuras: %d/5"%mini(slain,5) if region_id=="map_02" else "Derrote 5 Rasuras no Bairro (%d/5)"%mini(slain,5)
+	elif quest_started: objective="Retorne a Maera em Vigília."
+	if quest_completed: objective="Investigação concluída · U"
+	hud.set_mission(mission_title+"\n"+objective)
 	message_label.visible = message_until > Time.get_ticks_msec() / 1000.0
 
 # ---------------------------------------------------------------- teclas
@@ -701,7 +656,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			Engine.set_meta("aethel_new_game", true)
 			get_tree().reload_current_scene()
 		return
-	if event.is_action_pressed("quests"):
+	if event.is_action_pressed("minimap"):
+		regions.minimap.toggle()
+	elif event.is_action_pressed("quests"):
 		quest_panel.visible = not quest_panel.visible
 		_refresh_quest_panel()
 	elif event.is_action_pressed("inventory"):
@@ -724,6 +681,15 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			if event.is_action_pressed("skill_%d" % (index + 1)): _activate_skill(SKILL_IDS[index], get_viewport().get_mouse_position())
 
 func _interact() -> void:
+	if regions.interact(): return
+	# Keyboard interaction prioritizes the nearest available service in reach.
+	var nearest_npc := ""
+	var npc_distance := 2.6
+	for id: String in narrative.actors:
+		if not narrative.available(id): continue
+		var distance: float=player.position.distance_to(narrative.actors[id].position)
+		if distance<npc_distance and narrative.reachable(id): nearest_npc=id; npc_distance=distance
+	if not nearest_npc.is_empty(): narrative.request(nearest_npc); return
 	if narrative != null:
 		var pointed: String = narrative.pick(get_viewport().get_mouse_position())
 		if not pointed.is_empty():
@@ -741,18 +707,9 @@ func _interact() -> void:
 		var object_id: String = exploration.pick(get_viewport().get_mouse_position())
 		if not object_id.is_empty(): exploration.request(object_id); return
 	if _collect_nearest_drop(): return
-	if region_id == "map_01":
-		if is_instance_valid(merchant) and player.global_position.distance_to(merchant.global_position) < 3:
-			narrative.request("doma")
-		elif player.global_position.distance_to(gate.global_position) < 2.8 and quest_started:
-			region_id = "map_02"
-			_update_region()
-		elif player.global_position.distance_to(npc.global_position) < 2.8:
-			narrative.request("maera")
-	else:
-		if player.global_position.distance_to(gate.global_position) < 2.8:
-			region_id = "map_01"
-			_update_region()
+	if region_id=="map_01":
+		if player.position.distance_to(merchant.position)<3: narrative.request("doma")
+		elif player.position.distance_to(npc.position)<2.8: narrative.request("maera")
 
 func _toggle_left_panel(panel: Control) -> void:
 	var opening: bool = not panel.visible
@@ -762,6 +719,7 @@ func _toggle_left_panel(panel: Control) -> void:
 
 # ---------------------------------------------------------------- regiões
 func _update_region() -> void:
+	regions.load_region(region_id)
 	if exploration != null: exploration.update_region()
 	if narrative != null: narrative.close()
 	if workshop != null:
@@ -772,21 +730,28 @@ func _update_region() -> void:
 		merchant.visible = region_id == "map_01"
 		merchant.collision_layer = 8 if merchant.visible else 0
 	for drop in dropped_items:
-		if is_instance_valid(drop): drop.visible = str(drop.get_meta("region", region_id)) == region_id
+		if is_instance_valid(drop):
+			drop.visible = str(drop.get_meta("region", region_id)) == region_id
+			if drop.visible: drop.position=regions.level.safe_position(drop.position)
 	for enemy in enemies:
 		if is_instance_valid(enemy): enemy.queue_free()
 	enemies.clear()
 	pickup_target = null
-	if region_id == "map_01":
-		player.position = Vector3(0, 0, 4)
-		npc.visible = true
-		gate.position = Vector3(11, 0, 0)
-	else:
-		player.position = Vector3(0, 0, 9)
-		npc.visible = false
-		gate.position = Vector3(0, 0, 12)
-		slain = exploration.killed.size() if exploration != null else 0
+	player.position=regions.point(regions.definitions[region_id].spawn)
+	npc.visible=region_id=="map_01"
+	gate.position=Vector3(11,0,0) if region_id=="map_01" else Vector3(0,0,12)
+	if region_id!="map_01":
+		slain=0
+		for group: Dictionary in exploration.data.encounters:
+			if group.region=="map_02":
+				for member: Dictionary in group.members:
+					if exploration.killed.has(str(member.id)): slain+=1
 		_build_enemies()
+	var camera := get_viewport().get_camera_3d()
+	if camera!=null:
+		camera.follow_min=Vector2(-14,-14)
+		camera.follow_max=Vector2(14,14)
+		camera.snap_to_target()
 	player.clear_commands()
 
 
@@ -817,7 +782,7 @@ func _spawn_drop(entry: Dictionary, at_position: Vector3) -> AethelDroppedItem:
 	else: drop.item = entry["item"]
 	var angle: float = rng.randf() * TAU
 	drop.position = at_position + Vector3(cos(angle), 0.0, sin(angle)) * rng.randf_range(0.35, 1.1)
-	drop.position.y = 0.0
+	drop.position.y = regions.level.height_at(drop.position.x,drop.position.z)
 	drop.set_meta("region", region_id)
 	add_child(drop)
 	dropped_items.append(drop)
@@ -982,7 +947,7 @@ func _setup_rpg_systems() -> void:
 	progression.name = "ProgressionManager"
 	player.add_child(progression)
 	progression.leveled_up.connect(_on_level_up)
-	progression.experience_gained.connect(func(amount: int) -> void: _on_combat_event(player.global_position+Vector3(0,2,0),"+%d XP" % amount,"xp"))
+	progression.experience_gained.connect(func(amount: int) -> void: _on_combat_event(player.global_position+Vector3(0,3.3,0),"+%d XP" % amount,"xp"))
 	skill_tree = AethelSkillTree.new()
 	skill_tree.name = "SkillTree"
 	player.add_child(skill_tree)
@@ -1195,6 +1160,7 @@ func _purchase(item: AethelItemInstance, is_stock_potion: bool) -> void:
 
 # ---------------------------------------------------------------- save / load (versão 3)
 func _save_state() -> void:
+	regions.reveal()
 	var equipment: Dictionary = {}
 	for slot in player.equipped:
 		var item: AethelItemInstance = player.equipped[slot]
@@ -1202,7 +1168,7 @@ func _save_state() -> void:
 	var payload: Dictionary = {"version": SAVE_VERSION, "character_id": player.character_id, "class_id": String(player.class_id), "position": [player.position.x, player.position.y, player.position.z], "stamina": player.stamina, "progression": progression.serialize(), "skills": skill_tree.serialize(),
 		"stats": player.stats.serialize(), "gold": gold, "region_id": region_id, "quest_started": quest_started,
 		"quest_completed": quest_completed, "map_02_cleared": map_02_cleared, "slain": slain, "hp": player.hp,
-		"ether": player.ether, "inventory": inventory.serialize(), "equipped": equipment, "belt": belt, "right_skill": right_skill_id, "exploration": exploration.serialize(), "narrative": narrative.serialize(), "shop_stock": shop_stock.map(func(item: AethelItemInstance) -> Dictionary: return item.serialize())}
+		"ether": player.ether, "inventory": inventory.serialize(), "equipped": equipment, "belt": belt, "right_skill": right_skill_id, "world_regions":regions.serialize(), "exploration": exploration.serialize(), "narrative": narrative.serialize(), "shop_stock": shop_stock.map(func(item: AethelItemInstance) -> Dictionary: return item.serialize())}
 	var file := FileAccess.open(SAVE_PATH + ".tmp", FileAccess.WRITE)
 	if file == null:
 		_show_message("Falha ao abrir arquivo de save")
@@ -1277,6 +1243,7 @@ func _valid_save(data: Dictionary) -> bool:
 		for row: Dictionary in data.get("shop_stock",[]): owned_ids[str(row.get("id",""))] = true
 		for row: Dictionary in data.exploration.get("drops",[]):
 			if int(row.gold) == 0 and owned_ids.has(str(row.item.get("id",""))): return false
+	if data.has("world_regions") and not regions.valid_state(data.world_regions): return false
 	return true
 
 func _load_state() -> bool:
@@ -1303,8 +1270,9 @@ func _load_state() -> bool:
 	_refresh_shop()
 	map_02_cleared = bool(payload.get("map_02_cleared", false))
 	exploration.restore(payload.get("exploration",{}),map_02_cleared)
+	regions.restore(payload.get("world_regions",{}))
 	var saved_region: String = str(payload.get("region_id", "map_01"))
-	region_id = saved_region if saved_region in ["map_01", "map_02"] else "map_01"
+	region_id = saved_region if regions.definitions.has(saved_region) else "map_01"
 	_update_region()
 	inventory.restore(payload.get("inventory", {}), item_catalog)
 	player.equipped.clear()
@@ -1352,17 +1320,10 @@ func _load_state() -> bool:
 	player.stamina = clampf(float(payload.get("stamina", player.max_stamina)), 0, player.max_stamina)
 	player.stamina_changed.emit(player.stamina, player.max_stamina)
 	var saved_position: Array = payload.get("position", [])
-	if saved_position.size() == 3 and saved_position.all(func(value: Variant) -> bool: return value is float or value is int):
-		var point := Vector3(float(saved_position[0]), 0, float(saved_position[2]))
-		if is_finite(point.x) and is_finite(point.z) and absf(point.x) < 13 and absf(point.z) < 13:
-			var query := PhysicsShapeQueryParameters3D.new()
-			var capsule := CapsuleShape3D.new()
-			capsule.radius = 0.35
-			capsule.height = 1.6
-			query.shape = capsule
-			query.transform = Transform3D(Basis.IDENTITY, point + Vector3(0,0.9,0))
-			query.exclude = [player.get_rid()]
-			if get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty(): player.position = point
+	if saved_position.size()==3 and saved_position.all(func(value: Variant) -> bool: return value is float or value is int):
+		player.position=regions.level.safe_position(Vector3(float(saved_position[0]),float(saved_position[1]),float(saved_position[2])))
+	else: player.position=regions.level.safe_position(Vector3.INF)
+	get_viewport().get_camera_3d().snap_to_target()
 	player.hp = clampi(int(payload.get("hp", player.max_hp)), 0, player.max_hp)
 	player.ether = clampi(int(payload.get("ether", player.max_ether)), 0, player.max_ether)
 	player.hp_changed.emit(float(player.hp), float(player.max_hp))
@@ -1450,15 +1411,24 @@ func _setup_reactive_ui() -> void:
 	quest_panel.hide()
 	mission_changed.connect(_refresh_quest_panel)
 	var toolbar := HBoxContainer.new()
+	toolbar.name="WorldToolbar"
 	hud.root.add_child(toolbar)
-	toolbar.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	toolbar.offset_left = -370
-	toolbar.offset_right = -18
-	toolbar.offset_top = -180
-	toolbar.offset_bottom = -138
-	for entry: Array in [["I Mochila","inventory"],["C Atributos","character"],["U Missões","quests"],["Esc Pausa","pause"]]:
+	toolbar.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	toolbar.anchor_left=0.84
+	toolbar.anchor_right=0.84
+	toolbar.offset_left = 0
+	toolbar.offset_right = 176
+	toolbar.add_theme_constant_override("separation",2)
+	toolbar.offset_top = 174
+	toolbar.offset_bottom = 208
+	for entry: Array in [["I","inventory"],["C","character"],["U","quests"],["H","help"],["Esc","pause"]]:
 		var button := Button.new()
 		button.text = entry[0]
+		button.custom_minimum_size=Vector2(27,28)
+		AethelUI.style_slot(button,0)
+		button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		button.tooltip_text={"inventory":"Mochila","character":"Atributos","quests":"Missões","help":"Ajuda","pause":"Pausa"}[entry[1]]
+		hud.quick_buttons[entry[1]]=button
 		button.add_theme_font_size_override("font_size",12)
 		button.focus_mode = Control.FOCUS_NONE
 		button.pressed.connect(func() -> void:
@@ -1467,6 +1437,7 @@ func _setup_reactive_ui() -> void:
 				"inventory": inventory_view.visible = not inventory_view.visible
 				"character": _toggle_left_panel(character_panel)
 				"quests": quest_panel.visible = not quest_panel.visible; _refresh_quest_panel()
+				"help": help_panel.visible=not help_panel.visible
 				"pause": player.clear_commands(); pause_menu.open()
 			audio.play_cue("ui",true))
 		toolbar.add_child(button)

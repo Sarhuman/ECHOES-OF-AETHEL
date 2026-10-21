@@ -175,6 +175,7 @@ func run() -> void:
 	check(float(ex.buffs.get("remaining",0)) > 0 and world.player.exploration_reduction == 0.2,"active effect remaining time persists")
 	var count: int = world.dropped_items.size()
 	check(world._load_state() and world.dropped_items.size() == count,"repeated load does not duplicate ground loot")
+	await frames() # Independent travel inputs occur on separate frames.
 	world.player.position = ex.objects.vigilia_anchor.position + Vector3(0,0,1)
 	check(ex.travel("vigilia_anchor","district_anchor") and world.enemies.is_empty(),"saved cleared region stays cleared")
 	world.player.position = ex.objects.district_special.position + Vector3(0,0,1)

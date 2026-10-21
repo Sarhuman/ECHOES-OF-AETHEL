@@ -20,10 +20,11 @@ var filter_panel: PanelContainer
 var travel_panel: PanelContainer
 var effect_label: Label
 var audio: AethelAudioManager
+var object_labels: Dictionary={}
 var labels: Dictionary = {}
 var sound_clock := 0.0
 var priority_sound_clock := 0.0
-const NAMES := {"chest":"Baú","barrel":"Barril","urn":"Urna","remains":"Restos abandonados","tomb":"Túmulo","altar":"Altar de Ardósia","well":"Poço","anchor":"Âncora de Travessia"}
+const NAMES := {"chest":"Baú","barrel":"Barril","urn":"Urna","remains":"Restos abandonados","tomb":"Túmulo","altar":"Altar de Ardósia","well":"Poço","anchor":"Âncora de Travessia","door":"Porta de bronze","lore":"Vestígio"}
 
 func setup(owner_world: Node3D) -> void:
 	world = owner_world
@@ -50,6 +51,17 @@ func setup(owner_world: Node3D) -> void:
 		shape.position.y = 0.6
 		actor.add_child(shape)
 		build_visual(actor,definition)
+		if definition.kind=="door":
+			var body := StaticBody3D.new()
+			body.name="DoorBody"
+			actor.add_child(body)
+			var collision := CollisionShape3D.new()
+			var door_shape := BoxShape3D.new()
+			door_shape.size=Vector3(7.8,2.4,0.2)
+			collision.shape=door_shape
+			collision.position.y=1.2
+			body.add_child(collision)
+			world._box(actor,Vector3(0,1.2,0),Vector3(7.8,2.4,0.18),Color("655236"),false)
 		objects[str(definition.id)] = actor
 	build_ui()
 	update_region()
@@ -86,7 +98,7 @@ func build_visual(actor: Node3D, definition: Dictionary) -> void:
 
 func build_ui() -> void:
 	effect_label = Label.new()
-	effect_label.position = Vector2(20,100)
+	effect_label.position = Vector2(20,280)
 	effect_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	canvas.add_child(effect_label)
 	filter_panel = PanelContainer.new()
@@ -121,6 +133,10 @@ func update_region() -> void:
 		var actor: Area3D = objects[id]
 		actor.visible = definition_for(id).region == world.region_id
 		actor.collision_layer = 128 if actor.visible else 0
+		if definition_for(id).kind=="door" and used.has(id): actor.hide(); actor.collision_layer=0
+		if definition_for(id).kind=="door":
+			actor.get_node("DoorBody").collision_layer=1 if actor.visible else 0
+			world.regions.level.set_archive_door(used.has(id))
 	refresh_objects()
 
 func refresh_objects() -> void:
@@ -141,6 +157,7 @@ func pick(screen: Vector2) -> String:
 
 func reachable(actor: Node3D) -> bool:
 	var query := PhysicsRayQueryParameters3D.create(world.player.global_position+Vector3.UP,actor.global_position+Vector3(0,0.5,0),1 | 8)
+	if actor.has_node("DoorBody"): query.exclude=[actor.get_node("DoorBody").get_rid()]
 	return world.get_world_3d().direct_space_state.intersect_ray(query).is_empty()
 
 func request(id: String) -> bool:
@@ -154,7 +171,9 @@ func request(id: String) -> bool:
 	stalled = 0
 	last_position = world.player.global_position
 	if world.player.global_position.distance_to(objects[id].global_position) <= 2.5: return activate(id)
-	world.player.command_move(objects[id].global_position)
+	var destination: Vector3=objects[id].global_position
+	if definition_for(id).kind=="door": destination+=Vector3(0,0,2)
+	world.player.command_move(destination)
 	return true
 
 func activate(id: String) -> bool:
@@ -165,6 +184,20 @@ func activate(id: String) -> bool:
 	world.player.clear_commands()
 	var offset: Vector3 = objects[id].global_position-world.player.global_position
 	if offset.length() > 0.01: world.player.facing = offset.normalized()
+	if row.kind == "lore":
+		used[id]=1
+		world.regions.known_pois[id]=true
+		world._show_message(str(row.get("text","Um registro aguarda interpretação.")))
+		return true
+	if row.kind == "door":
+		used[id]=1
+		world.regions.opened_doors[id]=true
+		objects[id].get_node("DoorBody").collision_layer=0
+		world.regions.level.set_archive_door(true)
+		objects[id].hide()
+		objects[id].collision_layer=0
+		world._show_message("Porta aberta")
+		return true
 	if row.kind == "anchor":
 		if not id in anchors: anchors.append(id)
 		feedback(objects[id].global_position,"Travessia descoberta","anchor")
@@ -207,7 +240,7 @@ func open_travel(source: String) -> void:
 	for id: String in anchors:
 		if id == source: continue
 		var button := Button.new()
-		button.text = "Vigília" if definition_for(id).region == "map_01" else "Bairro que Faltava · teste"
+		button.text = str(world.regions.definitions[definition_for(id).region].name)
 		button.pressed.connect(func() -> void: travel(source,id))
 		column.add_child(button)
 	var close := Button.new()
@@ -223,15 +256,14 @@ func travel(source: String,destination: String) -> bool:
 	if not source in anchors or not destination in anchors or not objects.has(source) or not objects.has(destination): return false
 	if world.game_over or not objects[source].visible or world.player.global_position.distance_to(objects[source].global_position) > 2.5 or not reachable(objects[source]): return false
 	if definition_for(destination).region == "map_02" and not world.quest_started: return false
-	world.region_id = str(definition_for(destination).region)
-	world._update_region()
-	world.player.position = objects[destination].position + Vector3(0,0,1.4)
-	world.player.clear_commands()
+	if not world.regions.move_to(str(definition_for(destination).region),objects[destination].position+Vector3(0,0,1.4)): return false
 	feedback(world.player.position,"Travessia concluída","anchor")
 	return true
 
 func build_encounters() -> void:
 	for group: Dictionary in data.encounters:
+		if bool(world.regions.definitions[world.region_id].safe): return
+		if world.enemies.size()>=int(world.regions.definitions[world.region_id].enemy_limit): return
 		if group.region != world.region_id or (bool(group.get("quest_required",false)) and not world.quest_started): continue
 		# Test fixtures can enter the slice directly; real portal access is quest gated.
 		for member: Dictionary in group.members:
@@ -351,6 +383,7 @@ func tick(delta: float) -> void:
 	if float(buffs.get("remaining",0)) > 0:
 		buffs.remaining = maxf(0,float(buffs.remaining)-delta)
 		apply_buffs()
+	effect_label.visible=world.dropped_items.any(func(drop: AethelDroppedItem) -> bool: return is_instance_valid(drop) and not drop.is_queued_for_deletion() and visible_drop(drop))
 	effect_label.text = "Altar de Ardósia: resistência %ds · O: filtro de loot" % ceili(float(buffs.remaining)) if float(buffs.get("remaining",0)) > 0 else "O: filtro de loot"
 	if not pending.is_empty():
 		if world.game_over or world.player.keyboard_active or is_instance_valid(world.player.attack_target): pending = ""
@@ -378,7 +411,7 @@ func serialize() -> Dictionary:
 	var drops: Array = []
 	for drop: AethelDroppedItem in world.dropped_items:
 		if not is_instance_valid(drop) or drop.is_queued_for_deletion(): continue
-		drops.append({"id":drop.drop_id,"region":str(drop.get_meta("region")),"position":[drop.position.x,0,drop.position.z],"gold":drop.gold_amount,"item":drop.item.serialize() if drop.item != null else {}})
+		drops.append({"id":drop.drop_id,"region":str(drop.get_meta("region")),"position":[drop.position.x,drop.position.y,drop.position.z],"gold":drop.gold_amount,"item":drop.item.serialize() if drop.item != null else {}})
 	return {"used":used.duplicate(),"killed":killed.duplicate(),"anchors":anchors.duplicate(),"buffs":buffs.duplicate(),"drops":drops}
 
 func valid_state(payload: Variant) -> bool:
@@ -409,9 +442,9 @@ func valid_state(payload: Variant) -> bool:
 	for row: Variant in payload.get("drops",[]):
 		if not row is Dictionary or not row.get("id") is String or row.id.is_empty() or ids.has(row.id): return false
 		ids[row.id] = true
-		if not row.get("region","") in ["map_01","map_02"] or not row.get("position") is Array or row.position.size() != 3: return false
+		if not world.regions.definitions.has(str(row.get("region",""))) or not row.get("position") is Array or row.position.size() != 3: return false
 		for coordinate: Variant in row.position:
-			if not (coordinate is int or coordinate is float) or not is_finite(float(coordinate)) or absf(float(coordinate)) > 17: return false
+			if not (coordinate is int or coordinate is float) or not is_finite(float(coordinate)) or absf(float(coordinate)) > 20: return false
 		if not (row.get("gold") is int or row.get("gold") is float) or not is_finite(float(row.gold)) or row.gold < 0 or row.gold > 1000000 or floorf(float(row.gold)) != row.gold: return false
 		if not row.get("item",{}) is Dictionary: return false
 		if row.gold == 0:
@@ -431,6 +464,7 @@ func restore(payload: Dictionary,legacy_cleared: bool) -> void:
 	buffs = payload.get("buffs",{}).duplicate()
 	if payload.is_empty() and legacy_cleared:
 		for group: Dictionary in data.encounters:
+			if group.region!="map_02": continue
 			for member: Dictionary in group.members: killed[str(member.id)] = true
 	for drop: AethelDroppedItem in world.dropped_items:
 		if is_instance_valid(drop): drop.queue_free()
@@ -447,3 +481,46 @@ func restore(payload: Dictionary,legacy_cleared: bool) -> void:
 	apply_buffs()
 	refresh_objects()
 
+
+func present_object_labels() -> void:
+	var camera := world.get_viewport().get_camera_3d()
+	var placed: Array[Rect2]=[]
+	for id: String in objects:
+		var actor: Area3D=objects[id]
+		var title: Label3D=actor.get_node("Title")
+		title.visible=false
+		if not object_labels.has(id):
+			var label:=Label.new()
+			label.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			label.add_theme_font_size_override("font_size",14)
+			label.add_theme_color_override("font_color",AethelUI.TEXT)
+			label.add_theme_color_override("font_outline_color",Color("0b0a08"))
+			label.add_theme_constant_override("outline_size",5)
+			loot_canvas.add_child(label)
+			object_labels[id]=label
+		var label: Label=object_labels[id]
+		label.hide()
+		if not actor.visible or world.inventory_view.visible or world.narrative.view.visible or world.shop_panel.visible: continue
+		if actor.position.distance_to(world.player.position)>12 or camera.is_position_behind(actor.position) or not reachable(actor): continue
+		var screen: Vector2=camera.unproject_position(actor.position+Vector3(0,1.2,0))
+		if not Rect2(0,70,1280,550).has_point(screen): continue
+		label.text=title.text
+		label.size=label.get_minimum_size()
+		var base:=Vector2(clampf(screen.x-label.size.x/2,12,1260-label.size.x),clampf(screen.y,70,620-label.size.y))
+		var found:=false
+		for attempt in 18:
+			var candidate:=Rect2(base-Vector2(0,attempt*(label.size.y+5)),label.size)
+			if candidate.position.y<70: break
+			var hud_overlap:=false
+			for panel: Control in [world.hud.resource_panel,world.hud.mission_tracker,world.hud.action_row,world.hud.root.get_node("WorldToolbar"),world.regions.minimap]:
+				if panel.visible and candidate.intersects(panel.get_global_rect()): hud_overlap=true;break
+			if hud_overlap: continue
+			var overlaps:=false
+			for other: Rect2 in placed:
+				if candidate.intersects(other.grow(3)): overlaps=true;break
+			if overlaps: continue
+			label.position=candidate.position
+			placed.append(candidate)
+			found=true
+			break
+		label.visible=found

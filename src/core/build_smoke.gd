@@ -38,6 +38,8 @@ func run() -> void:
 	await frames(15)
 	Input.action_release("move_right")
 	check(player.position.distance_to(start) > 0.2, "movement input")
+	world.region_id="map_03"
+	world._update_region()
 	player.position = Vector3.ZERO
 	player.clear_commands()
 	var enemy = world._spawn_enemy(Vector3(0,0,-3),1,2)
@@ -77,6 +79,8 @@ func run() -> void:
 	check(world.merchant.get_node_or_null("InteractionArea") != null, "Doma interaction")
 	player.clear_commands()
 	player.attack_recovery = 0
+	world.region_id="map_01"
+	world._update_region()
 	player.position = world.merchant.position + Vector3(2,0,0)
 	world.narrative.request("doma")
 	check(world.narrative.view.visible,"Doma dialogue data exported")
@@ -113,7 +117,7 @@ func run() -> void:
 	world._save_state()
 	var drop_count: int = world.dropped_items.size()
 	check(world._load_state() and ex.used.has("district_chest") and ex.anchors.size() == 2 and world.dropped_items.size() == drop_count,"release exploration persistence")
-	check(world.hud.life_globe != null and world.hud.ether_globe != null,"release globe resources")
+	check(world.hud.hp_bar != null and world.hud.ether_bar != null,"release compact resources")
 	check(AudioServer.get_bus_index("UI") >= 0 and AudioServer.get_bus_index("Ambience") >= 0,"release audio channels")
 	var discard := AethelItemInstance.new(world.item_catalog.wood_shield,"release-discard")
 	world.inventory.add_item(discard)
@@ -125,6 +129,14 @@ func run() -> void:
 	var tooltip_rect: Rect2 = world.shop_tooltip.get_global_rect()
 	await frames(20)
 	check(world.shop_tooltip.get_global_rect() == tooltip_rect,"release stable tooltip")
+	await frames(3)
+	check(world.regions.validate_graph().is_empty(),"release graph connections")
+	check(not world.regions.allows_combat(),"release safe hub")
+	for connector: String in ["map_01_to_map_02","map_02_to_map_03","map_03_to_map_04"]:
+		player.position=world.regions.connectors[connector].position
+		check(world.regions.transition(connector),"release canonical transition "+connector)
+		await frames(3)
+	check(world.region_id=="map_04" and world.regions.allows_combat(),"release archive offensive policy")
 	world.pause_menu.open()
 	check(get_tree().paused, "pause")
 	get_tree().paused = false
