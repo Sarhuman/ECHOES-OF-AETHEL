@@ -1,6 +1,6 @@
-# Teste da Fase 24 — NPCs, diálogos, comércio e progresso
+# Teste da Fase 25 — exploração e recompensas
 
-Extraia todo EchoesOfAethel-Fase24-Windows-x64.zip em uma pasta nova. Abra jogo/EchoesOfAethel-Fase24.exe com o PCK ao lado. Fonte editável em fonte/project.godot; Godot 4.7.2.stable.official.ed1daf0bf. O export é pré-alpha, sem assinatura/instalador.
+Extraia todo EchoesOfAethel-Fase25-Windows-x64.zip em uma pasta nova. Abra jogo/EchoesOfAethel-Fase25.exe com o PCK ao lado. Fonte editável em fonte/project.godot; Godot 4.7.2.stable.official.ed1daf0bf. O export é pré-alpha, sem assinatura/instalador.
 
 ## Roteiro de playtest
 
@@ -27,7 +27,7 @@ python tools/fetch_windows_template.py
 python tools/package_windows.py
 ```
 
-O build executa tools/test.ps1 com quinze suítes e perfis separados. Para somente os testes, passe o mesmo GodotExe a tools/test.ps1. As suítes da Fase 23 preservam os testes de inventário e arraste nativo. As novas suítes test_phase24.gd e test_phase24_gui.gd exercitam NPCs, narrativa, comércio e persistência.
+O build executa tools/test.ps1 com dezessete suítes e perfis separados. Para somente os testes, passe o mesmo GodotExe a tools/test.ps1. As suítes da Fase 23 preservam os testes de inventário e arraste nativo. As novas suítes test_phase24.gd e test_phase24_gui.gd exercitam NPCs, narrativa, comércio e persistência.
 
 ## Estado artístico e limites
 
@@ -46,3 +46,17 @@ Organização é determinística por área e ID, sem rotação de itens; pode re
 6. Repita em 1280×720 e 1920×1080. Verifique retratos provisórios, foco, rolagem e legibilidade. Confirme movimento/ataques/F1–F3 após fechar UI.
 
 Automação adicional: test_phase24.gd verifica serviços reais e persistência; test_phase24_gui.gd injeta E/setas/Enter/Esc/L em ambas as resoluções. Rodar o segundo sem --headless e com AETHEL_CAPTURE_DIR gera capturas. A inspeção dessas capturas e os inputs automatizados não substituem o playtest humano acima, que continua pendente. Detalhes em FASE24_NPCS.md.
+
+
+## Fase 25 — roteiro de exploração
+
+1. Em Novo jogo, aceite a investigação provisória de Maera. Ative a Âncora de Travessia de Vigília (próxima ao ponto inicial); descubra, feche a janela e atravesse o portal a leste.
+2. Enfrente comum, campeão e elite com dois lacaios. Observe os nomes/modificadores, proteção temporária e efeito periódico. O bot e as suítes automatizadas cobrem o combate; este roteiro exige avaliação humana adicional.
+3. Veja loot cair, use Alt e clique num item distante. Confira aproximação e transferência para mochila/cinto/saldo. Com mochila cheia, item deve ficar no chão. O abre filtro; desligue/religue categorias e confira que nada é destruído.
+4. Abra baú, barril, urna, restos e túmulo. O baú especial exige o grupo da elite completo. Tente reabrir antes/depois de F5/F9: nenhuma recompensa adicional.
+5. Use o Poço, observe os três recursos e o limite de dois usos. Use o Altar de Ardósia, observe duração e resistência; espere expirar ou salve/carregue para conferir os segundos restantes, sem novo uso.
+6. Descubra a Âncora do Bairro e volte à âncora descoberta de Vigília. Tente um destino não descoberto (não deve existir como opção). Gerencie equipamento e comércio de Doma; salve.
+7. Retorne ao Bairro: mortos continuam eliminados e loot deixado continua disponível. Salve/carregue várias vezes, colete, salve novamente: não deve reaparecer. Sobreviventes recuperam vida ao reentrar; Novo jogo reinicia o mundo.
+8. Repita em 1280×720 e 1920×1080. Verifique foco, mouse, nomes separados, filtros e retorno ao HUD. Os modelos/sons e a geometria compartilhada são provisórios.
+
+Novos testes: test_phase25.gd e test_phase25_gui.gd. O segundo aceita AETHEL_CAPTURE_DIR e gera seis capturas quando executado sem --headless. Inspeção dessas capturas e inputs automatizados não substituem playtest humano. tools/smoke_windows.ps1 executa o EXE exportado com 21 verificações, perfil isolado e teste de persistência de exploração. As taxas e a política de respawn estão em FASE25_EXPLORATION.md.

@@ -6,6 +6,7 @@ enum MonsterRank { NORMAL, CHAMPION, UNIQUE }
 
 var rng := RandomNumberGenerator.new()
 var catalog: Dictionary = {}
+var rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/loot_tables.json"))
 
 func _init(item_catalog: Dictionary = {}, seed_value: int = -1) -> void:
 	catalog = item_catalog
@@ -18,8 +19,9 @@ func set_seed(seed_value: int) -> void:
 func _quality_roll(rank: int, magic_find: float, min_quality: int) -> int:
 	rank = clampi(rank, 0, 2)
 	var scale: float = 1 + clampf(magic_find, 0, 1000) / 100
-	var weights: Array[float] = [55, 27, 12, 5, 1]
-	for index in range(1, 5): weights[index] *= scale * (1 + rank * 0.8)
+	var weights: Array[float] = []
+	for weight: Variant in rules.rarity_weights: weights.append(float(weight))
+	for index in range(1, 5): weights[index] *= scale * (1 + rank * float(rules.quality_rank_bonus))
 	var total := 0.0
 	for weight in weights: total += weight
 	var roll := rng.randf() * total
@@ -32,17 +34,6 @@ func roll_item(monster_level: int, rank: int = 0, magic_find: float = 0.0, min_q
 	rank = clampi(rank, 0, 2)
 	monster_level = clampi(monster_level, 1, 100)
 	var quality: int = _quality_roll(rank, magic_find, min_quality)
-	if quality == AethelItemData.Rarity.UNIQUE:
-		var pool: Array = []
-		for data: AethelItemData in AethelItemCatalog.uniques(catalog):
-			if data.item_level <= monster_level + 2: pool.append(data)
-		if pool.is_empty(): pass # sem unico autoral elegivel: lendario gerado a partir de base
-		else:
-			var unique_def: AethelItemData = pool[rng.randi() % pool.size()]
-			var unique_item := AethelItemInstance.new(unique_def)
-			unique_item.quality = AethelItemData.Rarity.UNIQUE
-			unique_item.item_level = monster_level
-			return unique_item
 	var bases: Array = []
 	for data: AethelItemData in AethelItemCatalog.generic_bases(catalog):
 		if data.item_level <= monster_level + 1: bases.append(data)
@@ -89,28 +80,65 @@ func _potion_for_level(level: int, wants_life: bool) -> AethelItemInstance:
 	return AethelItemInstance.new(catalog[key])
 
 func roll_gold(level: int, rank: int = 0) -> int:
-	return rng.randi_range(4, 10) * maxi(1, level) * [1, 3, 8][rank]
+	return rng.randi_range(int(rules.gold_range[0]),int(rules.gold_range[1])) * maxi(1,level) * int(rules.tables[["normal","champion","elite"][clampi(rank,0,2)]].gold_scale)
 
 func roll_drops(monster_level: int, rank: int = 0, magic_find: float = 0.0) -> Array:
-	## Retorna [{kind:"gold",amount}, {kind:"potion",item}, {kind:"item",item}]
-	rank = clampi(rank, 0, 2)
-	monster_level = clampi(monster_level, 1, 100)
+	return roll_rewards({"id":"legacy","level":monster_level,"rank":rank,"region":"map_02","difficulty":"test","table":["normal","champion","elite"][clampi(rank,0,2)],"magic_find":magic_find})
+
+func validate_rules() -> bool:
+	if rules.get("rarity_weights",[]).size() != 5: return false
+	var total := 0.0
+	for weight: Variant in rules.rarity_weights:
+		if not (weight is int or weight is float) or not is_finite(float(weight)) or float(weight) < 0: return false
+		total += float(weight)
+	if total <= 0: return false
+	for table: Dictionary in rules.tables.values():
+		if table.rolls < 0 or table.rolls > 20 or table.guaranteed < 0 or table.guaranteed > 5: return false
+		if table.chance < 0 or table.chance > 1 or table.gold_scale <= 0: return false
+		var sum := 0.0
+		for key: String in table.weights:
+			if not key in ["gold","potion","equipment","material"] or float(table.weights[key]) < 0: return false
+			sum += float(table.weights[key])
+		if sum <= 0: return false
+	for id: String in rules.materials:
+		if not catalog.has(id) or catalog[id].kind != "material": return false
+	return true
+
+func roll_rewards(context: Dictionary) -> Array:
 	var drops: Array = []
-	var rolls: int = [1, 2, 4][rank]
-	if rank >= MonsterRank.CHAMPION:
-		var guaranteed: int = 1 if rank == MonsterRank.CHAMPION else 3
-		for i in guaranteed:
-			var guaranteed_item: AethelItemInstance = roll_item(monster_level, rank, magic_find, AethelItemData.Rarity.MAGIC)
-			if guaranteed_item != null: drops.append({"kind": "item", "item": guaranteed_item})
-	for i in rolls:
-		if rng.randf() >= (0.55 if rank == MonsterRank.NORMAL else 0.75): continue
-		var roll: float = rng.randf()
-		if roll < 0.50:
-			drops.append({"kind": "gold", "amount": roll_gold(monster_level, rank)})
-		elif roll < 0.72:
-			var potion: AethelItemInstance = _potion_for_level(monster_level, rng.randf() < 0.6)
-			if potion != null: drops.append({"kind": "potion", "item": potion})
-		else:
-			var item: AethelItemInstance = roll_item(monster_level, rank, magic_find)
-			if item != null: drops.append({"kind": "item", "item": item})
+	if not validate_rules(): return drops
+	if not rules.tables.has(str(context.get("table",""))) or not str(context.get("region","")) in rules.regions: return drops
+	if not rules.difficulty_scales.has(str(context.get("difficulty",""))) or str(context.get("id","")).is_empty(): return drops
+	var table: Dictionary = rules.tables[str(context.table)]
+	var level: int = clampi(int(context.get("level",1)),1,100)
+	var rank: int = clampi(int(context.get("rank",0)),0,2)
+	var magic_find: float = clampf(float(context.get("magic_find",0)),0,1000)
+	var reward_scale: float = clampf(float(context.get("reward_scale",1)),0.1,3.0) * float(rules.difficulty_scales[str(context.difficulty)])
+	for i in int(table.guaranteed):
+		var item := roll_item(level,rank,magic_find,int(table.minimum_quality))
+		if item != null: drops.append({"kind":"item","item":item})
+	var total := 0.0
+	for weight: Variant in table.weights.values(): total += float(weight)
+	for i in int(table.rolls):
+		if rng.randf() >= float(table.chance): continue
+		var roll := rng.randf() * total
+		var category := ""
+		for key: String in table.weights:
+			roll -= float(table.weights[key])
+			if roll < 0:
+				category = key
+				break
+		match category:
+			"gold": drops.append({"kind":"gold","amount":maxi(1,roundi(rng.randi_range(int(rules.gold_range[0]),int(rules.gold_range[1])) * level * float(table.gold_scale) * reward_scale))})
+			"potion":
+				var potion := _potion_for_level(level,rng.randf() < float(rules.potion_life_chance))
+				if potion != null: drops.append({"kind":"potion","item":potion})
+			"equipment":
+				var item := roll_item(level,rank,magic_find,int(table.minimum_quality))
+				if item != null: drops.append({"kind":"item","item":item})
+			"material":
+				var id: String = rules.materials[rng.randi_range(0,rules.materials.size()-1)]
+				if catalog.has(id): drops.append({"kind":"item","item":AethelItemInstance.new(catalog[id])})
+	for index in drops.size():
+		if drops[index].has("item"): drops[index].item.instance_id = "loot-%s-%d-%d" % [str(context.id),rng.randi(),index]
 	return drops

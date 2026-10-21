@@ -92,6 +92,27 @@ func run() -> void:
 	world.gold = 0
 	check(world._load_state() and world.gold == 1000-price and world.inventory.find_item(offer.instance_id) != null,"release save/load transaction")
 	check(not world.shop_stock.any(func(item: AethelItemInstance) -> bool: return item.instance_id == offer.instance_id),"release stock persisted")
+	world.shop_panel.hide()
+	world.quest_started = true
+	var ex: AethelExploration = world.exploration
+	player.position = ex.objects.vigilia_anchor.position+Vector3(0,0,1)
+	check(ex.activate("vigilia_anchor"),"release anchor discovery")
+	ex.travel_panel.hide()
+	world.region_id = "map_02"
+	world._update_region()
+	for actor in world.enemies: actor.set_physics_process(false)
+	player.position = ex.objects.district_chest.position+Vector3(0,0,1)
+	check(ex.activate("district_chest") and not ex.activate("district_chest"),"release chest single use")
+	player.position = ex.objects.district_well.position+Vector3(0,0,1)
+	player.hp = 20
+	check(ex.activate("district_well") and player.hp > 20,"release well")
+	player.position = ex.objects.district_altar.position+Vector3(0,0,1)
+	check(ex.activate("district_altar") and player.exploration_reduction > 0,"release altar")
+	player.position = ex.objects.district_anchor.position+Vector3(0,0,1)
+	check(ex.activate("district_anchor") and ex.travel("district_anchor","vigilia_anchor"),"release fast travel")
+	world._save_state()
+	var drop_count: int = world.dropped_items.size()
+	check(world._load_state() and ex.used.has("district_chest") and ex.anchors.size() == 2 and world.dropped_items.size() == drop_count,"release exploration persistence")
 	world.pause_menu.open()
 	check(get_tree().paused, "pause")
 	get_tree().paused = false

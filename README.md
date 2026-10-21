@@ -1,3 +1,15 @@
+# Fase 25 — exploração, loot e interações
+
+Versão Windows 0.25.0, Godot 4.7.2. Base: Fase 24 / PR #12. Loot por tabelas, cinco raridades, filtro, campeão e elite com dois lacaios, contêineres, altar, poço e Âncoras de Travessia funcionais. Mortes, fontes consumidas, âncoras e loot pendente persistem no mesmo save do personagem.
+
+Extraia o ZIP e abra `jogo/EchoesOfAethel-Fase25.exe` com PCK junto. Fonte: `fonte/project.godot`. Clique/E/F interage; Alt mostra nomes; O filtra; I inventário; F5/F9 salva/carrega. Aceite a investigação provisória com Maera para sair ao Bairro. [Roteiro](docs/TESTING.md), [auditoria](docs/FASE25_AUDIT.md), [regras e limites](docs/FASE25_EXPLORATION.md).
+
+Área hostil, arte e sons são provisórios. Campanha e playtest humano continuam pendentes. PR Draft, sem merge automático.
+
+---
+
+## Histórico da Fase 24
+
 # Fase 24 — NPCs, diálogo e comércio integrado
 
 Versão Windows 0.24.0, Godot 4.7.2. Parte da Fase 23 (PR #11), preservando inventário, equipamentos e combate. Doma tem diálogo ramificado, oficina provisória, estoque determinístico persistente e compra/venda reais; Maera apresenta uma investigação provisória com recompensa única. A missão canônica completa permanece pendente.

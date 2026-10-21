@@ -44,6 +44,7 @@ var invulnerability: float = 0.0
 var dash_remaining: float = 0.0
 var guard_remaining: float = 0.0
 var skill_cooldowns: Dictionary = {}
+var exploration_reduction := 0.0
 var interaction_input_locked := false
 var facing := Vector3(0, 0, -1)
 var keyboard_active: bool = false
@@ -411,7 +412,7 @@ func receive_attack(raw_damage: int, attacker_rating: int, attacker_level: int) 
 
 func take_damage(amount: int) -> void:
 	if hp <= 0 or invulnerability > 0.0: return
-	var final_damage: int = maxi(1, roundi(float(amount) * (0.6 if guard_remaining > 0.0 else 1.0)))
+	var final_damage: int = maxi(1, roundi(float(amount) * (0.6 if guard_remaining > 0.0 else 1.0) * (1.0-clampf(exploration_reduction,0,0.5))))
 	hp = maxi(0, hp - final_damage)
 	hp_changed.emit(float(hp), float(max_hp))
 	combat_event.emit(global_position + Vector3(0, 2.2, 0), "-%d" % final_damage, "hurt")

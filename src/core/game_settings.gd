@@ -1,6 +1,8 @@
 class_name AethelSettings
 extends RefCounted
 
+static var loot_filters: Dictionary = {"common":true,"magic":true,"rare":true,"epic":true,"legendary":true,"gold":true,"consumable":true,"material":true}
+
 static var fullscreen := false
 static var volume := 0.8
 static var camera_zoom := 12.0
@@ -14,6 +16,7 @@ static func path() -> String:
 static func load_settings() -> void:
 	var config := ConfigFile.new()
 	if config.load(path()) == OK:
+		for key: String in loot_filters: loot_filters[key] = bool(config.get_value("loot",key,true))
 		remember_zoom = bool(config.get_value("video", "remember_zoom", true))
 		camera_zoom = clampf(float(config.get_value("video", "zoom", 12)), 10, 18) if remember_zoom else 12.0
 		fullscreen = bool(config.get_value("video", "fullscreen", false))
@@ -37,4 +40,5 @@ static func save_settings() -> void:
 	config.set_value("video", "zoom", camera_zoom if remember_zoom else 12.0)
 	config.set_value("audio", "volume", volume)
 	config.set_value("input", "interact", interact_key)
+	for key: String in loot_filters: config.set_value("loot",key,loot_filters[key])
 	config.save(path())

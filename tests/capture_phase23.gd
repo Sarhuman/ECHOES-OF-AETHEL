@@ -18,7 +18,9 @@ func run() -> void:
 		var enemy = world._spawn_enemy(Vector3(2,0,0),1,1)
 		enemy.take_damage(99999)
 		for drop in world.dropped_items.duplicate():
-			if is_instance_valid(drop): world._collect_drop(drop)
+			if is_instance_valid(drop):
+				world.player.position = drop.position + Vector3(0.5,0,0)
+				world._collect_drop(drop)
 		await process_frame
 	world.inventory.auto_sort()
 	world.inventory_view.show()

@@ -132,6 +132,7 @@ func run() -> void:
 		await frames()
 		for drop in world.dropped_items.duplicate():
 			if not is_instance_valid(drop) or drop.is_gold() or drop.item.definition.kind != "equipment": continue
+			player.position = drop.position + Vector3(0.5,0,0)
 			var dropped: AethelItemInstance = drop.item
 			check(world._collect_drop(drop) and bag.find_item(dropped.instance_id) == dropped,"defeat real enemy then collect actual loot")
 			world._on_equip_requested(dropped.instance_id)
