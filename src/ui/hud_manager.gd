@@ -128,9 +128,9 @@ func _make_resource_panel() -> void:
 	root.add_child(resource_panel)
 	resource_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	resource_panel.anchor_left=0.015
-	resource_panel.anchor_right=0.265
+	resource_panel.anchor_right=0.218125
 	resource_panel.anchor_top=0.02
-	resource_panel.anchor_bottom=0.235
+	resource_panel.anchor_bottom=0.218
 	resource_panel.add_theme_stylebox_override("panel",AethelUI.panel(AethelUI.BACKGROUND,AethelUI.BRASS))
 	status_column=VBoxContainer.new()
 	status_column.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -153,14 +153,14 @@ func _make_resource_panel() -> void:
 	mission_tracker.add_theme_font_size_override("font_size",14)
 	mission_tracker.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	root.add_child(mission_tracker)
-	mission_tracker.anchor_left=0.015;mission_tracker.anchor_right=0.28
-	mission_tracker.anchor_top=0.29;mission_tracker.anchor_bottom=0.38
+	mission_tracker.anchor_left=0.015;mission_tracker.anchor_right=0.218125
+	mission_tracker.anchor_top=0.245;mission_tracker.anchor_bottom=0.335
 	mission_tracker.text="Missão · Vigília\nConverse com Maera."
 
 func _resource_row(parent: Control, title: String, color: Color, height: int) -> Array:
 	var bar := ProgressBar.new()
 	bar.name = title
-	bar.custom_minimum_size = Vector2(306, height)
+	bar.custom_minimum_size = Vector2(236, height)
 	bar.show_percentage = false
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var fill := StyleBoxFlat.new()
@@ -253,24 +253,36 @@ func update_belt(belt: Array, catalog: Dictionary) -> void:
 		label.add_theme_color_override("font_color", Color("ff6a6a") if is_life else Color("6a9cff"))
 
 func _make_xp_bar() -> void:
+	var row:=HBoxContainer.new()
+	row.add_theme_constant_override("separation",8)
+	row.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	status_column.add_child(row)
 	xp_bar=ProgressBar.new()
-	xp_bar.custom_minimum_size=Vector2(306,8)
+	xp_bar.custom_minimum_size=Vector2(170,6)
+	xp_bar.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	xp_bar.size_flags_vertical=Control.SIZE_SHRINK_CENTER
 	xp_bar.show_percentage=false
 	xp_bar.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	status_column.add_child(xp_bar)
+	row.add_child(xp_bar)
 	var fill:=StyleBoxFlat.new()
 	fill.bg_color=Color("d9a441")
+	fill.set_content_margin_all(0)
 	xp_bar.add_theme_stylebox_override("fill",fill)
+	var background:=StyleBoxFlat.new()
+	background.bg_color=Color("2a2112")
+	background.set_content_margin_all(0)
+	xp_bar.add_theme_stylebox_override("background",background)
 	xp_text=Label.new()
 	xp_text.add_theme_font_size_override("font_size",12)
 	xp_text.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	status_column.add_child(xp_text)
+	row.add_child(xp_text)
 
-func set_xp(current: int, required: int) -> void:
-	if xp_bar == null: return
-	xp_bar.max_value = float(maxi(1, required))
-	xp_bar.value = float(current)
-	if xp_text != null: xp_text.text = "Nível %d · XP %d / %d" % [_progression.current_level if is_instance_valid(_progression) else 1,current,required]
+func set_xp(current: int,required: int) -> void:
+	if xp_bar==null: return
+	xp_bar.max_value=maxi(1,required)
+	xp_bar.value=clampi(current,0,maxi(1,required))
+	xp_text.text="XP %d%%"%roundi(100.0*current/maxi(1,required))
+	xp_bar.tooltip_text="XP %d / %d"%[current,required]
 
 func _make_target_bar() -> void:
 	target_box = Control.new()

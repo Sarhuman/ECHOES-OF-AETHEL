@@ -132,6 +132,13 @@ func run() -> void:
 			for failure in failures: print("FALHA: "+failure)
 			quit(1)
 			return
+	world.progression.gain_xp(50)
+	await frames()
+	check(world.hud.xp_bar.value==50 and "50%" in world.hud.xp_text.text,"rendered partial XP")
+	await shot("fase27-xp-parcial-1920x1080")
+	root.size=Vector2i(1280,720)
+	await shot("fase27-xp-parcial-1280x720")
+	world.hud.set_xp(world.progression.current_xp,world.progression.required_xp(world.progression.current_level))
 	# Door opens through native interaction, then click routes into the archive.
 	world.player.position=Vector3(0,0,8)
 	await press(KEY_E)

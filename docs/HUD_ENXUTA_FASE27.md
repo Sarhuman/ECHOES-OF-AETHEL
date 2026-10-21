@@ -9,3 +9,12 @@ Nome/nível/ouro e XP usam os mesmos dados/sinais. Missão mostra somente um obj
 Mensagens de Travessia permanecem três segundos no topo central. Filtro de loot só aparece com drops da região atual. Rótulos por proximidade usam linha livre e não cobrem os retângulos da HUD; nomes de loot continuam com Alt. Removidos os textos soltos inferiores e título/dicas redundantes; controles extensos permanecem em H. Âncoras relativas à viewport e offsets de dimensões/margens lógicas mantêm layout no stretch canvas_items, com escala configurável85/100/110%.
 
 Validação automatizada usa cliques reais nos menus/poção, atalhos, comparação de retângulos e capturas de Vigília/Bairro/Pátio/Arquivo em1280×720 e1920×1080. Isso prova os caminhos testados, sem substituir playtest humano ou edição visual de novos assets. Planilha original e seu status permanecem intactos. Combate, stamina, payload de save e lógica de missão não foram alterados por essa revisão da HUD.
+
+
+## Ajustes após a revisão da captura
+
+Status e missão têm aproximadamente260px na viewport lógica1280×720. XP usa preenchimento de6px, com percentual ao lado e valores completos no tooltip; capturas adicionais mostram50/100(50%) em ambas as resoluções. O minimapa compacto mede176×144 e aproxima a área em torno do jogador; o ampliado mantém a visão regional conhecida.
+
+O rastreador mostra a pendência de Rasuras explicitamente no Bairro quando o jogador está no Pátio/Arquivo. Concluir esses encontros novos não incrementa mais o contador do Bairro; voltar a Vigília continua necessário para receber a recompensa. O título usa Maera/Bairro em vez de provisória, sem promover a missão de teste à missão canônica completa. Os detalhes de escopo permanecem no diário/documentação.
+
+A escadaria recebe luz de preenchimento local sem sombra, com contraste entre degraus. Prédios associam teto e corpo no mesmo componente de oclusão; material alpha compatível com OpenGL é aplicado aos dois quando encobrem jogador/torso de inimigo próximo. Colisões permanecem sólidas.

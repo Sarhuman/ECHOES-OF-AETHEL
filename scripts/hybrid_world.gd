@@ -269,7 +269,7 @@ func _spawn_enemy(at_position: Vector3, level: int, rank: int) -> CharacterBody3
 func _on_enemy_defeated(enemy: CharacterBody3D) -> void:
 	if exploration != null and not exploration.defeat(enemy): return
 	enemies.erase(enemy)
-	slain += 1
+	if region_id=="map_02": slain += 1
 	if region_id == "map_02" and slain >= 5: map_02_cleared = true
 	progression.gain_xp(enemy.xp_value)
 	_refresh_all()
@@ -614,9 +614,13 @@ func _process(delta: float) -> void:
 	elif slain >= 5 and region_id == "map_02":
 		status_label.text += "  |  ÁREA LIBERADA"
 	var objective := "Converse com Maera."
-	if quest_started: objective="Derrote 5 Rasuras (%d/5)."%mini(slain,5) if not map_02_cleared else "Retorne a Maera."
-	if quest_completed: objective="Investigação registrada. Explore o Ato I."
-	hud.set_mission("Missão · Investigação provisória\n"+objective)
+	var mission_title := "Missão · Maera"
+	if quest_started and not map_02_cleared:
+		mission_title="Missão · Bairro que Faltava"
+		objective="Derrote Rasuras: %d/5"%mini(slain,5) if region_id=="map_02" else "Pendência no Bairro: %d/5"%mini(slain,5)
+	elif quest_started: objective="Retorne a Maera em Vigília."
+	if quest_completed: objective="Investigação concluída · U"
+	hud.set_mission(mission_title+"\n"+objective)
 	message_label.visible = message_until > Time.get_ticks_msec() / 1000.0
 
 # ---------------------------------------------------------------- teclas
@@ -1408,14 +1412,14 @@ func _setup_reactive_ui() -> void:
 	toolbar.name="WorldToolbar"
 	hud.root.add_child(toolbar)
 	toolbar.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	toolbar.offset_left = -244
+	toolbar.offset_left = -196
 	toolbar.offset_right = -18
-	toolbar.offset_top = 220
-	toolbar.offset_bottom = 254
+	toolbar.offset_top = 174
+	toolbar.offset_bottom = 208
 	for entry: Array in [["I","inventory"],["C","character"],["U","quests"],["H","help"],["Esc","pause"]]:
 		var button := Button.new()
 		button.text = entry[0]
-		button.custom_minimum_size=Vector2(38,32)
+		button.custom_minimum_size=Vector2(30,28)
 		button.tooltip_text={"inventory":"Mochila","character":"Atributos","quests":"Missões","help":"Ajuda","pause":"Pausa"}[entry[1]]
 		hud.quick_buttons[entry[1]]=button
 		button.add_theme_font_size_override("font_size",12)

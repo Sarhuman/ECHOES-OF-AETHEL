@@ -55,6 +55,12 @@ func run() -> void:
 	await frames(8)
 	var manager: AethelRegionManager=world.regions
 	check(manager.validate_graph().is_empty(),"graph destination scene arrival and reverse links")
+	world.hud.set_xp(50,100)
+	await frames()
+	check(world.hud.xp_bar.value==50 and "50%" in world.hud.xp_text.text,"partial XP has real fill and adjacent percentage")
+	check(world.hud.xp_bar.size.y<=8,"XP bar is thin")
+	check(world.hud.resource_panel.size.x<=262 and world.hud.mission_tracker.size.x<=262,"compact left panels are about 260px")
+	world.hud.set_xp(0,100)
 	check(manager.definitions.size()==4,"four canonical initial regions")
 	check(world.enemies.is_empty() and not manager.allows_combat(),"hub explicit safe policy no encounters")
 	var ether: int=world.player.ether
@@ -160,6 +166,7 @@ func run() -> void:
 	check(manager.level.get_node_or_null("FuturePorteiroEvent")!=null,"future narrative hook without boss")
 	for enemy in world.enemies.duplicate(): enemy.take_damage(999999)
 	await frames()
+	check(world.slain==0 and not world.map_02_cleared,"archive kills do not advance district investigation")
 	world.player.position=world.exploration.objects.archive_reward.position+Vector3(0,0,1)
 	check(world.exploration.activate("archive_reward"),"archive encounter reward")
 	var drops: int=world.dropped_items.size()

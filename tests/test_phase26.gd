@@ -89,9 +89,9 @@ func run() -> void:
  check(not hud.target_box.visible and not hud.boss_box.visible,"removed target signals disconnected")
  var xp: int=world.progression.current_xp
  world.progression.gain_xp(7)
- check(hud.xp_bar.value==world.progression.current_xp and str(world.progression.current_level) in hud.xp_text.text,"real XP event")
+ check(hud.xp_bar.value==world.progression.current_xp and ("Nv %d"%world.progression.current_level) in hud.status_header.text,"real XP event")
  world.progression.gain_xp(world.progression.required_xp(world.progression.current_level))
- check("Nível %d" % world.progression.current_level in hud.xp_text.text,"level update")
+ check(("Nv %d"%world.progression.current_level) in hud.status_header.text,"level update")
  for bus: String in ["Master","Music","SFX","UI","Ambience"]: check(AudioServer.get_bus_index(bus)>=0,"audio bus "+bus)
  var count: int=AudioServer.bus_count
  AethelAudioManager.ensure_buses()

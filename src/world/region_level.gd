@@ -146,6 +146,14 @@ func build_geometry() -> void:
 		box(Vector3(-10,5,-10),Vector3(2.5,0.4,2.5),Color("3a3226"),false)
 		for z in [-8.0,8.0]:
 			box(Vector3(-13,0.5,z),Vector3(2,1,2),Color("7e6b54"))
+	elif region_id == "map_03":
+		var stair_fill:=OmniLight3D.new()
+		stair_fill.position=Vector3(10,3,1)
+		stair_fill.light_color=Color("a5bfd0")
+		stair_fill.light_energy=1.0
+		stair_fill.omni_range=8
+		stair_fill.shadow_enabled=false
+		add_child(stair_fill)
 	elif region_id == "map_04":
 		for z in [-9.0,-4.0,1.0]:
 			for x in [-3.0,3.0]:

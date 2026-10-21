@@ -1,33 +1,33 @@
 {
-  "fixture": "AI movement frozen; original light/shader settings",
+  "fixture": "Final compact HUD; AI movement/combat collision neutralized, floor collision retained",
   "frame_cap": 60,
   "map_01": {
     "draw_calls": 267,
     "enemy_count": 0,
-    "frame_median_ms": 35.721,
-    "frame_p95_ms": 43.042,
-    "objects": 942
+    "frame_median_ms": 35.506,
+    "frame_p95_ms": 42.886,
+    "objects": 874
   },
   "map_02": {
-    "draw_calls": 230,
+    "draw_calls": 229,
     "enemy_count": 5,
-    "frame_median_ms": 36.769,
-    "frame_p95_ms": 43.08,
-    "objects": 983
+    "frame_median_ms": 35.773,
+    "frame_p95_ms": 43.272,
+    "objects": 887
   },
   "map_03": {
-    "draw_calls": 208,
+    "draw_calls": 207,
     "enemy_count": 2,
-    "frame_median_ms": 36.086,
-    "frame_p95_ms": 41.144,
-    "objects": 755
+    "frame_median_ms": 35.896,
+    "frame_p95_ms": 42.231,
+    "objects": 700
   },
   "map_04": {
     "draw_calls": 222,
     "enemy_count": 3,
-    "frame_median_ms": 36.286,
-    "frame_p95_ms": 40.042,
-    "objects": 933
+    "frame_median_ms": 36.006,
+    "frame_p95_ms": 40.426,
+    "objects": 846
   },
   "renderer": "AMD Radeon RX 580 2048SP",
   "resolution": "1920x1080"
