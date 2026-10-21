@@ -4,7 +4,7 @@ extends Node3D
 
 const PLAYER_SCRIPT = preload("res://scripts/hybrid_player.gd")
 const ENEMY_SCRIPT = preload("res://scripts/hybrid_enemy.gd")
-const SAVE_VERSION: int = 4
+const SAVE_VERSION: int = 5
 var SAVE_PATH: String = AethelSavePaths.current()
 const BELT_SLOTS: int = 4
 const BELT_STACK: int = 4
@@ -58,6 +58,9 @@ var last_drink_time: float = 0.0
 var merchant: StaticBody3D
 var help_panel: PanelContainer
 var message_label: Label
+var narrative: AethelNPCController
+var workshop: Node3D
+var stock_initialized := false
 var pause_menu: AethelPauseMenu
 
 func _ready() -> void:
@@ -73,6 +76,10 @@ func _ready() -> void:
 	_setup_rpg_systems()
 	_build_narrative_nodes()
 	_build_merchant()
+	_build_workshop()
+	narrative = AethelNPCController.new()
+	add_child(narrative)
+	narrative.setup(self)
 	var new_game: bool = bool(Engine.get_meta("aethel_new_game", false))
 	Engine.remove_meta("aethel_new_game")
 	if new_game or not _load_state(): _give_starting_gear()
@@ -253,13 +260,6 @@ func _build_merchant() -> void:
 	model.set("role", &"blacksmith")
 	model.rotation.y = -3 * PI / 4
 	merchant.add_child(model)
-	var title := Label3D.new()
-	title.text = "Doma Ferren\nFerreiro"
-	title.position.y = 2.4
-	title.font_size = 26
-	title.pixel_size = 0.007
-	title.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	merchant.add_child(title)
 
 func _build_player() -> void:
 	player = CharacterBody3D.new()
@@ -439,6 +439,7 @@ func _refresh_all() -> void:
 	_refresh_skills_panel()
 
 func _mouse_over_ui(position: Vector2) -> bool:
+	if narrative != null and narrative.view.visible: return true
 	for panel in [inventory_view, character_panel, skills_panel, shop_panel, help_panel]:
 		if panel != null and panel.visible and panel.get_global_rect().has_point(position): return true
 	return false
@@ -493,6 +494,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_left_press(screen: Vector2) -> void:
 	if _mouse_over_ui(screen): return
+	if narrative != null: narrative.close()
 	left_held = true
 	pickup_target = null
 	var enemy := pick_enemy_at(screen)
@@ -504,6 +506,10 @@ func _on_left_press(screen: Vector2) -> void:
 	if enemy != null:
 		hold_mode = "attack"
 		player.command_attack(enemy)
+		return
+	var npc_id: String = narrative.pick(screen) if narrative != null else ""
+	if not npc_id.is_empty():
+		narrative.request(npc_id)
 		return
 	var drop := pick_drop_at(screen)
 	if drop != null:
@@ -554,6 +560,9 @@ func _activate_skill(skill_id: String, screen: Variant = null) -> void:
 		_refresh_skills_panel()
 
 func _cast_right_skill(screen: Vector2) -> void:
+	if narrative != null:
+		if narrative.view.visible: return
+		narrative.close()
 	if right_skill_id.is_empty():
 		_show_message("Use F1–F3 para executar uma habilidade")
 		return
@@ -566,6 +575,7 @@ func _grant_training_skills() -> void:
 
 # ---------------------------------------------------------------- loop
 func _process(delta: float) -> void:
+	if narrative != null: narrative.tick(delta)
 	var camera := get_viewport().get_camera_3d()
 	hud.update_skills(right_skill_id, skill_tree.unlocked, SKILL_IDS, player, skill_tree.catalog)
 	for index in range(active_popups.size() - 1, -1, -1):
@@ -597,13 +607,13 @@ func _process(delta: float) -> void:
 		if player.global_position.distance_to(pickup_target.global_position) < 1.7: _collect_drop(pickup_target)
 	else:
 		pickup_target = null
-	if shop_panel.visible and (region_id != "map_01" or player.global_position.distance_to(merchant.global_position) > 4.5):
+	if shop_panel.visible and (not narrative.available("doma") or not narrative.hub.get("doma",false) or player.global_position.distance_to(merchant.global_position) > 3.0):
 		shop_panel.visible = false
 	status_label.text = "VIGÍLIA / PRAÇA DOS SINOS" if region_id == "map_01" else "BAIRRO QUE FALTAVA  |  Rasuras %d / 5" % slain
 	if region_id == "map_01":
 		hint_label.text = "E: conversar com Maera" if player.global_position.distance_to(npc.global_position) < 2.8 else "Procure Maera (marcador azul)."
-		if quest_started: hint_label.text = "Missão: Uma Porta para Ninguém — atravesse o portal a leste."
-		if quest_completed: hint_label.text = "Missão concluída: o bairro foi estabilizado."
+		if quest_started: hint_label.text = "Investigação provisória: atravesse o portal, derrote 5 Rasuras e retorne a Maera."
+		if quest_completed: hint_label.text = "Investigação provisória registrada. Missão canônica ainda pendente."
 		if player.global_position.distance_to(gate.global_position) < 2.8: hint_label.text = "E: entrar no Bairro que Faltava" if quest_started else "Converse com Maera antes de sair."
 		if player.global_position.distance_to(merchant.global_position) < 3.0: hint_label.text = "E: falar com Doma (L: loja)"
 	else:
@@ -619,6 +629,12 @@ func _process(delta: float) -> void:
 # ---------------------------------------------------------------- teclas
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return
+	if narrative != null and narrative.view.visible:
+		if event.is_action_pressed("pause") or event.is_action_pressed("interact"):
+			narrative.close()
+			get_viewport().set_input_as_handled()
+		return
+	if event.is_action_pressed("pause") and narrative != null: narrative.close()
 	if event.is_action_pressed("pause"):
 		for panel in [inventory_view, character_panel, skills_panel, shop_panel]: panel.visible = false
 		player.clear_commands()
@@ -650,19 +666,22 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			if event.is_action_pressed("skill_%d" % (index + 1)): _activate_skill(SKILL_IDS[index], get_viewport().get_mouse_position())
 
 func _interact() -> void:
+	if narrative != null:
+		var pointed: String = narrative.pick(get_viewport().get_mouse_position())
+		if not pointed.is_empty():
+			narrative.request(pointed)
+			return
 	if _collect_nearest_drop(): return
 	if region_id == "map_01":
 		if is_instance_valid(merchant) and player.global_position.distance_to(merchant.global_position) < 3:
-			_try_open_shop()
+			narrative.request("doma")
 		elif player.global_position.distance_to(gate.global_position) < 2.8 and quest_started:
 			region_id = "map_02"
 			_update_region()
 		elif player.global_position.distance_to(npc.global_position) < 2.8:
-			quest_started = true
-			_show_message("Maera: O mapa registra amanhãs que recusamos. Investigue o bairro.")
+			narrative.request("maera")
 	else:
 		if player.global_position.distance_to(gate.global_position) < 2.8:
-			if slain >= 5: quest_completed = true
 			region_id = "map_01"
 			_update_region()
 
@@ -674,6 +693,11 @@ func _toggle_left_panel(panel: Control) -> void:
 
 # ---------------------------------------------------------------- regiões
 func _update_region() -> void:
+	if narrative != null: narrative.close()
+	if workshop != null:
+		workshop.visible = region_id == "map_01"
+		for body: StaticBody3D in workshop.find_children("*","StaticBody3D",true,false):
+			body.collision_layer = 1 if workshop.visible else 0
 	if is_instance_valid(merchant):
 		merchant.visible = region_id == "map_01"
 		merchant.collision_layer = 8 if merchant.visible else 0
@@ -863,15 +887,19 @@ func _on_equipment_drop(payload: Dictionary, slot: String) -> void:
 	_on_equip_requested(str(payload.get("uid","")),slot)
 
 func _on_sell_requested(uid: String) -> void:
-	if not shop_panel.visible:
+	if not _trade_available():
 		_show_message("Abra a loja (L) perto de Doma para vender")
 		return
 	var item: AethelItemInstance = inventory.find_item(uid)
 	if item == null: return
+	if item.definition.kind == "quest" or item.definition.sale_locked:
+		_inventory_failure("Este item não pode ser vendido")
+		return
 	var price: int = maxi(1, item.gold_value() / 4) * item.quantity
-	inventory.remove_item(uid)
+	if not inventory.remove_item(uid): return
 	gold += price
 	_show_message("Vendido: %s por %d ouro" % [item.display_name(), price])
+	_refresh_shop()
 	_refresh_all()
 
 # ---------------------------------------------------------------- progressão, habilidades e loja
@@ -990,31 +1018,43 @@ func _build_shop_panel(ui: CanvasLayer) -> void:
 	for side in ["left", "right", "top", "bottom"]:
 		margin.add_theme_constant_override("margin_" + side, 12)
 	shop_panel.add_child(margin)
+	var scroll := ScrollContainer.new()
+	scroll.name = "StockScroll"
+	scroll.custom_minimum_size = Vector2(330,300)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.follow_focus = true
+	margin.add_child(scroll)
 	shop_column = VBoxContainer.new()
-	margin.add_child(shop_column)
+	shop_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(shop_column)
 	shop_tooltip = AethelItemTooltip.new()
 	shop_tooltip.requirement_source = player
 	ui.add_child(shop_tooltip)
 	shop_panel.visible = false
 
 func _roll_shop_stock() -> void:
+	if stock_initialized: return
+	stock_initialized = true
 	shop_stock.clear()
-	var level: int = maxi(1, progression.current_level if progression != null else 1)
-	for index in range(5):
-		var item: AethelItemInstance = loot_generator.roll_item(level + 1, 0, 0.0, AethelItemData.Rarity.NORMAL if index < 2 else AethelItemData.Rarity.MAGIC)
-		if item != null: shop_stock.append(item)
+	for id: String in narrative.merchants.doma.stock:
+		shop_stock.append(AethelItemInstance.new(item_catalog[id]))
 	_refresh_shop()
 
+func _trade_available() -> bool:
+	return not game_over and shop_panel.visible and narrative.reachable("doma") and narrative.available("doma") and bool(narrative.hub.get("doma",false)) and player.global_position.distance_to(merchant.global_position) <= 3.0
+
 func _buy_price(item: AethelItemInstance) -> int:
-	return item.gold_value() * (1 if item.definition.is_potion() else 2)
+	return item.gold_value() * (1 if item.definition.is_potion() else int(narrative.merchants.doma.price_multiplier)) * item.quantity
 
 func _refresh_shop() -> void:
 	if shop_column == null: return
-	for node in shop_column.get_children(): node.queue_free()
+	for node in shop_column.get_children():
+		shop_column.remove_child(node)
+		node.queue_free()
 	var title := Label.new()
-	title.text = "Doma Ferren — Ferreiro   |   Ouro: %d" % gold
+	title.text = "Doma Ferren — Ferreiro\nOuro: %d" % gold
 	shop_column.add_child(title)
-	for potion_id in ["hp_small", "mana_small", "hp_medium"]:
+	for potion_id: String in narrative.merchants.doma.unlimited_potions:
 		if potion_id == "hp_medium" and progression != null and progression.current_level < 4: continue
 		var potion := AethelItemInstance.new(item_catalog[potion_id])
 		_add_shop_button(potion, true)
@@ -1028,22 +1068,39 @@ func _refresh_shop() -> void:
 func _add_shop_button(item: AethelItemInstance, is_stock_potion: bool) -> void:
 	var button := Button.new()
 	button.text = "%s — %d ouro" % [item.display_name(), _buy_price(item)]
+	button.icon = item.definition.icon
+	button.expand_icon = true
+	button.add_theme_constant_override("icon_max_width",24)
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.add_theme_color_override("font_color", AethelDroppedItem.COLORS[clampi(item.get_quality(), 0, 4)])
 	button.pressed.connect(func() -> void: _purchase(item, is_stock_potion))
-	button.mouse_entered.connect(func() -> void: shop_tooltip.show_item(item))
+	button.mouse_entered.connect(func() -> void: _shop_inspect(item,button))
+	button.focus_entered.connect(func() -> void: _shop_inspect(item,button))
+	button.focus_exited.connect(func() -> void: shop_tooltip.hide_item())
 	button.mouse_exited.connect(func() -> void: shop_tooltip.hide_item())
 	shop_column.add_child(button)
 
 func _try_open_shop() -> void:
-	if region_id != "map_01" or player.global_position.distance_to(merchant.global_position) > 3.0:
+	if game_over or not narrative.available("doma") or not narrative.reachable("doma") or not bool(narrative.hub.get("doma",false)) or player.global_position.distance_to(merchant.global_position) > 3.0:
 		_show_message("Aproxime-se do ferreiro Doma em Vigília")
 		return
+	narrative.close()
 	_toggle_left_panel(shop_panel)
+	player.interaction_input_locked = shop_panel.visible
+	if shop_panel.visible:
+		player.clear_commands()
+		player.keyboard_active = false
 	_refresh_shop()
 
 func _purchase(item: AethelItemInstance, is_stock_potion: bool) -> void:
-	if not shop_panel.visible or region_id != "map_01": return
+	if not _trade_available() or item == null: return
+	if is_stock_potion:
+		if not String(item.definition.item_id) in narrative.merchants.doma.unlimited_potions: return
+		if item.definition.item_id == &"hp_medium" and progression.current_level < 4: return
+		if item.definition != item_catalog.get(String(item.definition.item_id)) or item.quantity != 1: return
+	elif not shop_stock.has(item):
+		_show_message("Mercadoria indisponível")
+		return
 	var price: int = _buy_price(item)
 	if gold < price:
 		_show_message("Ouro insuficiente")
@@ -1069,7 +1126,7 @@ func _save_state() -> void:
 	var payload: Dictionary = {"version": SAVE_VERSION, "character_id": player.character_id, "class_id": String(player.class_id), "position": [player.position.x, player.position.y, player.position.z], "stamina": player.stamina, "progression": progression.serialize(), "skills": skill_tree.serialize(),
 		"stats": player.stats.serialize(), "gold": gold, "region_id": region_id, "quest_started": quest_started,
 		"quest_completed": quest_completed, "map_02_cleared": map_02_cleared, "slain": slain, "hp": player.hp,
-		"ether": player.ether, "inventory": inventory.serialize(), "equipped": equipment, "belt": belt, "right_skill": right_skill_id}
+		"ether": player.ether, "inventory": inventory.serialize(), "equipped": equipment, "belt": belt, "right_skill": right_skill_id, "narrative": narrative.serialize(), "shop_stock": shop_stock.map(func(item: AethelItemInstance) -> Dictionary: return item.serialize())}
 	var file := FileAccess.open(SAVE_PATH + ".tmp", FileAccess.WRITE)
 	if file == null:
 		_show_message("Falha ao abrir arquivo de save")
@@ -1118,6 +1175,22 @@ func _valid_save(data: Dictionary) -> bool:
 	for entry: Variant in data.get("belt", []):
 		if not entry is Dictionary: return false
 		if entry.has("count") and not (entry["count"] is float or entry["count"] is int): return false
+	if int(data.version) >= 5 and (not data.has("narrative") or not data.has("shop_stock")): return false
+	if data.has("narrative") and not narrative.valid_state(data.narrative): return false
+	if int(data.version) >= 5 and bool(data.get("quest_completed",false)) != bool(data.narrative.get("reward_claimed",false)): return false
+	if data.has("shop_stock"):
+		if not data.shop_stock is Array or data.shop_stock.size() > narrative.merchants.doma.stock.size(): return false
+		var seen: Dictionary = {}
+		for row: Variant in data.shop_stock:
+			if not row is Dictionary: return false
+			var item := AethelItemInstance.from_dict(row,item_catalog)
+			if item == null or seen.has(item.instance_id): return false
+			if not String(item.definition.item_id) in narrative.merchants.doma.stock or item.quantity != 1: return false
+			for owned: Dictionary in data.get("inventory",{}).get("items",[]):
+				if str(owned.get("id","")) == item.instance_id: return false
+			for owned: Variant in data.get("equipped",{}).values():
+				if owned is Dictionary and str(owned.get("id","")) == item.instance_id: return false
+			seen[item.instance_id] = true
 	return true
 
 func _load_state() -> bool:
@@ -1136,6 +1209,12 @@ func _load_state() -> bool:
 	gold = maxi(0, int(payload.get("gold", 0)))
 	quest_started = bool(payload.get("quest_started", false))
 	quest_completed = bool(payload.get("quest_completed", false))
+	narrative.restore(payload.get("narrative",{}),quest_completed)
+	shop_stock.clear()
+	stock_initialized = payload.has("shop_stock")
+	for row: Dictionary in payload.get("shop_stock",[]): shop_stock.append(AethelItemInstance.from_dict(row,item_catalog))
+	_roll_shop_stock()
+	_refresh_shop()
 	map_02_cleared = bool(payload.get("map_02_cleared", false))
 	var saved_region: String = str(payload.get("region_id", "map_01"))
 	region_id = saved_region if saved_region in ["map_01", "map_02"] else "map_01"
@@ -1205,3 +1284,52 @@ func _load_state() -> bool:
 	player.clear_commands()
 	_show_message("Save carregado")
 	return true
+
+func _shop_inspect(item: AethelItemInstance, button: Button) -> void:
+	shop_tooltip.show_item_at(item,button.get_global_rect())
+	var slot: String = player.slot_for(item)
+	if player.equipped.has(slot): shop_tooltip.append_comparison(item,player.equipped[slot])
+
+func _build_workshop() -> void:
+	workshop = Node3D.new()
+	workshop.name = "DomaWorkshop"
+	add_child(workshop)
+	# Place solids behind Doma; keep the approach from the plaza clear.
+	var anvil := Node3D.new()
+	anvil.name = "Anvil"
+	workshop.add_child(anvil)
+	anvil.position = Vector3(-10,0,-0.6)
+	_box(anvil,Vector3(0,0.35,0),Vector3(0.65,0.7,0.6),Color("3a3226"))
+	_box(anvil,Vector3(0,0.82,0),Vector3(1.4,0.26,0.52),Color("737877"))
+	_box(anvil,Vector3(0.85,0.84,0),Vector3(0.4,0.13,0.25),Color("737877"),false)
+	var forge := Node3D.new()
+	forge.name = "Furnace"
+	workshop.add_child(forge)
+	forge.position = Vector3(-11,0,-3)
+	_box(forge,Vector3(0,0.4,0),Vector3(1.8,0.8,1.3),Color("302c29"))
+	_box(forge,Vector3(-0.72,1.2,0),Vector3(0.35,1.1,1.3),Color("47413b"))
+	_box(forge,Vector3(0.72,1.2,0),Vector3(0.35,1.1,1.3),Color("47413b"))
+	_box(forge,Vector3(0,1.85,0),Vector3(1.8,0.3,1.3),Color("47413b"))
+	_box(forge,Vector3(0,1.02,0.2),Vector3(1.0,0.15,0.6),Color("e78c38"),false)
+	var light := OmniLight3D.new()
+	light.position = Vector3(0,1.4,0.8)
+	light.light_color = Color("ff9b49")
+	light.light_energy = 2
+	light.omni_range = 5
+	forge.add_child(light)
+	var bench := Node3D.new()
+	bench.name = "ToolBench"
+	workshop.add_child(bench)
+	bench.position = Vector3(-7.5,0,-2)
+	_box(bench,Vector3(0,0.6,0),Vector3(2.1,1.2,0.8),Color("493a2c"))
+	for x in [-0.65,0.0,0.65]:
+		_box(bench,Vector3(x,1.28,0),Vector3(0.08,0.08,0.6),Color("817a69"),false)
+		_box(bench,Vector3(x,1.28,-0.27),Vector3(0.28,0.16,0.15),Color("5c6365"),false)
+	var rack := Node3D.new()
+	rack.name = "EquipmentDisplay"
+	workshop.add_child(rack)
+	rack.position = Vector3(-6,0,-3.5)
+	_box(rack,Vector3(0,0.9,0),Vector3(0.2,1.8,0.7),Color("493a2c"))
+	for x in [-0.32,0.32]:
+		_box(rack,Vector3(x,1.4,-0.42),Vector3(0.1,1.3,0.08),Color("8c9290"),false)
+		_box(rack,Vector3(x,0.95,-0.42),Vector3(0.4,0.09,0.09),Color("9f8552"),false)

@@ -48,6 +48,7 @@ func _initialize() -> void:
 	world._toggle_left_panel(world.skills_panel)
 	_check(world.skills_panel.visible and not world.character_panel.visible, "alternar para habilidades")
 	# loja: comprar poção, comprar equipamento e vender
+	world.player.position = world.merchant.position + Vector3(2,0,0)
 	world.gold = 500
 	world.shop_panel.visible = false
 	world._toggle_left_panel(world.shop_panel)

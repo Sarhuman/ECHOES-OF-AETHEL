@@ -1,0 +1,22 @@
+{
+  "doma": {
+    "restock": "none",
+    "price_multiplier": 2,
+    "unlimited_potions": [
+      "hp_small",
+      "mana_small",
+      "hp_medium"
+    ],
+    "stock": [
+      "short_sword",
+      "hand_axe",
+      "wood_shield",
+      "quilted_armor",
+      "leather_gloves",
+      "leather_boots",
+      "bronze_shard",
+      "worn_fabric",
+      "stone_dust"
+    ]
+  }
+}

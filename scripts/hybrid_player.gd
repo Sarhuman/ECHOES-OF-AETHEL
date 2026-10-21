@@ -44,6 +44,7 @@ var invulnerability: float = 0.0
 var dash_remaining: float = 0.0
 var guard_remaining: float = 0.0
 var skill_cooldowns: Dictionary = {}
+var interaction_input_locked := false
 var facing := Vector3(0, 0, -1)
 var keyboard_active: bool = false
 
@@ -215,6 +216,7 @@ func clear_commands() -> void:
 	stand_attack = false
 
 func _keyboard_direction() -> Vector3:
+	if interaction_input_locked: return Vector3.ZERO
 	var direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var camera := get_viewport().get_camera_3d()
 	var yaw: float = camera.global_rotation.y if camera != null else CAMERA_YAW
@@ -242,7 +244,7 @@ func _physics_process(delta: float) -> void:
 	if hp <= 0:
 		velocity = Vector3.ZERO
 		return
-	manual_block = Input.is_action_pressed("block") and equipped.has("shield")
+	manual_block = not interaction_input_locked and Input.is_action_pressed("block") and equipped.has("shield")
 	var direction: Vector3 = _keyboard_direction()
 	keyboard_active = direction.length() > 0.1
 	if keyboard_active: clear_commands()
@@ -265,7 +267,7 @@ func _physics_process(delta: float) -> void:
 		if offset.length() < 0.25: has_move_target = false
 		else: direction = offset.normalized()
 	if direction.length() > 0.1 and attack_recovery <= 0: facing = direction
-	if Input.is_action_pressed("dodge") and dash_remaining <= 0.0 and invulnerability <= 0.0 and stamina >= DASH_STAMINA_COST:
+	if not interaction_input_locked and Input.is_action_pressed("dodge") and dash_remaining <= 0.0 and invulnerability <= 0.0 and stamina >= DASH_STAMINA_COST:
 		_visual_action(&"dodge", 0.2)
 		dash_remaining = 0.17
 		invulnerability = 0.22
