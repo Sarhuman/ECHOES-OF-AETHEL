@@ -1,3 +1,7 @@
+# US-01 Fix02 — percepção e navegação inimiga
+
+Entrega atual: EchoesOfAethel-US01-Fix02-Windows-x64.zip. Veja [diagnóstico e regressões](docs/BUG_US01_02_FIX02.md). Fix01 preservado. PR #18 Draft; homologação gráfica Fix02 depende do PO.
+
 # US-01 Fix01 — load após morte
 
 Entrega atual: EchoesOfAethel-US01-Fix01-Windows-x64.zip. Veja [diagnóstico e regressão](docs/BUG_US01_01_FIX01.md). PR #18 Draft; homologação pendente do PO.
