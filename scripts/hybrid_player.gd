@@ -198,6 +198,24 @@ func restore_full() -> void:
 	ether_changed.emit(float(ether), float(max_ether))
 	stamina_changed.emit(stamina, max_stamina)
 
+func reset_transient_state_after_load() -> void:
+	# Runtime combat/animation states are not part of the persisted snapshot.
+	clear_commands()
+	velocity = Vector3.ZERO
+	attack_cooldown = 0.0
+	attack_recovery = 0.0
+	invulnerability = 0.0
+	dash_remaining = 0.0
+	manual_block = false
+	guard_remaining = 0.0
+	interaction_input_locked = false
+	keyboard_active = false
+	_stuck_time = 0.0
+	navigation_repath = 0.0
+	_ether_fraction = 0.0
+	var visual := get_node_or_null("BastiaoVisual") as AethelCharacterVisual
+	if visual != null: visual.reset_after_load()
+
 func roll_damage(multiplier: float = 1.0) -> int:
 	return maxi(1, roundi(rng.randf_range(damage_min, damage_max) * multiplier))
 
