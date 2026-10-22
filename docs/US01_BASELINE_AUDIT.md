@@ -84,3 +84,6 @@ Ver US01_DEPENDENCIES_LICENSES.md e inventário por arquivo. Godot MIT e atribui
 ## G. Governança
 
 PR #18 Draft. Nenhum merge. Somente US-01. O resultado é candidato à revisão G1 com limitações declaradas, nunca homologação G2. PO deve validar graficamente o executável, incluindo Maera, combate, inventário, save/load, ambas resoluções e relatório do eventual congelamento no editor.
+## Complemento — pacote extraído sem cache
+
+O ZIP local foi extraído em `.archive/us01-clean-validation`, sem `.godot` e sem `.tools`. Todos os hashes do manifesto foram conferidos. A Godot 4.7.2 importou `fonte/project.godot` com exit 0 e nenhuma linha ERROR; a regressão US01 executada nessa cópia passou novamente: 83 checks, zero falhas, exit 0. Logs: us01-clean-checkout.log e us01-clean-runtime.log. Essa prova valida o conteúdo empacotado, sem depender do cache de importação do checkout de trabalho.
