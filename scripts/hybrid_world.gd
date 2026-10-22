@@ -1332,7 +1332,10 @@ func _load_state() -> bool:
 	player.ether_changed.emit(float(player.ether), float(player.max_ether))
 	game_over = player.hp <= 0
 	if death_overlay != null: death_overlay.visible = game_over
-	player.clear_commands()
+	if not game_over:
+		player.reset_transient_state_after_load()
+	else:
+		player.clear_commands()
 	_show_message("Save carregado")
 	return true
 
