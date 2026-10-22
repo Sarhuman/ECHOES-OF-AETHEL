@@ -1,3 +1,7 @@
+# US-01 — baseline Windows para revisão
+
+PR #18 Draft; Godot 4.7.2 exata. Consulte [auditoria US-01](docs/US01_BASELINE_AUDIT.md) e [instruções](docs/README_TESTE_US01.txt). G2 depende do Product Owner.
+
 # Fase 27 — primeira sequência de mundo explorável
 
 Windows 0.27.0 / Godot 4.7.2. Cenas iniciais distintas: **Vigília ⇄ Bairro que Faltava ⇄ Pátio dos Endereços ⇄ Arquivo das Portas Seladas**. Navegação com desvios e altura, hub seguro, fog/minimapa por piso e persistência integrada. Mantém os sistemas e correções da Fase26. HUD enxuta com barras superiores e barra única de ações, conforme a nova proposta.

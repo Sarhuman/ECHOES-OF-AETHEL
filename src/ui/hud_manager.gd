@@ -383,9 +383,9 @@ func show_effect(id: String,remaining: float,intensity: float) -> void:
 		badge.add_theme_constant_override("icon_max_width",20)
 		effect_row.add_child(badge)
 		effect_badges[id] = badge
-	var name: String = {"guard":"Guarda","altar":"Altar de Ardósia"}.get(id,id)
-	effect_badges[id].text = "%s · %ds" % [name,ceili(remaining)]
-	effect_badges[id].tooltip_text = "%s\nDuração: %ds\nRedução de dano: %d%%" % [name,ceili(remaining),roundi(intensity*100)]
+	var effect_name: String = {"guard":"Guarda","altar":"Altar de Ardósia"}.get(id,id)
+	effect_badges[id].text = "%s · %ds" % [effect_name,ceili(remaining)]
+	effect_badges[id].tooltip_text = "%s\nDuração: %ds\nRedução de dano: %d%%" % [effect_name,ceili(remaining),roundi(intensity*100)]
 
 func bind_world(world: Node3D) -> void:
 	if _world == world: return

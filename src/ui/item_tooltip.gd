@@ -74,6 +74,8 @@ func build_text(item: AethelItemInstance) -> String:
 			lines.append("[color=#%s]%s[/color]" % [color, AethelAffixData.describe(str(row["stat"]), float(row["value"]))])
 		if data.slot != "": lines.append("[color=#a39780]%s · %s[/color]" % [QUALITY_NAMES[quality], SLOT_NAMES.get(data.slot, data.slot)])
 	lines.append("[color=#a39780]Valor: %d ouro[/color]" % item.gold_value())
+	# Intentional integer truncation; preserve existing baseline rules.
+	@warning_ignore("integer_division")
 	lines.append("[color=#a39780]Venda: %d ouro / unidade · Pilha: %d[/color]" % [maxi(1,int(item.gold_value()/4)),maxi(1,int(item.gold_value()/4))*item.quantity])
 	return "\n".join(lines)
 

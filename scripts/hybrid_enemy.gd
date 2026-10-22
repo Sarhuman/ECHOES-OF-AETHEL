@@ -201,7 +201,7 @@ func receive_hit(damage: int, attacker_rating: int, attacker_level: int) -> bool
 
 func take_damage(amount: int) -> void:
 	if hp <= 0: return
-	hp -= maxi(1,roundi(amount * (1.0-float(modifier_rules.get("guardian",{}).get("reduction",0.2))) if ward_remaining > 0 else amount))
+	hp -= maxi(1,roundi(amount * (1.0-float(modifier_rules.get("guardian",{}).get("reduction",0.2))) if ward_remaining > 0 else float(amount)))
 	combat_event.emit(global_position + Vector3(0, 2.1, 0), "-%d" % amount, "damage")
 	stagger = float(RANK_STAGGER[rank])
 	windup_active = false

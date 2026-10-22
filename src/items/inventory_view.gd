@@ -5,6 +5,8 @@ signal unequip_requested(slot: String)
 signal discard_requested(instance_id: String)
 signal sell_requested(instance_id: String)
 signal inventory_drop_requested(payload: Dictionary, destination: Vector2i)
+# Emitted by AethelInventoryItemButton through its owning view.
+@warning_ignore("unused_signal")
 signal equipment_drop_requested(payload: Dictionary, slot: String)
 const SLOT_SIZE := 48
 const SLOT_LABELS := {"cape":"Capa","weapon":"Arma principal","shield":"Mão secundária","helm":"Elmo","armor":"Peitoral","gloves":"Luvas","boots":"Botas","belt":"Cinto","ring1":"Anel 1","ring2":"Anel 2","amulet":"Amuleto","charm":"Talismã"}
@@ -182,7 +184,7 @@ func _build_cells() -> void:
    grid_root.move_child(button,0)
    cells.append(button)
 
-func _show_item(item: AethelItemInstance, button: Control, keyboard: bool) -> void:
+func _show_item(item: AethelItemInstance, button: Control, _keyboard: bool) -> void:
  selected_uid = item.instance_id
  tooltip.show_item_at(item,button.get_global_rect())
  if player != null and inventory.find_item(item.instance_id) != null and item.definition.kind == "equipment":

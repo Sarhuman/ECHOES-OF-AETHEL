@@ -18,7 +18,7 @@ static func ensure_defaults() -> void:
 		InputMap.add_action(action)
 		for code: int in KEYS[action]:
 			var event := InputEventKey.new()
-			event.keycode = code
+			event.keycode = code as Key
 			InputMap.action_add_event(action, event)
 	var mouse_actions: Dictionary = {"primary": MOUSE_BUTTON_LEFT, "secondary": MOUSE_BUTTON_RIGHT,
 		"zoom_in": MOUSE_BUTTON_WHEEL_UP, "zoom_out": MOUSE_BUTTON_WHEEL_DOWN}
@@ -26,7 +26,7 @@ static func ensure_defaults() -> void:
 		if InputMap.has_action(action): continue
 		InputMap.add_action(action)
 		var event := InputEventMouseButton.new()
-		event.button_index = mouse_actions[action]
+		event.button_index = mouse_actions[action] as MouseButton
 		InputMap.action_add_event(action, event)
 
 static func bind_interact(code: Key) -> void:

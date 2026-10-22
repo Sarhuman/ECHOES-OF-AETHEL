@@ -408,13 +408,13 @@ func _refresh_all() -> void:
 	_refresh_skills_panel()
 	_check_mission_change()
 
-func _mouse_over_ui(position: Vector2) -> bool:
+func _mouse_over_ui(pointer_position: Vector2) -> bool:
 	if death_overlay != null and death_overlay.visible: return true
-	if quest_panel != null and quest_panel.visible and quest_panel.get_global_rect().has_point(position): return true
-	if exploration != null and exploration.blocks_ui(position): return true
+	if quest_panel != null and quest_panel.visible and quest_panel.get_global_rect().has_point(pointer_position): return true
+	if exploration != null and exploration.blocks_ui(pointer_position): return true
 	if narrative != null and narrative.view.visible: return true
 	for panel in [inventory_view, character_panel, skills_panel, shop_panel, help_panel]:
-		if panel != null and panel.visible and panel.get_global_rect().has_point(position): return true
+		if panel != null and panel.visible and panel.get_global_rect().has_point(pointer_position): return true
 	return false
 
 # ---------------------------------------------------------------- escolha por mouse
@@ -933,6 +933,8 @@ func _on_sell_requested(uid: String) -> void:
 	if item.definition.kind == "quest" or item.definition.sale_locked:
 		_inventory_failure("Este item não pode ser vendido")
 		return
+	# Intentional integer truncation; preserve existing baseline rules.
+	@warning_ignore("integer_division")
 	var price: int = maxi(1, item.gold_value() / 4) * item.quantity
 	if not inventory.remove_item(uid): return
 	gold += price

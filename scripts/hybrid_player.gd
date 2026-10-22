@@ -161,6 +161,8 @@ func recalculate_stats() -> void:
 	for value in equipped.values():
 		var item: AethelItemInstance = value
 		item_defense += item.defense_value()
+	# Intentional integer truncation; preserve existing baseline rules.
+	@warning_ignore("integer_division")
 	defense = item_defense + dex / 4
 	attack_rating = dex * 5
 	move_speed_mult = 1.0 + minf(sum_stat("move_speed"), 75.0) / 100.0

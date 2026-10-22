@@ -322,11 +322,11 @@ func present_drops(alt: bool) -> void:
 		if not is_instance_valid(drop) or drop.is_queued_for_deletion(): continue
 		var id: int = drop.get_instance_id()
 		if not labels.has(id):
-			var label := Label.new()
-			label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			label.add_theme_font_size_override("font_size",14)
-			loot_canvas.add_child(label)
-			labels[id] = {"label":label,"drop":drop}
+			var new_label := Label.new()
+			new_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			new_label.add_theme_font_size_override("font_size",14)
+			loot_canvas.add_child(new_label)
+			labels[id] = {"label":new_label,"drop":drop}
 		var label: Label = labels[id].label
 		var display: bool = visible_drop(drop)
 		drop.visible = display
@@ -389,7 +389,7 @@ func tick(delta: float) -> void:
 		if world.game_over or world.player.keyboard_active or is_instance_valid(world.player.attack_target): pending = ""
 		else:
 			approach_time += delta
-			stalled = stalled+delta if world.player.global_position.distance_to(last_position) < 0.003 else 0
+			stalled = stalled+delta if world.player.global_position.distance_to(last_position) < 0.003 else 0.0
 			last_position = world.player.global_position
 			if world.player.global_position.distance_to(objects[pending].global_position) <= 2.5: activate(pending)
 			elif stalled > 1.5 or approach_time > 12:
@@ -490,14 +490,14 @@ func present_object_labels() -> void:
 		var title: Label3D=actor.get_node("Title")
 		title.visible=false
 		if not object_labels.has(id):
-			var label:=Label.new()
-			label.mouse_filter=Control.MOUSE_FILTER_IGNORE
-			label.add_theme_font_size_override("font_size",14)
-			label.add_theme_color_override("font_color",AethelUI.TEXT)
-			label.add_theme_color_override("font_outline_color",Color("0b0a08"))
-			label.add_theme_constant_override("outline_size",5)
-			loot_canvas.add_child(label)
-			object_labels[id]=label
+			var new_label:=Label.new()
+			new_label.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			new_label.add_theme_font_size_override("font_size",14)
+			new_label.add_theme_color_override("font_color",AethelUI.TEXT)
+			new_label.add_theme_color_override("font_outline_color",Color("0b0a08"))
+			new_label.add_theme_constant_override("outline_size",5)
+			loot_canvas.add_child(new_label)
+			object_labels[id]=new_label
 		var label: Label=object_labels[id]
 		label.hide()
 		if not actor.visible or world.inventory_view.visible or world.narrative.view.visible or world.shop_panel.visible: continue

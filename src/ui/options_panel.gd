@@ -45,12 +45,12 @@ func _ready() -> void:
   AethelSettings.apply_window_size())
  rows.add_child(resolution)
  controls.resolution=resolution
- var scale := OptionButton.new()
- for text: String in ["HUD: 85%","HUD: 100%","HUD: 110%"]: scale.add_item(text)
- scale.select(0 if AethelSettings.hud_scale < 1 else (2 if AethelSettings.hud_scale > 1 else 1))
- scale.item_selected.connect(func(index: int) -> void: AethelSettings.hud_scale=[0.85,1.0,1.1][index]; changed())
- rows.add_child(scale)
- controls.hud_scale=scale
+ var scale_option := OptionButton.new()
+ for text: String in ["HUD: 85%","HUD: 100%","HUD: 110%"]: scale_option.add_item(text)
+ scale_option.select(0 if AethelSettings.hud_scale < 1 else (2 if AethelSettings.hud_scale > 1 else 1))
+ scale_option.item_selected.connect(func(index: int) -> void: AethelSettings.hud_scale=[0.85,1.0,1.1][index]; changed())
+ rows.add_child(scale_option)
+ controls.hud_scale=scale_option
  var motion := CheckButton.new()
  motion.text = "Reduzir animações da interface"
  motion.button_pressed = AethelSettings.reduced_motion

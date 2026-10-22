@@ -1,0 +1,15 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 Core Profile Context 26.5.2.260413 - Compatibility - Using Device: ATI Technologies Inc. - AMD Radeon RX 580 2048SP
+
+GUI27 WALK map_01 (11.0, 0.0, 0.0) got (11.08217, 0.000845, 0.148222)
+GUI27 TRANSITION map_01_to_map_02 got map_02 message Travessia: Bairro que Faltava
+GUI27 WALK map_02 (12.0, 0.0, -13.0) got (12.09294, 0.000844, -12.84682)
+GUI27 TRANSITION map_02_to_map_03 got map_03 message Travessia: Pátio dos Endereços
+GUI27 WALK map_03 (0.0, 0.0, -14.0) got (0.086236, 0.000845, -13.87667)
+GUI27 TRANSITION map_03_to_map_04 got map_04 message Travessia: Arquivo das Portas Seladas
+GUI27 WALK map_04 (0.0, 0.0, -10.0) got (0.128561, 0.000842, -9.79918)
+GUI27 WALK map_04 (0.0, 0.0, 16.0) got (0.212246, 0.000842, 16.11143)
+GUI27 WALK map_03 (0.0, 0.0, 14.0) got (0.190253, 0.000845, 14.11235)
+GUI27 WALK map_02 (0.0, 0.0, 12.0) got (0.148092, 0.000845, 12.08172)
+PHASE27 GRAPHICS METRICS: {"fixture":"AI movement frozen; original light/shader settings","frame_cap":60,"renderer":"AMD Radeon RX 580 2048SP","resolution":"1920x1080"}
+PHASE27 GUI: 169 checks, 0 failures
