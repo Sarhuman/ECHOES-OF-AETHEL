@@ -162,6 +162,21 @@ func play_attack() -> void:
  tween.tween_property(right_arm,"rotation:x", 0.35, 0.16)
  tween.tween_property(right_arm,"rotation:x", 0.0, 0.15)
 
+func reset_after_load() -> void:
+ # Explicit revival entry point; ordinary animation requests cannot leave death.
+ if _death_tween != null:
+  _death_tween.kill()
+  _death_tween = null
+ _visual_state = &"idle"
+ _action_remaining = 0.0
+ is_moving = false
+ torso.rotation = Vector3.ZERO
+ left_arm.rotation = Vector3.ZERO
+ right_arm.rotation = Vector3.ZERO
+ left_leg.rotation = Vector3.ZERO
+ right_leg.rotation = Vector3.ZERO
+ set_guard_active(false)
+
 func play_state(state: StringName) -> void:
  if _visual_state == &"death": return
  _visual_state = state

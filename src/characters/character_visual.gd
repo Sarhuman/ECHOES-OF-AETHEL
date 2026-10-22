@@ -80,6 +80,8 @@ func play_action(state: StringName, duration: float = 0.3) -> void:
 func reset_after_load() -> void:
     # Clear a long-running death action before restoring playable state.
     _action_time = 0.0
+    if _model != null and _model.has_method("reset_after_load"):
+        _model.call("reset_after_load")
     request_state(fallback_idle)
     if _model != null and _model.has_method("play_state"):
         _model.call("play_state", fallback_idle)

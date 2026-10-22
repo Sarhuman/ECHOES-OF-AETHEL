@@ -1,0 +1,94 @@
+[
+  {
+    "Test": "test_us01_fix01",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_us01_baseline",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_phase27_gui",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_phase27",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_phase26_gui",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_phase26",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_phase25",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_phase25_gui",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_phase24",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_phase24_gui",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_phase23",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_phase23_gui",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_gothic_ui",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_project_integrity",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_items",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_combat",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_gameplay",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_ui_smoke",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_rpg_systems",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_hud_revision",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_consolidation",
+    "ExitCode": 0
+  },
+  {
+    "Test": "test_playability",
+    "ExitCode": 0
+  },
+  {
+    "Test": "balance_bot",
+    "ExitCode": 0
+  }
+]

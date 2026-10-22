@@ -1,3 +1,7 @@
+# US-01 Fix01 — load após morte
+
+Entrega atual: EchoesOfAethel-US01-Fix01-Windows-x64.zip. Veja [diagnóstico e regressão](docs/BUG_US01_01_FIX01.md). PR #18 Draft; homologação pendente do PO.
+
 # US-01 — baseline Windows para revisão
 
 PR #18 Draft; Godot 4.7.2 exata. Consulte [auditoria US-01](docs/US01_BASELINE_AUDIT.md) e [instruções](docs/README_TESTE_US01.txt). G2 depende do Product Owner.

@@ -628,6 +628,11 @@ func _process(delta: float) -> void:
 # ---------------------------------------------------------------- teclas
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return
+	# Loading a previous save must remain possible on the defeat screen.
+	if game_over and event.is_action_pressed("load"):
+		if _load_state(): _refresh_all()
+		get_viewport().set_input_as_handled()
+		return
 	if game_over and event.is_action_pressed("pause"): return
 	if narrative != null and narrative.view.visible:
 		if event.is_action_pressed("pause") or event.is_action_pressed("interact"):
@@ -1336,6 +1341,7 @@ func _load_state() -> bool:
 		player.reset_transient_state_after_load()
 	else:
 		player.clear_commands()
+		player._visual_action(&"death", 999)
 	_show_message("Save carregado")
 	return true
 

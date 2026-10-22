@@ -203,6 +203,7 @@ func reset_transient_state_after_load() -> void:
 	clear_commands()
 	velocity = Vector3.ZERO
 	attack_cooldown = 0.0
+	skill_cooldowns.clear()
 	attack_recovery = 0.0
 	invulnerability = 0.0
 	dash_remaining = 0.0

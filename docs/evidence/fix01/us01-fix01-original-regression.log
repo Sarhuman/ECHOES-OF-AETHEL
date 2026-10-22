@@ -1,0 +1,11 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+FALHA: F9 after death loads living snapshot
+FALHA: model internal death state cleared
+FALHA: model torso upright immediately
+FALHA: death tween cannot reapply fallen pose
+FALHA: stale skill recovery cleared on load
+FALHA: model locomotion works after reload
+FALHA: world skill input route works after reload
+FALHA: in-flight death tween cancelled
+FIX01 REGRESSION: 29 checks, 8 failures

@@ -34,19 +34,21 @@ jobs:
       - name: Import, test and export
         shell: pwsh
         run: |
-          ./tools/build_windows.ps1 -GodotExe "$pwd/.tools/Godot_v4.7.2-stable_win64_console.exe" -BuildName EchoesOfAethel-US01-Windows-x64
+          ./tools/build_windows.ps1 -GodotExe "$pwd/.tools/Godot_v4.7.2-stable_win64_console.exe" -BuildName EchoesOfAethel-US01-Fix01-Windows-x64
           Copy-Item licenses/GODOT* teste-fase20/
           Copy-Item docs/TESTING.md teste-fase20/LEIA-ME.md
       - name: Execute exported game on Windows
         shell: pwsh
-        run: ./tools/smoke_windows.ps1 -Executable "$pwd/teste-fase20/EchoesOfAethel-US01-Windows-x64.exe"
+        run: ./tools/smoke_windows.ps1 -Executable "$pwd/teste-fase20/EchoesOfAethel-US01-Fix01-Windows-x64.exe"
       - name: Package executable and source
         shell: pwsh
-        run: python tools/package_windows.py --build-name EchoesOfAethel-US01-Windows-x64 --archive-name EchoesOfAethel-US01-Windows-x64.zip
+        run: |
+          python tools/audit_baseline.py
+          python tools/package_windows.py --build-name EchoesOfAethel-US01-Fix01-Windows-x64 --archive-name EchoesOfAethel-US01-Fix01-Windows-x64.zip
       - uses: actions/upload-artifact@v4
         with:
-          name: EchoesOfAethel-US01-Windows-x64
-          path: EchoesOfAethel-US01-Windows-x64.zip
+          name: EchoesOfAethel-US01-Fix01-Windows-x64
+          path: EchoesOfAethel-US01-Fix01-Windows-x64.zip
       - uses: actions/upload-artifact@v4
         if: always()
         with:

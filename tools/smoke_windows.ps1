@@ -14,7 +14,7 @@ try {
     $process.Refresh()
     if ($process.ExitCode -ne 0) { throw 'Windows executable smoke failed' }
     $log = Get-Content -LiteralPath $logPath -Raw
-    if ($log -notmatch 'SMOKE MENU READY' -or $log -notmatch 'BUILD SMOKE: 32 checks, 0 failures' -or $log -match 'SCRIPT ERROR|Parse Error|FALHA:') {
+    if ($log -notmatch 'SMOKE MENU READY' -or $log -notmatch 'BUILD SMOKE: 40 checks, 0 failures' -or $log -match 'SCRIPT ERROR|Parse Error|FALHA:') {
         throw 'Windows executable did not finish the gameplay smoke checks'
     }
 } finally { $env:AETHEL_TEST_SAVE_DIR = $oldSaveDir }

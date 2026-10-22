@@ -137,6 +137,37 @@ func run() -> void:
 		check(world.regions.transition(connector),"release canonical transition "+connector)
 		await frames(3)
 	check(world.region_id=="map_04" and world.regions.allows_combat(),"release archive offensive policy")
+	# BUG-US01-01: exercise actual release input and procedural model after death.
+	for actor in world.enemies: actor.set_physics_process(false)
+	player.hp = player.max_hp
+	player.invulnerability = 0
+	player.attack_cooldown = 0
+	world._save_state()
+	var live_hp: int = player.hp
+	var live_position: Vector3 = player.position
+	player.take_damage(player.max_hp * 10)
+	await frames(24)
+	var visual: AethelCharacterVisual = player.get_node("BastiaoVisual")
+	check(world.game_over and visual._model._visual_state == &"death", "Fix01 release actually dead")
+	await press(KEY_F9)
+	await frames(2)
+	check(player.hp == live_hp and not world.game_over, "Fix01 release F9 restores alive")
+	check(player.position.distance_to(live_position) < 0.25, "Fix01 release position restored")
+	check(visual._model._visual_state != &"death" and absf(visual._model.torso.rotation.z) < 0.05, "Fix01 release procedural model upright")
+	var restored_position: Vector3 = player.position
+	Input.action_press("move_right")
+	await frames(12)
+	Input.action_release("move_right")
+	check(player.position.distance_to(restored_position) > 0.1, "Fix01 release movement restored")
+	await press(KEY_J)
+	check(player.attack_cooldown > 0, "Fix01 release basic attack input restored")
+	player.ether = player.max_ether
+	await press(KEY_F2)
+	check(player.guard_remaining > 0, "Fix01 release skill input restored")
+	player.invulnerability = 0
+	player.take_damage(player.max_hp * 10)
+	world._save_state()
+	check(world._load_state() and player.hp == 0 and world.game_over, "Fix01 release zero HP stays dead")
 	world.pause_menu.open()
 	check(get_tree().paused, "pause")
 	get_tree().paused = false

@@ -1,7 +1,7 @@
 ECHOES OF AETHEL - US-01 - CANDIDATO DE DIAGNOSTICO
 Nao homologado. PR #18 Draft. G2 depende do Product Owner.
 
-Extraia todo o ZIP. Abra jogo/EchoesOfAethel-US01-Windows-x64.exe.
+Extraia todo o ZIP. Abra jogo/EchoesOfAethel-US01-Fix01-Windows-x64.exe.
 Mantenha o arquivo .pck ao lado do .exe. Nao e preciso instalar Godot.
 Windows x64; Godot 4.7.2.stable.official.ed1daf0bf; GL Compatibility.
 Viewport 1280x720, stretch canvas_items/expand. Exportacao release-template,
@@ -24,3 +24,7 @@ fonte/: projeto editavel. evidencias/: logs e hashes. MANIFEST-SHA256.json:
 hashes dos arquivos empacotados. Licencas Godot em fonte/licenses/.
 Licenciamento comercial dos assets do projeto ainda exige confirmacao do PO.
 Consulte fonte/docs/US01_BASELINE_AUDIT.md para comandos e limitacoes.
+
+FIX01: salve vivo com F5, morra e pressione F9. Confira HP, posicao,
+modelo em pe, movimento, ataque, habilidades e itens/missao preservados.
+Save de HP zero deve permanecer em derrota.
