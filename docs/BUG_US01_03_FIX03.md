@@ -70,3 +70,11 @@ Pacote: `EchoesOfAethel-US01-Fix03-Windows-x64.zip`, EXE/PCK correspondentes, fo
 Suítes legadas emitiram avisos de 2–8 ObjectDB instances leaked ao encerrar, com exit 0 e checks concluídos; logs preservados. A regra de combate usa os estados aprovados, não todo evento possível de dano/aggro. Estados transitórios como hit sem windup ou dano recente não receberam nova classificação temporal nesta entrega. Licenciamento comercial continua pendente conforme a auditoria anterior. A validação gráfica final do Fix03 depende do PO, com atenção a ameaça surgindo no clique e coexistência de outros modais.
 
 PR #18 permanece Draft. Nenhum merge. Nenhuma nova história. Aprovação da regra não é aprovação automática G1/G2 nem homologação do executável.
+
+## Verificacao adicional do CI e fixture Fix02
+
+A primeira execucao do CI deste Fix03 (39903685554) aprovou Fix03 28/0, mas parou em Fix02: `agent resumes after map synchronizes` (23 checks/1 falha). A falha foi preservada, nao ignorada/repetida ate passar. O teste usa frames fixos e um mapa privado recem-ativado; a sincronizacao assincrona da navegacao nao e uma barreira de prontidao por numero de frames.
+
+Ajuste limitado a tests/test_us01_fix02.gd: `map_set_use_async_iterations(nav_map, false)` somente nos mapas criados pela fixture. A configuracao do mapa de producao e scripts de IA continuam intactos. Mantidos os 23 checks, os 35 frames e o deslocamento minimo >0,3m; nenhum criterio foi removido ou relaxado. Tres execucoes locais independentes passaram (23/0 cada), com logs anexados, e o CI integral sera repetido no novo commit. O teste registra a iteracao e o tamanho do caminho ao fim da espera. Isso torna a fixture deterministica; nao constitui homologacao de desempenho/scheduling assincrono em producao.
+
+Referencia da API: https://docs.godotengine.org/en/stable/classes/class_navigationserver3d.html#class-navigationserver3d-method-map-set-use-async-iterations .

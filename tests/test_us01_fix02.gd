@@ -45,6 +45,8 @@ func setup(blocks: Array[Rect2] = [], navigation: bool = true, nav_blocks: Array
  fixture = Node3D.new()
  root.add_child(fixture)
  nav_map = NavigationServer3D.map_create()
+ # Test-owned map only: remove worker scheduling from fixed-frame assertions.
+ NavigationServer3D.map_set_use_async_iterations(nav_map, false)
  if navigation: NavigationServer3D.map_set_active(nav_map, true)
  box(Vector3(0,-0.3,0), Vector3(30,0.6,30))
  for rect in blocks: box(Vector3(rect.get_center().x,1.5,rect.get_center().y),Vector3(rect.size.x,3,rect.size.y))
@@ -138,6 +140,7 @@ func run() -> void:
  NavigationServer3D.map_set_active(nav_map, true)
  NavigationServer3D.map_force_update(nav_map)
  await frames(35)
+ print("FIX02 SYNC: iteration=",NavigationServer3D.map_get_iteration_id(nav_map)," path_points=",NavigationServer3D.map_get_path(nav_map,enemy.position,player.position,true).size())
  check(enemy.position.distance_to(initial) > 0.3,"agent resumes after map synchronizes")
  # Attack initiation and delayed resolution must both respect solid obstruction.
  await setup([Rect2(-0.2,-3,0.4,6)])
