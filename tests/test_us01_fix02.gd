@@ -68,7 +68,14 @@ func setup(blocks: Array[Rect2] = [], navigation: bool = true, nav_blocks: Array
    mesh.add_polygon(polygon)
  mesh.set_vertices(vertices)
  region.navigation_mesh = mesh
- if navigation: fixture.add_child(region)
+ if navigation:
+  fixture.add_child(region)
+  # Enter-tree can assign the World3D default map; bind the private RID afterward.
+  region.set_navigation_map(nav_map)
+ if navigation:
+  # Flush tree registration before starting actors; frame budget measures movement only.
+  await frames(2)
+  NavigationServer3D.map_force_update(nav_map)
  player = DummyPlayer.new()
  fixture.add_child(player)
  player.position = Vector3(5,0,0)
@@ -112,6 +119,7 @@ func run() -> void:
  for i in 230:
   await frames(1)
   max_z = maxf(max_z, absf(enemy.position.z))
+ print("FIX02 DETOUR: position=",enemy.position," max_z=",max_z," state=",enemy.ai_state," nav=",enemy.nav_status," path=",NavigationServer3D.map_get_path(nav_map,Vector3(-5,0,0),player.position,true))
  check(enemy.position.x > 1.5 and max_z > 2.3, "agent physically routes around pillar")
  # Disconnected cells with a clear sightline: synchronized map, unreachable goal.
  await setup([],true,[Rect2(-1,-12,2,24)])
@@ -136,9 +144,13 @@ func run() -> void:
  initial = enemy.position
  await frames(15)
  check(enemy.position.distance_to(initial) < 0.1 and enemy.get("nav_status") == &"waiting","unsynchronized navigation waits")
+ enemy.set_physics_process(false)
  fixture.add_child(region)
+ region.set_navigation_map(nav_map)
  NavigationServer3D.map_set_active(nav_map, true)
+ await frames(2)
  NavigationServer3D.map_force_update(nav_map)
+ enemy.set_physics_process(true)
  await frames(35)
  print("FIX02 SYNC: iteration=",NavigationServer3D.map_get_iteration_id(nav_map)," path_points=",NavigationServer3D.map_get_path(nav_map,enemy.position,player.position,true).size())
  check(enemy.position.distance_to(initial) > 0.3,"agent resumes after map synchronizes")
