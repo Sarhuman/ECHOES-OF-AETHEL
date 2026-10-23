@@ -14,7 +14,7 @@ Não foi reproduzido input permanentemente travado após fechar, viajar, morrer 
 
 Adicionado apenas tests/diagnose_us01_03.gd, sem integrar uma regra nova ao runner. Instancia a cena main real, usa região map_02 e sua âncora real district_anchor, player em (3,0,10); destinos previamente marcados descobertos apenas na fixture. Remove encontros iniciais para isolar cada caso e acrescenta uma Campeã real via _spawn_enemy, mantendo dano, atributos e IA de produção. Caso "próximo sem agressão" desativa física somente desse inimigo na fixture: é um controle de proximidade, não prova de que uma Campeã visível naturalmente permanece pacífica. Um segundo cenário próximo usa IA ativa, mas uma parede da fixture bloqueia a linha de visão: permaneceu patrol por 1s, com HP 155, enquanto o menu abriu normalmente. Nos demais casos a IA está ativa; perseguição e windup são verificados como pré-condições.
 
-RNG do jogador usa seed 42 na fixture, sem alterar chances/atributos. Cliques usam InputEventMouseButton real com transformação do viewport; teclado usa InputEventKey/Input.action_press conforme caso. Primeiro rascunho sem transformação de coordenadas não clicava os botões e um spawn atrás de geometria não estabelecia chase; ambos foram corrigidos antes da execução final e não foram registrados como defeitos do jogo.
+RNG do jogador usa seed 42 na fixture, sem alterar chances/atributos. O dano rolado pelo inimigo pode variar entre execuções; os valores abaixo correspondem ao JSON da rodada final (a rodada anterior também confirmou dano, 155→149). Cliques usam InputEventMouseButton real com transformação do viewport; teclado usa InputEventKey/Input.action_press conforme caso. Primeiro rascunho sem transformação de coordenadas não clicava os botões e um spawn atrás de geometria não estabelecia chase; ambos foram corrigidos antes da execução final e não foram registrados como defeitos do jogo.
 
 Saves são isolados por AETHEL_TEST_SAVE_DIR, sem tocar saves do PO. A saída distingue erros de fixture de observações: o sucesso do diagnóstico significa que os cenários foram executados, não que o comportamento atual foi aprovado.
 
@@ -29,11 +29,11 @@ Saves são isolados por AETHEL_TEST_SAVE_DIR, sem tocar saves do PO. A saída di
 | Próximo sem agressão, IA ativa e visão ocluída | menu abre; HP 155→155; inimigo permanece patrol por 1s |
 | Perseguição ativa | menu abre com chase; botão de destino leva map_02→map_01, HP 155→155 |
 | Windup ativo | menu abre com attack/windup=true |
-| Dano com menu aberto | em 3s HP 155→149; menu continua true e lock true |
+| Dano com menu aberto | em 3s HP 155→150; menu continua true e lock true |
 | Viagem durante windup | travel retorna true; map_02→map_01; HP 155→155; inimigo anterior queued e depois removido |
-| Viagem após dano e com ameaça | travel retorna true; map_02→map_03; HP 149→149 no retorno síncrono e após 3 frames |
+| Viagem após dano e com ameaça | travel retorna true; map_02→map_03; HP 150→150 no retorno síncrono e após 3 frames |
 | Estado após viagem | menu false, lock false, transitioning true só no restante do frame; nova posição segura e inimigos de destino reconstruídos |
-| Ameaça controlada no destino | Campeã adicionada próxima após chegada; HP 149→142 em 3s. Não há proteção permanente pós-viagem |
+| Ameaça controlada no destino | Campeã adicionada próxima após chegada; HP 150→145 em 3s. Não há proteção permanente pós-viagem |
 | Morte com menu aberto | HP 1→0; game_over true; menu fecha e lock false |
 | Botão Fechar, clique real | menu false, lock false após frames; movimento posterior ≈1,30m |
 | Escape, tecla real | fecha menu sem pausar; lock false; movimento posterior ≈0,76m, limitado inicialmente pelo recovery de habilidade anterior |
@@ -46,7 +46,7 @@ Posições registradas: origem (3,0,10); chegada Vigília (3,0,7,4); chegada Pá
 
 ### Dano durante a transição
 
-`move_to()` é síncrono e não contém await: nesta execução não houve perda de HP entre a chamada e seu retorno nem nos primeiros frames amostrados. O inimigo de origem entra em queue_free na reconstrução da região. O guard transitioning dura o restante do frame e evita entradas duplicadas; não é imunidade. O veil visual dura aproximadamente 0,3s, mas não pausa o mundo. As observações não provam invulnerabilidade universal durante o fade, todas as ordens de processamento ou todos os destinos. Não foi reproduzido dano vindo do inimigo antigo após a viagem. A redução 149→142 foi produzida por uma ameaça nova e controlada no destino, não deve ser atribuída à troca síncrona.
+`move_to()` é síncrono e não contém await: nesta execução não houve perda de HP entre a chamada e seu retorno nem nos primeiros frames amostrados. O inimigo de origem entra em queue_free na reconstrução da região. O guard transitioning dura o restante do frame e evita entradas duplicadas; não é imunidade. O veil visual dura aproximadamente 0,3s, mas não pausa o mundo. As observações não provam invulnerabilidade universal durante o fade, todas as ordens de processamento ou todos os destinos. Não foi reproduzido dano vindo do inimigo antigo após a viagem. A redução 150→145 foi produzida por uma ameaça nova e controlada no destino, não deve ser atribuída à troca síncrona.
 
 ## Arquivos/funções e causa técnica
 
