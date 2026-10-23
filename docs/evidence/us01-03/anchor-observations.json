@@ -291,6 +291,66 @@
     },
     {
       "attack_recovery": 0.0,
+      "case": "nearby_occluded_active_AI",
+      "enemy": {
+        "position": [
+          1.00035417079926,
+          0.000845353992190212,
+          10.0607299804688
+        ],
+        "queued": false,
+        "state": "patrol",
+        "windup": false
+      },
+      "enemy_count": 1,
+      "ether": 25,
+      "hp": 155,
+      "input_locked": true,
+      "invulnerability": 0.0,
+      "menu": true,
+      "paused": false,
+      "position": [
+        3.0,
+        0.0,
+        10.0
+      ],
+      "region": "map_02",
+      "skill_cooldowns": {},
+      "transitioning": false,
+      "veil_visible": false
+    },
+    {
+      "attack_recovery": 0.0,
+      "case": "occluded_active_after_1s",
+      "enemy": {
+        "position": [
+          1.02372264862061,
+          0.000845360627863556,
+          10.5888624191284
+        ],
+        "queued": false,
+        "state": "patrol",
+        "windup": false
+      },
+      "enemy_count": 1,
+      "ether": 25,
+      "hp": 155,
+      "input_locked": true,
+      "invulnerability": 0.0,
+      "menu": true,
+      "paused": false,
+      "position": [
+        3.0,
+        0.0,
+        10.0
+      ],
+      "region": "map_02",
+      "skill_cooldowns": {},
+      "transitioning": false,
+      "veil_visible": false
+    },
+    {
+      "attack_recovery": 0.0,
       "case": "chase_before_open",
       "enemy": {
         "position": [
@@ -544,7 +604,7 @@
       },
       "enemy_count": 1,
       "ether": 25,
-      "hp": 149,
+      "hp": 150,
       "input_locked": true,
       "invulnerability": 0.0,
       "menu": true,
@@ -574,7 +634,7 @@
       },
       "enemy_count": 1,
       "ether": 25,
-      "hp": 149,
+      "hp": 150,
       "input_locked": true,
       "invulnerability": 0.0,
       "menu": true,
@@ -604,7 +664,7 @@
       },
       "enemy_count": 2,
       "ether": 25,
-      "hp": 149,
+      "hp": 150,
       "input_locked": false,
       "invulnerability": 0.0,
       "menu": false,
@@ -624,7 +684,7 @@
       "case": "combat_travel_after_frames",
       "enemy_count": 2,
       "ether": 25,
-      "hp": 149,
+      "hp": 150,
       "input_locked": false,
       "invulnerability": 0.0,
       "menu": false,
@@ -654,7 +714,7 @@
       },
       "enemy_count": 3,
       "ether": 25,
-      "hp": 142,
+      "hp": 145,
       "input_locked": false,
       "invulnerability": 0.0,
       "menu": false,

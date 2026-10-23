@@ -12,7 +12,7 @@ Não foi reproduzido input permanentemente travado após fechar, viajar, morrer 
 
 ## Método e limites
 
-Adicionado apenas tests/diagnose_us01_03.gd, sem integrar uma regra nova ao runner. Instancia a cena main real, usa região map_02 e sua âncora real district_anchor, player em (3,0,10); destinos previamente marcados descobertos apenas na fixture. Remove encontros iniciais para isolar cada caso e acrescenta uma Campeã real via _spawn_enemy, mantendo dano, atributos e IA de produção. Caso "próximo sem agressão" desativa física somente desse inimigo na fixture: é um controle de proximidade, não prova de que uma Campeã visível naturalmente permanece pacífica. Nos demais casos a IA está ativa; perseguição e windup são verificados como pré-condições.
+Adicionado apenas tests/diagnose_us01_03.gd, sem integrar uma regra nova ao runner. Instancia a cena main real, usa região map_02 e sua âncora real district_anchor, player em (3,0,10); destinos previamente marcados descobertos apenas na fixture. Remove encontros iniciais para isolar cada caso e acrescenta uma Campeã real via _spawn_enemy, mantendo dano, atributos e IA de produção. Caso "próximo sem agressão" desativa física somente desse inimigo na fixture: é um controle de proximidade, não prova de que uma Campeã visível naturalmente permanece pacífica. Um segundo cenário próximo usa IA ativa, mas uma parede da fixture bloqueia a linha de visão: permaneceu patrol por 1s, com HP 155, enquanto o menu abriu normalmente. Nos demais casos a IA está ativa; perseguição e windup são verificados como pré-condições.
 
 RNG do jogador usa seed 42 na fixture, sem alterar chances/atributos. Cliques usam InputEventMouseButton real com transformação do viewport; teclado usa InputEventKey/Input.action_press conforme caso. Primeiro rascunho sem transformação de coordenadas não clicava os botões e um spawn atrás de geometria não estabelecia chase; ambos foram corrigidos antes da execução final e não foram registrados como defeitos do jogo.
 
@@ -20,12 +20,13 @@ Saves são isolados por AETHEL_TEST_SAVE_DIR, sem tocar saves do PO. A saída di
 
 ## Resultados — execução final
 
-31 observações, zero erros de fixture; exit 0. JSON completo em docs/evidence/us01-03/anchor-observations.json. Cada amostra inclui HP, Éter, posição, região, menu, input_locked, pausa, invulnerabilidade, recovery/cooldowns, transição/veil e estado/posição/windup do inimigo quando ainda válido.
+33 observações, zero erros de fixture; exit 0. JSON completo em docs/evidence/us01-03/anchor-observations.json. Cada amostra inclui HP, Éter, posição, região, menu, input_locked, pausa, invulnerabilidade, recovery/cooldowns, transição/veil e estado/posição/windup do inimigo quando ainda válido.
 
 | Cenário | Comportamento efetivamente reproduzido |
 |---|---|
 | Sem inimigos | menu abre; HP 155; lock true; paused false |
 | Próximo sem agressão, controle com física desativada | menu abre; HP 155→155 em 1s; inimigo patrol |
+| Próximo sem agressão, IA ativa e visão ocluída | menu abre; HP 155→155; inimigo permanece patrol por 1s |
 | Perseguição ativa | menu abre com chase; botão de destino leva map_02→map_01, HP 155→155 |
 | Windup ativo | menu abre com attack/windup=true |
 | Dano com menu aberto | em 3s HP 155→149; menu continua true e lock true |
