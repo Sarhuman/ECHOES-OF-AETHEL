@@ -520,6 +520,7 @@ func _apply_hold() -> void:
 	elif player.global_position.distance_to(aim) > 0.45: player.command_move(aim)
 
 func _activate_skill(skill_id: String, screen: Variant = null) -> void:
+	if exploration != null and exploration.travel_panel.visible: return
 	if not skill_tree.unlocked.has(skill_id):
 		_show_message("Habilidade indisponível")
 		return
@@ -543,6 +544,7 @@ func _activate_skill(skill_id: String, screen: Variant = null) -> void:
 		_refresh_skills_panel()
 
 func _cast_right_skill(screen: Vector2) -> void:
+	if exploration != null and exploration.travel_panel.visible: return
 	if narrative != null:
 		if narrative.view.visible: return
 		narrative.close()
@@ -633,6 +635,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		if _load_state(): _refresh_all()
 		get_viewport().set_input_as_handled()
 		return
+	if exploration != null and exploration.travel_panel.visible:
+		for action: String in ["attack_key", "skill_1", "skill_2", "skill_3"]:
+			if event.is_action_pressed(action):
+				get_viewport().set_input_as_handled()
+				return
 	if game_over and event.is_action_pressed("pause"): return
 	if narrative != null and narrative.view.visible:
 		if event.is_action_pressed("pause") or event.is_action_pressed("interact"):

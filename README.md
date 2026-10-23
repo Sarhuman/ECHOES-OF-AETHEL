@@ -1,3 +1,7 @@
+# US-01 Fix03 — Ancoras fora de combate
+
+Entrega atual: EchoesOfAethel-US01-Fix03-Windows-x64.zip. Veja [regra aprovada e testes](docs/BUG_US01_03_FIX03.md). Fix01/Fix02 preservados; PR #18 Draft.
+
 # US-01 Fix02 — percepção e navegação inimiga
 
 Entrega atual: EchoesOfAethel-US01-Fix02-Windows-x64.zip. Veja [diagnóstico e regressões](docs/BUG_US01_02_FIX02.md). Fix01 preservado. PR #18 Draft; homologação gráfica Fix02 depende do PO.

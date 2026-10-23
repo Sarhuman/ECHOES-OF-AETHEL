@@ -122,6 +122,7 @@ func build_ui() -> void:
 	travel_panel.position = Vector2(460,140)
 	canvas.add_child(travel_panel)
 	travel_panel.hide()
+	travel_panel.visibility_changed.connect(_sync_travel_input_lock)
 
 func blocks_ui(screen: Vector2) -> bool:
 	return (filter_panel.visible and filter_panel.get_global_rect().has_point(screen)) or travel_panel.visible
@@ -230,7 +231,32 @@ func activate(id: String) -> bool:
 	refresh_objects()
 	return true
 
+func travel_combat_active() -> bool:
+	for enemy in world.enemies:
+		if not is_instance_valid(enemy) or enemy.is_queued_for_deletion() or enemy.hp <= 0: continue
+		if enemy.target == world.player and (enemy.ai_state in [&"chase", &"search", &"attack"] or enemy.windup_active): return true
+	return false
+
+func _sync_travel_input_lock() -> void:
+	var dialogue_open: bool = world.narrative != null and world.narrative.view.visible
+	var shop_open: bool = world.shop_panel != null and world.shop_panel.visible
+	world.player.interaction_input_locked = travel_panel.visible or dialogue_open or shop_open
+
+func close_travel() -> void:
+	travel_panel.hide()
+	_sync_travel_input_lock()
+
+func _reject_combat_travel() -> bool:
+	if not travel_combat_active(): return false
+	close_travel()
+	world._show_message("Travessia indisponível durante combate")
+	return true
+
 func open_travel(source: String) -> void:
+	if world.game_over or _reject_combat_travel(): return
+	world.player.clear_commands()
+	world.left_held = false
+	world.hold_mode = ""
 	for child in travel_panel.get_children(): travel_panel.remove_child(child); child.queue_free()
 	var column := VBoxContainer.new()
 	travel_panel.add_child(column)
@@ -245,7 +271,7 @@ func open_travel(source: String) -> void:
 		column.add_child(button)
 	var close := Button.new()
 	close.text = "Fechar"
-	close.pressed.connect(travel_panel.hide)
+	close.pressed.connect(close_travel)
 	column.add_child(close)
 	travel_panel.show()
 	world.player.interaction_input_locked = true
@@ -253,6 +279,7 @@ func open_travel(source: String) -> void:
 	close.grab_focus()
 
 func travel(source: String,destination: String) -> bool:
+	if _reject_combat_travel(): return false
 	if not source in anchors or not destination in anchors or not objects.has(source) or not objects.has(destination): return false
 	if world.game_over or not objects[source].visible or world.player.global_position.distance_to(objects[source].global_position) > 2.5 or not reachable(objects[source]): return false
 	if definition_for(destination).region == "map_02" and not world.quest_started: return false
@@ -377,7 +404,8 @@ func apply_buffs() -> void:
 	world.player.exploration_reduction = float(buffs.get("reduction",0)) if float(buffs.get("remaining",0)) > 0 else 0.0
 
 func tick(delta: float) -> void:
-	if travel_panel.visible: world.player.interaction_input_locked = true
+	if travel_panel.visible: _reject_combat_travel()
+	_sync_travel_input_lock()
 	sound_clock = maxf(0,sound_clock-delta)
 	priority_sound_clock = maxf(0,priority_sound_clock-delta)
 	if float(buffs.get("remaining",0)) > 0:

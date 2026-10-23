@@ -1,3 +1,5 @@
+> Atualizacao em 23/10/2026: proposta aprovada pelo PO e implementada no [Fix03](BUG_US01_03_FIX03.md). O diagnostico abaixo e historico, anterior a correcao.
+
 # BUG-US01-03 — Diagnóstico das Âncoras durante combate
 
 **Somente investigação. Nenhuma correção funcional implementada.**
