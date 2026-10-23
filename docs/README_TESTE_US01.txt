@@ -1,7 +1,7 @@
 ECHOES OF AETHEL - US-01 - CANDIDATO DE DIAGNOSTICO
 Nao homologado. PR #18 Draft. G2 depende do Product Owner.
 
-Extraia todo o ZIP. Abra jogo/EchoesOfAethel-US01-Fix03-Windows-x64.exe.
+Extraia todo o ZIP. Abra jogo/EchoesOfAethel-US01-Fix03R1-Windows-x64.exe.
 Mantenha o arquivo .pck ao lado do .exe. Nao e preciso instalar Godot.
 Windows x64; Godot 4.7.2.stable.official.ed1daf0bf; GL Compatibility.
 Viewport 1280x720, stretch canvas_items/expand. Exportacao release-template,
@@ -36,3 +36,5 @@ Fix01 deve continuar funcionando. Homologacao grafica pendente do PO.
 FIX03: ancoras somente fora de combate (chase/search/attack).
 Nova ameaca fecha o menu; mundo ativo, sem imunidade.
 Fechar/Esc restituem controles. Fix01/Fix02 preservados.
+
+Fix03R1: viagem bloqueada por 5 segundos monotônicos após dano efetivo de inimigo; dano ambiental não arma a janela. Menu fecha ao receber dano inimigo; hit com ameaça ativa também bloqueia. Homologação G1/G2 pendente do PO.

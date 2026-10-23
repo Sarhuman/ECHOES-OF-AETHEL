@@ -1,6 +1,7 @@
 extends CharacterBody3D
 ## Bastião: movimento por clique/WASD, ataque com mira no mouse, atributos, equipamento e habilidades.
 signal hp_changed(current: float, maximum: float)
+signal enemy_damage_received(amount: int)
 signal ether_changed(current: float, maximum: float)
 signal stamina_changed(current: float, maximum: float)
 signal skills_changed
@@ -453,7 +454,7 @@ func drink_potion(life: int, mana: int) -> void:
 		ether_changed.emit(float(ether), float(max_ether))
 		if restored > 0: combat_event.emit(global_position + Vector3(0, 2.6, 0), "+%d" % restored, "mana")
 
-func receive_attack(raw_damage: int, attacker_rating: int, attacker_level: int) -> String:
+func receive_attack(raw_damage: int, attacker_rating: int, attacker_level: int, source: Node = null) -> String:
 	if hp <= 0 or invulnerability > 0.0: return "ignored"
 	var chance: float = clampf(2.0 * float(attacker_rating) / float(attacker_rating + defense + 1) * float(attacker_level) / float(attacker_level + character_level), 0.05, 0.95)
 	if rng.randf() > chance:
@@ -466,13 +467,16 @@ func receive_attack(raw_damage: int, attacker_rating: int, attacker_level: int) 
 			stamina_changed.emit(stamina, max_stamina)
 		combat_event.emit(global_position + Vector3(0, 2.2, 0), "BLOQUEOU", "miss")
 		return "block"
-	take_damage(raw_damage)
+	take_damage(raw_damage, source)
 	return "hit"
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, source: Node = null) -> void:
 	if hp <= 0 or invulnerability > 0.0: return
 	var final_damage: int = maxi(1, roundi(float(amount) * (0.6 if guard_remaining > 0.0 else 1.0) * (1.0-clampf(exploration_reduction,0,0.5))))
+	var hp_before: int = hp
 	hp = maxi(0, hp - final_damage)
+	if hp < hp_before and is_instance_valid(source) and source.is_in_group("hybrid_enemies"):
+		enemy_damage_received.emit(hp_before - hp)
 	hp_changed.emit(float(hp), float(max_hp))
 	combat_event.emit(global_position + Vector3(0, 2.2, 0), "-%d" % final_damage, "hurt")
 	invulnerability = 0.35

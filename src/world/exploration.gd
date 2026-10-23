@@ -3,6 +3,8 @@ extends Node
 ## World coordination only: existing inventory, Player stats, loot and save remain authoritative.
 signal effect_changed(id: String,remaining: float,intensity: float)
 var _effect_display := -1
+const ENEMY_DAMAGE_TRAVEL_LOCK_MS := 5000
+var last_enemy_damage_ms: int = -1
 var world: Node3D
 var data: Dictionary
 var objects: Dictionary = {}
@@ -28,6 +30,7 @@ const NAMES := {"chest":"Baú","barrel":"Barril","urn":"Urna","remains":"Restos 
 
 func setup(owner_world: Node3D) -> void:
 	world = owner_world
+	world.player.enemy_damage_received.connect(_on_enemy_damage_received)
 	data = JSON.parse_string(FileAccess.get_file_as_string("res://data/exploration.json"))
 	loot_canvas = CanvasLayer.new()
 	loot_canvas.layer = 2
@@ -231,10 +234,18 @@ func activate(id: String) -> bool:
 	refresh_objects()
 	return true
 
+func _on_enemy_damage_received(_amount: int) -> void:
+	last_enemy_damage_ms = Time.get_ticks_msec()
+	if travel_panel != null and travel_panel.visible: _reject_combat_travel()
+
+func recent_enemy_damage_active() -> bool:
+	return last_enemy_damage_ms >= 0 and Time.get_ticks_msec() - last_enemy_damage_ms < ENEMY_DAMAGE_TRAVEL_LOCK_MS
+
 func travel_combat_active() -> bool:
+	if recent_enemy_damage_active(): return true
 	for enemy in world.enemies:
 		if not is_instance_valid(enemy) or enemy.is_queued_for_deletion() or enemy.hp <= 0: continue
-		if enemy.target == world.player and (enemy.ai_state in [&"chase", &"search", &"attack"] or enemy.windup_active): return true
+		if enemy.target == world.player and (enemy.ai_state in [&"chase", &"search", &"attack"] or enemy.windup_active or (enemy.ai_state == &"hit" and enemy.search_remaining > 0.0)): return true
 	return false
 
 func _sync_travel_input_lock() -> void:

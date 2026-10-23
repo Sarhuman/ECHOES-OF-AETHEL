@@ -160,6 +160,10 @@ func run() -> void:
 	check(not ex.activate("district_altar"),"altar cannot be reused")
 	world.player.position = ex.objects.district_anchor.position + Vector3(0,0,1)
 	check(ex.activate("district_anchor"),"discover hostile anchor")
+	# Enemy DOT earlier in this fixture starts the real-time travel lock.
+	while ex.recent_enemy_damage_active():
+		OS.delay_msec(10)
+		await process_frame
 	check(ex.travel("district_anchor","vigilia_anchor") and world.region_id == "map_01","travel to discovered hub")
 	world._save_state()
 	var expected: Dictionary = ex.serialize()

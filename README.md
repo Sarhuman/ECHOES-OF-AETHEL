@@ -1,6 +1,6 @@
 # US-01 Fix03 — Ancoras fora de combate
 
-Entrega atual: EchoesOfAethel-US01-Fix03-Windows-x64.zip. Veja [regra aprovada e testes](docs/BUG_US01_03_FIX03.md). Fix01/Fix02 preservados; PR #18 Draft.
+Entrega atual: EchoesOfAethel-US01-Fix03R1-Windows-x64.zip. Veja [regra aprovada e testes](docs/BUG_US01_03_FIX03.md). Fix01/Fix02 preservados; PR #18 Draft.
 
 # US-01 Fix02 — percepção e navegação inimiga
 
@@ -182,3 +182,5 @@ O mundo ainda concentra parte da integração; a modularização foi incremental
 Referências: [bíblia narrativa](docs/NARRATIVE_BIBLE.md), [atlas dos mapas](docs/WORLD_ATLAS.md), [Atlas do Nunca](docs/LORE_ATLAS_DO_NUNCA.md), [identidade dos mapas](docs/MAP_IDENTITY_MATRIX.md). São documentos de design; não representam funcionalidades já implementadas.
 
 Avisos da engine em `licenses/`. Assets procedurais/texturas vieram do pacote fornecido; não foi concluída uma auditoria jurídica para publicação comercial. O repositório não define ainda uma licença geral de redistribuição do jogo. Build não assinada, destinada a testes de pré-alpha.
+
+Fix03R1: viagem bloqueada por 5 segundos monotônicos após dano efetivo de inimigo; dano ambiental não arma a janela. Menu fecha ao receber dano inimigo; hit com ameaça ativa também bloqueia. Homologação G1/G2 pendente do PO.

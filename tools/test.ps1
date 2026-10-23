@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][string]$GodotExe)
+﻿param([Parameter(Mandatory=$true)][string]$GodotExe)
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
 $enginePath = (Resolve-Path -LiteralPath $GodotExe).Path
@@ -7,6 +7,7 @@ New-Item -ItemType Directory -Path $logsPath -Force | Out-Null
 $oldSaveDir = $env:AETHEL_TEST_SAVE_DIR
 $results = @()
 $markers = @{
+    test_us01_fix03_recent_damage='FIX03 DAMAGE:'
     test_us01_fix03='FIX03 ANCHORS:'
     test_us01_fix02='FIX02 AI:'
     test_us01_fix01='FIX01 REGRESSION:'
@@ -24,7 +25,7 @@ try {
     $graphLog = Join-Path $logsPath 'region-graph-final.log'
     & $enginePath --headless --path $taskRoot --script res://tools/validate_regions.gd --log-file $graphLog | Out-Host
     if ($LASTEXITCODE -ne 0 -or (Select-String -LiteralPath $graphLog -Pattern 'SCRIPT ERROR|Parse Error' -Quiet)) { throw 'Region graph validation failed' }
-    foreach ($testName in @('test_us01_fix03','test_us01_fix02','test_us01_fix01','test_us01_baseline','test_phase27_gui','test_phase27','test_phase26_gui','test_phase26','test_phase25','test_phase25_gui','test_phase24','test_phase24_gui','test_phase23','test_phase23_gui','test_gothic_ui','test_project_integrity','test_items','test_combat','test_gameplay','test_ui_smoke','test_rpg_systems','test_hud_revision','test_consolidation','test_playability','balance_bot')) {
+    foreach ($testName in @('test_us01_fix03_recent_damage','test_us01_fix03','test_us01_fix02','test_us01_fix01','test_us01_baseline','test_phase27_gui','test_phase27','test_phase26_gui','test_phase26','test_phase25','test_phase25_gui','test_phase24','test_phase24_gui','test_phase23','test_phase23_gui','test_gothic_ui','test_project_integrity','test_items','test_combat','test_gameplay','test_ui_smoke','test_rpg_systems','test_hud_revision','test_consolidation','test_playability','balance_bot')) {
         $env:AETHEL_TEST_SAVE_DIR = Join-Path $logsPath "profiles/$testName"
         New-Item -ItemType Directory -Path $env:AETHEL_TEST_SAVE_DIR -Force | Out-Null
         $logPath = Join-Path $logsPath "$testName-final.log"

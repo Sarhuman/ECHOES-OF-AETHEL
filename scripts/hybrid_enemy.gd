@@ -227,7 +227,7 @@ func _physics_process(delta: float) -> void:
 		if windup <= 0:
 			_cancel_windup()
 			if alive and distance < 1.95 and has_line_of_sight():
-				target.receive_attack(randi_range(damage_min, damage_max), attack_rating, level)
+				target.receive_attack(randi_range(damage_min, damage_max), attack_rating, level, self)
 			attack_cooldown = [1.3, 1.15, 1.0][rank]
 		return
 	if visible_target and distance < 1.55 and attack_cooldown <= 0:
@@ -325,7 +325,7 @@ func _tick_modifiers(delta: float) -> void:
 		if modifier_clock >= float(rule.interval):
 			modifier_clock = 0
 			if global_position.distance_to(target.global_position) <= float(rule.radius) and has_line_of_sight():
-				target.take_damage(int(rule.dot_damage))
+				target.take_damage(int(rule.dot_damage), self)
 				combat_event.emit(target.global_position+Vector3(0,2.3,0),str(rule.name),"hurt")
 	if "guardian" in modifiers:
 		guardian_clock -= delta

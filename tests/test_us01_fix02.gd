@@ -2,10 +2,10 @@ extends SceneTree
 class DummyPlayer extends CharacterBody3D:
  var hp := 1000
  var hits := 0
- func receive_attack(_damage: int, _rating: int, _level: int) -> String:
+ func receive_attack(_damage: int, _rating: int, _level: int, _source: Node = null) -> String:
   hits += 1
   return "hit"
- func take_damage(_amount: int) -> void: hits += 1
+ func take_damage(_amount: int, _source: Node = null) -> void: hits += 1
 var failures: Array[String] = []
 var checks := 0
 var fixture: Node3D
