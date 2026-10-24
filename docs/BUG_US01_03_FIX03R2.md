@@ -45,3 +45,11 @@ As assinaturas normalizadas de jogador, IA, mundo, visual, regressões Fix01/Fix
 ## CI intermediário e prontidão da fixture Fix02
 
 Workflow 40058943065, commit a003ee0: feedback 13/0, janela 24/0 e âncoras 28/0 passaram; Fix02 falhou em “agent resumes after map synchronizes”, embora a consulta ao fim retornasse iteração 2/caminho 11. O resultado não foi ignorado. A fixture agora verifica a existência de caminho completo ANTES de iniciar o orçamento de 35 frames, com ator parado e espera limitada a 120 frames de preparação. Acrescenta um check de prontidão; os 23 anteriores, o deslocamento >0,3 m e os 35 frames de movimento continuam iguais. Não atribuir causalidade definitiva apenas ao log anterior: são acrescentados registros de posição, estado e caminho do agente para distinguir preparação e movimento. IA de produção permanece byte a byte preservada. A assinatura anterior da fixture em preserved-contracts.json descreve o primeiro commit R2; a revisão de preparação está explicitamente registrada aqui.
+
+## Complemento de cobertura — fluxo real obrigatório
+
+Conferência do escopo: a única alteração de produção desde c871938 continua em src/world/exploration.gd, somente mensagens e estado vazio. Nenhuma mudança funcional adicional nesta rodada.
+
+A suíte de feedback passa de 13 para 23 checks. Acrescenta abertura/descoberta com F usando o binding existente (sem gravar preferências), viagem pacífica com inimigo próximo e física ativa atrás de obstrução real, perseguição gerada pela IA real sem atribuir ai_state, recusa por E e chamada direta, e fechamento por perseguidor surgido depois da abertura. Mantidos mundo ativo, feedback e liberação do lock. Não se congela IA nesses cenários novos; o obstáculo só pertence à fixture e não bloqueia o acesso à âncora. O setup continua controlado e não substitui o save/roteiro de homologação do PO.
+
+Execução focada: 23 checks/zero falhas. Baseline completa, nova exportação e CI serão repetidos no novo commit; links, hashes e resultado final constarão no PR. Janela de 5 segundos permanece coberta pelos 24 checks anteriores intactos; Fix01 e Fix02 continuam no runner. G1/G2 não aprovados.
