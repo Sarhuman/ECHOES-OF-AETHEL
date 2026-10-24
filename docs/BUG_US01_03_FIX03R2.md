@@ -14,7 +14,7 @@ Mantidos sem alterações: marca monotônica de dano efetivo inimigo, janela de 
 
 Nova suíte tests/test_us01_fix03r2_feedback.gd: 13 checks. Descobre o par de âncoras por E/activate reais sem atribuir anchors diretamente, seleciona destino com eventos de mouse e volta com foco/Enter. Verifica estado vazio, descoberta ausente, fonte invisível, distância por clique, HP/modal preservados, transição ocupada, progressão e obstrução por E/chamada direta. A preparação teleporta e controla progressão; remove encontros nos testes de guards não relacionados a combate. Não é playtest humano nem validação de todos os dispositivos.
 
-Os 28 checks originais, 24 da janela, 28 Fix01 e 23 Fix02 não foram editados. Runner passa de 26 para 27 suítes. Mantida a fixture Fix02 com RID privado atribuído após registro na árvore.
+Os 28 checks originais, 24 da janela e 28 Fix01 não foram editados. Os 23 checks Fix02 são preservados; a revisão de preparação descrita abaixo acrescenta um check de prontidão. Runner passa de 26 para 27 suítes. Mantida a fixture Fix02 com RID privado atribuído após registro na árvore.
 
 A primeira versão da nova fixture falhou em seis checks: a volta ao Bairro reconstruía o encontro autoral, cujo chase tinha prioridade sobre os guards que o teste queria exercitar. A fixture agora remove explicitamente esse encontro depois da volta, sem alterar ou limpar o relógio de dano nem editar produção. A execução focada final passou 13/0.
 
@@ -40,4 +40,8 @@ Importação limpa e parsing exit 0; grafo sem erros; 27/27 suítes exit 0; feed
 
 ![Estado sem destinos no PCK Fix03R2](evidence/fix03r2/render-01-one-anchor.png)
 
-As assinaturas normalizadas de jogador, IA, mundo, visual, regressões Fix01/Fix02/Fix03 e bloco da janela/predicado foram comparadas com a base c871938: idênticas. Evidência em [preserved-contracts.json](evidence/fix03r2/preserved-contracts.json). Os logs mantêm avisos locais de certificados/editor_settings e ObjectDB legados; não houve erro de parsing nem falha no smoke. O CI será executado sobre o commit publicado; resultado final e hashes serão associados ao PR.
+As assinaturas normalizadas de jogador, IA, mundo, visual, regressões Fix01/Fix03 e bloco da janela/predicado foram comparadas com a base c871938: idênticas. A única exceção entre testes é a preparação da fixture Fix02 explicitada abaixo. Evidência em [preserved-contracts.json](evidence/fix03r2/preserved-contracts.json). Os logs mantêm avisos locais de certificados/editor_settings e ObjectDB legados; não houve erro de parsing nem falha no smoke. O CI será executado sobre o commit publicado; resultado final e hashes serão associados ao PR.
+
+## CI intermediário e prontidão da fixture Fix02
+
+Workflow 40058943065, commit a003ee0: feedback 13/0, janela 24/0 e âncoras 28/0 passaram; Fix02 falhou em “agent resumes after map synchronizes”, embora a consulta ao fim retornasse iteração 2/caminho 11. O resultado não foi ignorado. A fixture agora verifica a existência de caminho completo ANTES de iniciar o orçamento de 35 frames, com ator parado e espera limitada a 120 frames de preparação. Acrescenta um check de prontidão; os 23 anteriores, o deslocamento >0,3 m e os 35 frames de movimento continuam iguais. Não atribuir causalidade definitiva apenas ao log anterior: são acrescentados registros de posição, estado e caminho do agente para distinguir preparação e movimento. IA de produção permanece byte a byte preservada. A assinatura anterior da fixture em preserved-contracts.json descreve o primeiro commit R2; a revisão de preparação está explicitamente registrada aqui.

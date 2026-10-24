@@ -28,8 +28,10 @@
     "sha256_normalized": "89d989a8c7ef68ec4853a9c25503a16fc83a45d3df647a26bceac1e55e324c9f"
   },
   "tests/test_us01_fix02.gd": {
-    "unchanged": true,
-    "sha256_normalized": "12d4d3d2775d2b3abe8213006a1e55bcae4d70188aaf1b34ac0d43d1472ec833"
+    "unchanged": false,
+    "production_ai_unchanged": true,
+    "reason": "Bounded path readiness barrier in fixture; 23 original checks preserved plus 1 precondition check",
+    "sha256_normalized": "53d96a0b53218a00712caabe76f9010587e29da38b0ec1de964b9018a670b2a2"
   },
   "monotonic_timer_and_combat_predicate": {
     "unchanged": true,

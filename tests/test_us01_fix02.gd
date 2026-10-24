@@ -150,8 +150,19 @@ func run() -> void:
  NavigationServer3D.map_set_active(nav_map, true)
  await frames(2)
  NavigationServer3D.map_force_update(nav_map)
+ # Map iteration alone is not a readiness barrier for a newly attached region.
+ # Keep the actor stopped until the same path query used by navigation is ready.
+ var ready_path:=PackedVector3Array()
+ for readiness_frame in 120:
+  if NavigationServer3D.map_get_iteration_id(nav_map)>0:
+   ready_path=NavigationServer3D.map_get_path(nav_map,initial,player.position,true)
+   if ready_path.size()>1 and ready_path[-1].distance_to(player.position)<0.6: break
+  await frames(1)
+  NavigationServer3D.map_force_update(nav_map)
+ check(ready_path.size()>1 and ready_path[-1].distance_to(player.position)<0.6,"fixture path ready before movement budget")
  enemy.set_physics_process(true)
  await frames(35)
+ print("FIX02 RESUME: initial=",initial," position=",enemy.position," state=",enemy.ai_state," status=",enemy.nav_status," agent_map=",enemy.navigation_agent.get_navigation_map()==nav_map," agent_path=",enemy.navigation_agent.get_current_navigation_path()," reachable=",enemy.navigation_agent.is_target_reachable())
  print("FIX02 SYNC: iteration=",NavigationServer3D.map_get_iteration_id(nav_map)," path_points=",NavigationServer3D.map_get_path(nav_map,enemy.position,player.position,true).size())
  check(enemy.position.distance_to(initial) > 0.3,"agent resumes after map synchronizes")
  # Attack initiation and delayed resolution must both respect solid obstruction.
