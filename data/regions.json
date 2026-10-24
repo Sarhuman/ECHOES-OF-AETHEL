@@ -1,0 +1,444 @@
+{
+  "schema_version": 1,
+  "seed": 2701,
+  "regions": [
+    {
+      "id": "map_01",
+      "name": "Vigília — Praça dos Sinos",
+      "act": "I",
+      "type": "hub",
+      "scene": "res://scenes/regions/map_01.tscn",
+      "optional": false,
+      "safe": true,
+      "spawn": [
+        0,
+        0,
+        4
+      ],
+      "entries": {
+        "south": [
+          0,
+          0,
+          4
+        ],
+        "east": [
+          9,
+          0,
+          0
+        ]
+      },
+      "exits": [
+        {
+          "id": "map_01_to_map_02",
+          "position": [
+            11,
+            0,
+            0
+          ],
+          "destination": "map_02",
+          "arrival": "south",
+          "condition": "quest_started"
+        }
+      ],
+      "anchors": [
+        "vigilia_anchor"
+      ],
+      "pois": [],
+      "narrative_refs": [
+        "WORLD_ATLAS",
+        "NARRATIVE_BIBLE"
+      ],
+      "floors": [
+        [
+          -16,
+          -16,
+          32,
+          32
+        ]
+      ],
+      "blocks": [
+        [
+          -11,
+          -11,
+          2,
+          2
+        ],
+        [
+          9,
+          -11,
+          2,
+          2
+        ],
+        [
+          -14,
+          -9,
+          2,
+          2
+        ],
+        [
+          -14,
+          7,
+          2,
+          2
+        ],
+        [
+          6,
+          -7,
+          3,
+          2
+        ]
+      ],
+      "enemy_limit": 0,
+      "nav_blocks": [
+        [
+          -10.5,
+          -1.1,
+          1.5,
+          1.2
+        ],
+        [
+          -12,
+          -3.8,
+          2,
+          1.6
+        ],
+        [
+          -9.45,
+          1.55,
+          0.9,
+          0.9
+        ]
+      ]
+    },
+    {
+      "id": "map_02",
+      "name": "Bairro que Faltava",
+      "act": "I",
+      "type": "exterior",
+      "scene": "res://scenes/regions/map_02.tscn",
+      "optional": false,
+      "safe": false,
+      "spawn": [
+        0,
+        0,
+        9
+      ],
+      "entries": {
+        "south": [
+          0,
+          0,
+          9
+        ],
+        "north": [
+          11,
+          0,
+          -11
+        ]
+      },
+      "exits": [
+        {
+          "id": "map_02_to_map_01",
+          "position": [
+            0,
+            0,
+            12
+          ],
+          "destination": "map_01",
+          "arrival": "east",
+          "condition": ""
+        },
+        {
+          "id": "map_02_to_map_03",
+          "position": [
+            12,
+            0,
+            -13
+          ],
+          "destination": "map_03",
+          "arrival": "south",
+          "condition": "quest_started"
+        }
+      ],
+      "anchors": [
+        "district_anchor"
+      ],
+      "pois": [
+        {
+          "id": "district_trace",
+          "name": "Endereço sobreposto · vestígio",
+          "position": [
+            -12,
+            0,
+            -11
+          ],
+          "optional": true
+        }
+      ],
+      "narrative_refs": [
+        "WORLD_ATLAS",
+        "NARRATIVE_BIBLE"
+      ],
+      "floors": [
+        [
+          -15,
+          -15,
+          30,
+          30
+        ]
+      ],
+      "blocks": [
+        [
+          -10,
+          -1,
+          4,
+          5
+        ],
+        [
+          1,
+          -2,
+          5,
+          4
+        ],
+        [
+          -2,
+          -12,
+          4,
+          4
+        ],
+        [
+          9,
+          0,
+          4,
+          3
+        ]
+      ],
+      "enemy_limit": 8
+    },
+    {
+      "id": "map_03",
+      "name": "Pátio dos Endereços",
+      "act": "I",
+      "type": "exterior",
+      "scene": "res://scenes/regions/map_03.tscn",
+      "optional": false,
+      "safe": false,
+      "spawn": [
+        0,
+        0,
+        12
+      ],
+      "entries": {
+        "south": [
+          0,
+          0,
+          12
+        ],
+        "north": [
+          0,
+          0,
+          -12
+        ]
+      },
+      "exits": [
+        {
+          "id": "map_03_to_map_02",
+          "position": [
+            0,
+            0,
+            14
+          ],
+          "destination": "map_02",
+          "arrival": "north",
+          "condition": ""
+        },
+        {
+          "id": "map_03_to_map_04",
+          "position": [
+            0,
+            0,
+            -14
+          ],
+          "destination": "map_04",
+          "arrival": "south",
+          "condition": "quest_started"
+        }
+      ],
+      "anchors": [
+        "courtyard_anchor"
+      ],
+      "pois": [
+        {
+          "id": "postal_trace",
+          "name": "Cartas sem destinatário",
+          "position": [
+            9,
+            1.5,
+            -9
+          ],
+          "optional": true
+        }
+      ],
+      "narrative_refs": [
+        "WORLD_ATLAS",
+        "NARRATIVE_BIBLE"
+      ],
+      "floors": [
+        [
+          -14,
+          -16,
+          28,
+          32
+        ]
+      ],
+      "blocks": [
+        [
+          -8,
+          -4,
+          4,
+          8
+        ],
+        [
+          4,
+          -10,
+          2,
+          7
+        ]
+      ],
+      "enemy_limit": 8
+    },
+    {
+      "id": "map_04",
+      "name": "Arquivo das Portas Seladas",
+      "act": "I",
+      "type": "dungeon",
+      "scene": "res://scenes/regions/map_04.tscn",
+      "optional": false,
+      "safe": false,
+      "spawn": [
+        0,
+        0,
+        14
+      ],
+      "entries": {
+        "south": [
+          0,
+          0,
+          14
+        ]
+      },
+      "exits": [
+        {
+          "id": "map_04_to_map_03",
+          "position": [
+            0,
+            0,
+            16
+          ],
+          "destination": "map_03",
+          "arrival": "north",
+          "condition": ""
+        }
+      ],
+      "anchors": [
+        "archive_anchor"
+      ],
+      "pois": [
+        {
+          "id": "archive_record",
+          "name": "Registro lacrado · evento futuro",
+          "position": [
+            -11,
+            0,
+            -3
+          ],
+          "optional": true
+        },
+        {
+          "id": "archive_arena",
+          "name": "Câmara do Porteiro · reservada",
+          "position": [
+            0,
+            0,
+            -15
+          ],
+          "optional": false
+        }
+      ],
+      "narrative_refs": [
+        "WORLD_ATLAS",
+        "NARRATIVE_BIBLE"
+      ],
+      "floors": [
+        [
+          -4,
+          6,
+          8,
+          12
+        ],
+        [
+          -4,
+          -13,
+          8,
+          20
+        ],
+        [
+          -14,
+          -6,
+          10,
+          8
+        ],
+        [
+          4,
+          -6,
+          10,
+          8
+        ],
+        [
+          -9,
+          -18,
+          18,
+          6
+        ]
+      ],
+      "blocks": [
+        [
+          -3.4,
+          -10,
+          0.8,
+          2
+        ],
+        [
+          -3.4,
+          -5,
+          0.8,
+          2
+        ],
+        [
+          -3.4,
+          0,
+          0.8,
+          2
+        ],
+        [
+          2.6,
+          -10,
+          0.8,
+          2
+        ],
+        [
+          2.6,
+          -5,
+          0.8,
+          2
+        ],
+        [
+          2.6,
+          0,
+          0.8,
+          2
+        ]
+      ],
+      "enemy_limit": 8
+    }
+  ]
+}

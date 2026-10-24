@@ -1,0 +1,25 @@
+{
+  "base_branch": "feat/fase22-equipment-visual-contract",
+  "base_commit": "f66184aa10a24feb3cea102dc2320654e78298b3",
+  "main_at_audit": "10980c6e5bac2f0ea365bc905e83240a2ec0758a",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "inputs": [
+    {
+      "file": "echoes_of_aethel_fase20_nucleo_arpg.zip",
+      "sha256": "28b4f7b6ae4a35a791276bf5c2f5f6df0aa51b64d9187f116ccc55732261f110"
+    },
+    {
+      "file": "FASE20_NUCLEO_ARPG.pdf",
+      "sha256": "00141272baef991be1f411d13154684f2a37d68f71cb9f19e1c4a967fbc19b2f"
+    }
+  ],
+  "narrative_refs": {
+    "feat/original-narrative-foundation": "c2ee8cdc0e1ef053435d59332e6d659aa617aa0e",
+    "design/environmental-narrative-dungeons": "0feb1f8cde0ed0fa2bd9139feca7c7b31cdf30b0"
+  },
+  "notes": [
+    "ZIP original e PDF fornecidos pelo usuario; originais preservados.",
+    "Nenhum merge dos PRs #1 a #6.",
+    "Legado 2D nao participa do projeto consolidado."
+  ]
+}

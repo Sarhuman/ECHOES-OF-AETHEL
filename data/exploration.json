@@ -1,0 +1,410 @@
+{
+  "modifier_definitions": {
+    "brutal": {
+      "name": "Punho de Cinza",
+      "damage": 1.2
+    },
+    "resistant": {
+      "name": "Pele de Ardósia",
+      "defense": 1.5
+    },
+    "fast": {
+      "name": "Passo Partido",
+      "speed": 1.2
+    },
+    "corrupted": {
+      "name": "Ferida de Eco",
+      "dot_damage": 2,
+      "interval": 2,
+      "radius": 2.8
+    },
+    "guardian": {
+      "name": "Vigília de Ferro",
+      "reduction": 0.2,
+      "interval": 6,
+      "duration": 2,
+      "radius": 4
+    }
+  },
+  "encounters": [
+    {
+      "id": "alley_patrol",
+      "region": "map_02",
+      "kind": "common",
+      "quest_required": true,
+      "members": [
+        {
+          "id": "patrol_1",
+          "position": [
+            -5,
+            0,
+            -5
+          ],
+          "level": 2,
+          "rank": 0,
+          "table": "normal",
+          "modifiers": [],
+          "type": "rasura"
+        }
+      ],
+      "reward_scale": 1.0
+    },
+    {
+      "id": "broken_steps",
+      "region": "map_02",
+      "kind": "champion",
+      "quest_required": true,
+      "members": [
+        {
+          "id": "champion_1",
+          "position": [
+            5,
+            0,
+            -6
+          ],
+          "level": 1,
+          "rank": 1,
+          "health_scale": 0.7,
+          "table": "champion",
+          "modifiers": [
+            "fast",
+            "resistant"
+          ],
+          "type": "rasura"
+        }
+      ],
+      "reward_scale": 1.0
+    },
+    {
+      "id": "echo_guard",
+      "region": "map_02",
+      "kind": "elite_with_minions",
+      "quest_required": true,
+      "members": [
+        {
+          "id": "elite_1",
+          "position": [
+            -10,
+            0,
+            -8
+          ],
+          "level": 1,
+          "rank": 2,
+          "health_scale": 0.55,
+          "table": "elite",
+          "name": "Rasura do Limiar",
+          "modifiers": [
+            "brutal",
+            "corrupted",
+            "guardian"
+          ],
+          "type": "rasura"
+        },
+        {
+          "id": "minion_1",
+          "position": [
+            -12,
+            0,
+            -7
+          ],
+          "level": 1,
+          "rank": 0,
+          "table": "normal",
+          "leader": "elite_1",
+          "modifiers": [],
+          "type": "rasura"
+        },
+        {
+          "id": "minion_2",
+          "position": [
+            -9,
+            0,
+            -10
+          ],
+          "level": 1,
+          "rank": 0,
+          "table": "normal",
+          "leader": "elite_1",
+          "modifiers": [],
+          "type": "rasura"
+        }
+      ],
+      "reward_scale": 1.0
+    },
+    {
+      "id": "map_03_patrol",
+      "region": "map_03",
+      "kind": "common",
+      "quest_required": true,
+      "reward_scale": 1.0,
+      "members": [
+        {
+          "id": "map_03_guard_0",
+          "position": [
+            -3,
+            0,
+            0
+          ],
+          "level": 2,
+          "rank": 0,
+          "table": "normal",
+          "modifiers": [],
+          "type": "rasura"
+        },
+        {
+          "id": "map_03_guard_1",
+          "position": [
+            3,
+            0,
+            -8
+          ],
+          "level": 2,
+          "rank": 1,
+          "table": "champion",
+          "modifiers": [],
+          "type": "rasura"
+        }
+      ]
+    },
+    {
+      "id": "map_04_patrol",
+      "region": "map_04",
+      "kind": "common",
+      "quest_required": true,
+      "reward_scale": 1.0,
+      "members": [
+        {
+          "id": "map_04_guard_0",
+          "position": [
+            0,
+            0,
+            1
+          ],
+          "level": 2,
+          "rank": 0,
+          "table": "normal",
+          "modifiers": [],
+          "type": "rasura"
+        },
+        {
+          "id": "map_04_guard_1",
+          "position": [
+            -9,
+            0,
+            -3
+          ],
+          "level": 2,
+          "rank": 1,
+          "table": "champion",
+          "modifiers": [],
+          "type": "rasura"
+        },
+        {
+          "id": "map_04_guard_2",
+          "position": [
+            9,
+            0,
+            -3
+          ],
+          "level": 2,
+          "rank": 0,
+          "table": "normal",
+          "modifiers": [],
+          "type": "rasura"
+        }
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "id": "vigilia_anchor",
+      "region": "map_01",
+      "kind": "anchor",
+      "position": [
+        3,
+        0,
+        6
+      ]
+    },
+    {
+      "id": "district_anchor",
+      "region": "map_02",
+      "kind": "anchor",
+      "position": [
+        3,
+        0,
+        9
+      ]
+    },
+    {
+      "id": "district_chest",
+      "region": "map_02",
+      "kind": "chest",
+      "position": [
+        -3,
+        0,
+        7
+      ],
+      "table": "container"
+    },
+    {
+      "id": "district_special",
+      "region": "map_02",
+      "kind": "chest",
+      "position": [
+        7,
+        0,
+        -9
+      ],
+      "table": "special_chest",
+      "requires_encounter": "echo_guard"
+    },
+    {
+      "id": "district_barrel",
+      "region": "map_02",
+      "kind": "barrel",
+      "position": [
+        -10,
+        0,
+        -5
+      ],
+      "table": "container"
+    },
+    {
+      "id": "district_urn",
+      "region": "map_02",
+      "kind": "urn",
+      "position": [
+        10,
+        0,
+        -4
+      ],
+      "table": "container"
+    },
+    {
+      "id": "district_remains",
+      "region": "map_02",
+      "kind": "remains",
+      "position": [
+        -3,
+        0,
+        -10
+      ],
+      "table": "container"
+    },
+    {
+      "id": "district_tomb",
+      "region": "map_02",
+      "kind": "tomb",
+      "position": [
+        8,
+        0,
+        5
+      ],
+      "table": "container"
+    },
+    {
+      "id": "district_altar",
+      "region": "map_02",
+      "kind": "altar",
+      "position": [
+        -3,
+        0,
+        4
+      ],
+      "duration": 30,
+      "effect": "resistance",
+      "reduction": 0.2,
+      "uses": 1
+    },
+    {
+      "id": "district_well",
+      "region": "map_02",
+      "kind": "well",
+      "position": [
+        6,
+        0,
+        8
+      ],
+      "life": 0.5,
+      "ether": 0.5,
+      "stamina": 1.0,
+      "uses": 2
+    },
+    {
+      "id": "courtyard_anchor",
+      "region": "map_03",
+      "kind": "anchor",
+      "position": [
+        -3,
+        0,
+        10
+      ]
+    },
+    {
+      "id": "archive_anchor",
+      "region": "map_04",
+      "kind": "anchor",
+      "position": [
+        2,
+        0,
+        11
+      ]
+    },
+    {
+      "id": "archive_door",
+      "region": "map_04",
+      "kind": "door",
+      "position": [
+        0,
+        0,
+        6
+      ]
+    },
+    {
+      "id": "archive_reward",
+      "region": "map_04",
+      "kind": "chest",
+      "position": [
+        11,
+        0,
+        -3
+      ],
+      "table": "special_chest",
+      "requires_encounter": "map_04_patrol"
+    },
+    {
+      "id": "district_trace",
+      "region": "map_02",
+      "kind": "lore",
+      "position": [
+        -12,
+        0,
+        -11
+      ],
+      "text": "Duas placas atribuem épocas diferentes ao mesmo endereço. Vestígio registrado; evento narrativo futuro."
+    },
+    {
+      "id": "postal_trace",
+      "region": "map_03",
+      "kind": "lore",
+      "position": [
+        10,
+        1.5,
+        -9
+      ],
+      "text": "Cartas sem destinatário apontam para o Arquivo das Portas Seladas. Inscrição encontrada; interpretação narrativa futura."
+    },
+    {
+      "id": "archive_record",
+      "region": "map_04",
+      "kind": "lore",
+      "position": [
+        -11,
+        0,
+        -3
+      ],
+      "text": "O registro permanece lacrado. Ponto preparado para evento futuro, sem decisão canônica aplicada."
+    }
+  ]
+}

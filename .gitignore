@@ -1,0 +1,14 @@
+.godot/
+.tools/
+.archive/
+fase20/
+prototipo/
+teste/
+teste-fase20/
+relatorios/
+relatorios-fase20/
+*.zip
+*.tmp
+*.bak
+__pycache__/
+docs/evidence/*.import

@@ -1,0 +1,424 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] first_scan_filesystem | Started Inicialização do Projeto (5 steps)
+[   0% ] first_scan_filesystem | Escaneando estrutura de arquivos...
+[  16% ] first_scan_filesystem | Carregando nomes de classe globais...
+[  33% ] first_scan_filesystem | Verificando GDExtensions...
+[  50% ] first_scan_filesystem | Criando scripts autoload...
+[  66% ] first_scan_filesystem | Inicializando plugins...
+[  83% ] first_scan_filesystem | Iniciando escaneamento de arquivos...
+[ DONE ] first_scan_filesystem
+
+[   0% ] update_scripts_classes | Started Registrando classes globais... (78 steps)
+[   0% ] update_scripts_classes | 
+[   1% ] update_scripts_classes | 
+[   2% ] update_scripts_classes | 
+[   3% ] update_scripts_classes | 
+[   5% ] update_scripts_classes | 
+[   6% ] update_scripts_classes | 
+[   7% ] update_scripts_classes | AethelActorPresentationContract
+[   8% ] update_scripts_classes | AethelCharacterVisual
+[  10% ] update_scripts_classes | AethelCharacterVisualDefinition
+[  11% ] update_scripts_classes | AethelClassDefinition
+[  12% ] update_scripts_classes | AethelEquipmentVisual
+[  13% ] update_scripts_classes | AethelAudioManager
+[  15% ] update_scripts_classes | 
+[  16% ] update_scripts_classes | AethelCharacterStats
+[  17% ] update_scripts_classes | 
+[  18% ] update_scripts_classes | AethelSettings
+[  20% ] update_scripts_classes | AethelInput
+[  21% ] update_scripts_classes | AethelProgressionManager
+[  22% ] update_scripts_classes | AethelSavePaths
+[  24% ] update_scripts_classes | AethelAffixData
+[  25% ] update_scripts_classes | AethelDroppedItem
+[  26% ] update_scripts_classes | AethelInventoryManager
+[  27% ] update_scripts_classes | AethelInventoryView
+[  29% ] update_scripts_classes | AethelItemCatalog
+[  30% ] update_scripts_classes | AethelItemData
+[  31% ] update_scripts_classes | AethelItemIcons
+[  32% ] update_scripts_classes | AethelItemInstance
+[  34% ] update_scripts_classes | AethelLootGenerator
+[  35% ] update_scripts_classes | AethelNPCController
+[  36% ] update_scripts_classes | AethelSkillData
+[  37% ] update_scripts_classes | AethelSkillTree
+[  39% ] update_scripts_classes | AethelDialogueView
+[  40% ] update_scripts_classes | AethelOrnament
+[  41% ] update_scripts_classes | AethelUI
+[  43% ] update_scripts_classes | AethelCharacterPanel
+[  44% ] update_scripts_classes | AethelGlobe
+[  45% ] update_scripts_classes | AethelHUDManager
+[  46% ] update_scripts_classes | AethelInventoryItemButton
+[  48% ] update_scripts_classes | AethelItemTooltip
+[  49% ] update_scripts_classes | 
+[  50% ] update_scripts_classes | AethelMinimap
+[  51% ] update_scripts_classes | AethelOptionsPanel
+[  53% ] update_scripts_classes | AethelPauseMenu
+[  54% ] update_scripts_classes | AethelExploration
+[  55% ] update_scripts_classes | AethelRegionLevel
+[  56% ] update_scripts_classes | AethelRegionManager
+[  58% ] update_scripts_classes | 
+[  59% ] update_scripts_classes | 
+[  60% ] update_scripts_classes | 
+[  62% ] update_scripts_classes | 
+[  63% ] update_scripts_classes | 
+[  64% ] update_scripts_classes | 
+[  65% ] update_scripts_classes | 
+[  67% ] update_scripts_classes | 
+[  68% ] update_scripts_classes | 
+[  69% ] update_scripts_classes | 
+[  70% ] update_scripts_classes | 
+[  72% ] update_scripts_classes | 
+[  73% ] update_scripts_classes | 
+[  74% ] update_scripts_classes | 
+[  75% ] update_scripts_classes | 
+[  77% ] update_scripts_classes | 
+[  78% ] update_scripts_classes | 
+[  79% ] update_scripts_classes | 
+[  81% ] update_scripts_classes | 
+[  82% ] update_scripts_classes | 
+[  83% ] update_scripts_classes | 
+[  84% ] update_scripts_classes | 
+[  86% ] update_scripts_classes | 
+[  87% ] update_scripts_classes | 
+[  88% ] update_scripts_classes | 
+[  89% ] update_scripts_classes | 
+[  91% ] update_scripts_classes | 
+[  92% ] update_scripts_classes | 
+[  93% ] update_scripts_classes | 
+[  94% ] update_scripts_classes | 
+[  96% ] update_scripts_classes | 
+[  97% ] update_scripts_classes | 
+[ DONE ] update_scripts_classes
+
+[   0% ] _update_scan_actions | Started Escaneando ações... (105 steps)
+[   0% ] _update_scan_actions | annotated_map.svg
+[   0% ] _update_scan_actions | bronze_shard.svg
+[   1% ] _update_scan_actions | chain_boots.svg
+[   2% ] _update_scan_actions | chain_gloves.svg
+[   3% ] _update_scan_actions | cloth_sash.svg
+[   4% ] _update_scan_actions | ether_ring.svg
+[   5% ] _update_scan_actions | hand_axe.svg
+[   6% ] _update_scan_actions | hp_large.svg
+[   7% ] _update_scan_actions | hp_medium.svg
+[   8% ] _update_scan_actions | hp_small.svg
+[   9% ] _update_scan_actions | iron_axe.svg
+[  10% ] _update_scan_actions | iron_buckler.svg
+[  11% ] _update_scan_actions | iron_helm.svg
+[  12% ] _update_scan_actions | iron_mace.svg
+[  13% ] _update_scan_actions | leather_boots.svg
+[  14% ] _update_scan_actions | leather_cap.svg
+[  15% ] _update_scan_actions | leather_gloves.svg
+[  16% ] _update_scan_actions | long_sword.svg
+[  16% ] _update_scan_actions | mana_large.svg
+[  17% ] _update_scan_actions | mana_medium.svg
+[  18% ] _update_scan_actions | mana_small.svg
+[  19% ] _update_scan_actions | old_shield.svg
+[  20% ] _update_scan_actions | plain_amulet.svg
+[  21% ] _update_scan_actions | plain_ring.svg
+[  22% ] _update_scan_actions | plated_belt.svg
+[  23% ] _update_scan_actions | quest_seal.svg
+[  24% ] _update_scan_actions | quilted_armor.svg
+[  25% ] _update_scan_actions | restorer_cape.svg
+[  26% ] _update_scan_actions | scale_mail.svg
+[  27% ] _update_scan_actions | short_sword.svg
+[  28% ] _update_scan_actions | spiked_flail.svg
+[  29% ] _update_scan_actions | stone_dust.svg
+[  30% ] _update_scan_actions | tower_shield.svg
+[  31% ] _update_scan_actions | unq_amuleto.svg
+[  32% ] _update_scan_actions | unq_anel.svg
+[  33% ] _update_scan_actions | unq_egide.svg
+[  33% ] _update_scan_actions | unq_mascara.svg
+[  34% ] _update_scan_actions | unq_sino.svg
+[  35% ] _update_scan_actions | vigil_letter.svg
+[  36% ] _update_scan_actions | war_axe.svg
+[  37% ] _update_scan_actions | wood_shield.svg
+[  38% ] _update_scan_actions | worn_charm.svg
+[  39% ] _update_scan_actions | worn_fabric.svg
+[  40% ] _update_scan_actions | doma.svg
+[  41% ] _update_scan_actions | maera.svg
+[  42% ] _update_scan_actions | cleave.svg
+[  43% ] _update_scan_actions | guard.svg
+[  44% ] _update_scan_actions | strike.svg
+[  45% ] _update_scan_actions | aethel_portal.svg
+[  46% ] _update_scan_actions | globe_frame.png
+[  47% ] _update_scan_actions | globe_liquid.png
+[  48% ] _update_scan_actions | ground_stone.png
+[  49% ] _update_scan_actions | fix01-dead.png
+[  50% ] _update_scan_actions | fix01-moving.png
+[  50% ] _update_scan_actions | fix01-restored.png
+[  51% ] _update_scan_actions | fase27-map_01-1280x720.png
+[  52% ] _update_scan_actions | doma.png
+[  53% ] _update_scan_actions | fase23-comparison-1280x720.png
+[  54% ] _update_scan_actions | fase23-comparison-1920x1080.png
+[  55% ] _update_scan_actions | fase23-icon-catalog.png
+[  56% ] _update_scan_actions | fase23-loot-inventory-1280x720.png
+[  57% ] _update_scan_actions | fase23-loot-inventory-1920x1080.png
+[  58% ] _update_scan_actions | fase24-dialogue-1280x720.png
+[  59% ] _update_scan_actions | fase24-dialogue-1920x1080.png
+[  60% ] _update_scan_actions | fase24-shop-1280x720.png
+[  61% ] _update_scan_actions | fase24-shop-1920x1080.png
+[  62% ] _update_scan_actions | fase24-workshop-1280x720.png
+[  63% ] _update_scan_actions | fase24-workshop-1920x1080.png
+[  64% ] _update_scan_actions | fase25-encounter-1280x720.png
+[  65% ] _update_scan_actions | fase25-encounter-1920x1080.png
+[  66% ] _update_scan_actions | fase25-filter-1280x720.png
+[  66% ] _update_scan_actions | fase25-filter-1920x1080.png
+[  67% ] _update_scan_actions | fase25-loot-1280x720.png
+[  68% ] _update_scan_actions | fase25-loot-1920x1080.png
+[  69% ] _update_scan_actions | fase26-diario.png
+[  70% ] _update_scan_actions | fase26-ferreiro-tooltip.png
+[  71% ] _update_scan_actions | fase26-hud-1280x720.png
+[  72% ] _update_scan_actions | fase26-hud-1600x900.png
+[  73% ] _update_scan_actions | fase26-hud-1920x1080.png
+[  74% ] _update_scan_actions | fase26-inventario-tooltip.png
+[  75% ] _update_scan_actions | fase26-pausa.png
+[  76% ] _update_scan_actions | fase27-arquivo-mapa-expandido.png
+[  77% ] _update_scan_actions | fase27-map_01-1280x720.png
+[  78% ] _update_scan_actions | fase27-map_01-1920x1080.png
+[  79% ] _update_scan_actions | fase27-map_02-1280x720.png
+[  80% ] _update_scan_actions | fase27-map_02-1920x1080.png
+[  81% ] _update_scan_actions | fase27-map_03-1280x720.png
+[  82% ] _update_scan_actions | fase27-map_03-1920x1080.png
+[  83% ] _update_scan_actions | fase27-map_04-1280x720.png
+[  83% ] _update_scan_actions | fase27-map_04-1920x1080.png
+[  84% ] _update_scan_actions | fase27-retorno-doma.png
+[  85% ] _update_scan_actions | fase27-xp-parcial-1280x720.png
+[  86% ] _update_scan_actions | fase27-xp-parcial-1920x1080.png
+[  87% ] _update_scan_actions | gothic-components-1280x720.png
+[  88% ] _update_scan_actions | gothic-components-1920x1080.png
+[  89% ] _update_scan_actions | gothic-hud-1280x720.png
+[  90% ] _update_scan_actions | gothic-hud-1920x1080.png
+[  91% ] _update_scan_actions | gothic-inventory-1280x720.png
+[  92% ] _update_scan_actions | guarda-ativa.png
+[  93% ] _update_scan_actions | hud-1280x720.png
+[  94% ] _update_scan_actions | hud-1920x1080.png
+[  95% ] _update_scan_actions | inventario-personagem.png
+[  96% ] _update_scan_actions | pausa.png
+[  97% ] _update_scan_actions | release-fase20-2.png
+[  98% ] _update_scan_actions | release-validado.png
+[ DONE ] _update_scan_actions
+
+[   0% ] reimport | Started (Re)Importando Recursos (105 steps)
+[   0% ] reimport | Preparando arquivos para reimportação...
+[   0% ] reimport | Preparando arquivos para reimportação...
+[   1% ] reimport | Preparando arquivos para reimportação...
+[   2% ] reimport | Preparando arquivos para reimportação...
+[   3% ] reimport | Preparando arquivos para reimportação...
+[   4% ] reimport | Preparando arquivos para reimportação...
+[   5% ] reimport | Preparando arquivos para reimportação...
+[   6% ] reimport | Preparando arquivos para reimportação...
+[   7% ] reimport | Preparando arquivos para reimportação...
+[   8% ] reimport | Preparando arquivos para reimportação...
+[   9% ] reimport | Preparando arquivos para reimportação...
+[  10% ] reimport | Preparando arquivos para reimportação...
+[  11% ] reimport | Preparando arquivos para reimportação...
+[  12% ] reimport | Preparando arquivos para reimportação...
+[  13% ] reimport | Preparando arquivos para reimportação...
+[  14% ] reimport | Preparando arquivos para reimportação...
+[  15% ] reimport | Preparando arquivos para reimportação...
+[  16% ] reimport | Preparando arquivos para reimportação...
+[  16% ] reimport | Preparando arquivos para reimportação...
+[  17% ] reimport | Preparando arquivos para reimportação...
+[  18% ] reimport | Preparando arquivos para reimportação...
+[  19% ] reimport | Preparando arquivos para reimportação...
+[  20% ] reimport | Preparando arquivos para reimportação...
+[  21% ] reimport | Preparando arquivos para reimportação...
+[  22% ] reimport | Preparando arquivos para reimportação...
+[  23% ] reimport | Preparando arquivos para reimportação...
+[  24% ] reimport | Preparando arquivos para reimportação...
+[  25% ] reimport | Preparando arquivos para reimportação...
+[  26% ] reimport | Preparando arquivos para reimportação...
+[  27% ] reimport | Preparando arquivos para reimportação...
+[  28% ] reimport | Preparando arquivos para reimportação...
+[  29% ] reimport | Preparando arquivos para reimportação...
+[  30% ] reimport | Preparando arquivos para reimportação...
+[  31% ] reimport | Preparando arquivos para reimportação...
+[  32% ] reimport | Preparando arquivos para reimportação...
+[  33% ] reimport | Preparando arquivos para reimportação...
+[  33% ] reimport | Preparando arquivos para reimportação...
+[  34% ] reimport | Preparando arquivos para reimportação...
+[  35% ] reimport | Preparando arquivos para reimportação...
+[  36% ] reimport | Preparando arquivos para reimportação...
+[  37% ] reimport | Preparando arquivos para reimportação...
+[  38% ] reimport | Preparando arquivos para reimportação...
+[  39% ] reimport | Preparando arquivos para reimportação...
+[  40% ] reimport | Preparando arquivos para reimportação...
+[  41% ] reimport | Preparando arquivos para reimportação...
+[  42% ] reimport | Preparando arquivos para reimportação...
+[  43% ] reimport | Preparando arquivos para reimportação...
+[  44% ] reimport | Preparando arquivos para reimportação...
+[  45% ] reimport | Preparando arquivos para reimportação...
+[  46% ] reimport | Preparando arquivos para reimportação...
+[  47% ] reimport | Preparando arquivos para reimportação...
+[  48% ] reimport | Preparando arquivos para reimportação...
+[  49% ] reimport | Preparando arquivos para reimportação...
+[  50% ] reimport | Preparando arquivos para reimportação...
+[  50% ] reimport | Preparando arquivos para reimportação...
+[  51% ] reimport | Preparando arquivos para reimportação...
+[  52% ] reimport | Preparando arquivos para reimportação...
+[  53% ] reimport | Preparando arquivos para reimportação...
+[  54% ] reimport | Preparando arquivos para reimportação...
+[  55% ] reimport | Preparando arquivos para reimportação...
+[  56% ] reimport | Preparando arquivos para reimportação...
+[  57% ] reimport | Preparando arquivos para reimportação...
+[  58% ] reimport | Preparando arquivos para reimportação...
+[  59% ] reimport | Preparando arquivos para reimportação...
+[  60% ] reimport | Preparando arquivos para reimportação...
+[  61% ] reimport | Preparando arquivos para reimportação...
+[  62% ] reimport | Preparando arquivos para reimportação...
+[  63% ] reimport | Preparando arquivos para reimportação...
+[  64% ] reimport | Preparando arquivos para reimportação...
+[  65% ] reimport | Preparando arquivos para reimportação...
+[  66% ] reimport | Preparando arquivos para reimportação...
+[  66% ] reimport | Preparando arquivos para reimportação...
+[  67% ] reimport | Preparando arquivos para reimportação...
+[  68% ] reimport | Preparando arquivos para reimportação...
+[  69% ] reimport | Preparando arquivos para reimportação...
+[  70% ] reimport | Preparando arquivos para reimportação...
+[  71% ] reimport | Preparando arquivos para reimportação...
+[  72% ] reimport | Preparando arquivos para reimportação...
+[  73% ] reimport | Preparando arquivos para reimportação...
+[  74% ] reimport | Preparando arquivos para reimportação...
+[  75% ] reimport | Preparando arquivos para reimportação...
+[  76% ] reimport | Preparando arquivos para reimportação...
+[  77% ] reimport | Preparando arquivos para reimportação...
+[  78% ] reimport | Preparando arquivos para reimportação...
+[  79% ] reimport | Preparando arquivos para reimportação...
+[  80% ] reimport | Preparando arquivos para reimportação...
+[  81% ] reimport | Preparando arquivos para reimportação...
+[  82% ] reimport | Preparando arquivos para reimportação...
+[  83% ] reimport | Preparando arquivos para reimportação...
+[  83% ] reimport | Preparando arquivos para reimportação...
+[  84% ] reimport | Preparando arquivos para reimportação...
+[  85% ] reimport | Preparando arquivos para reimportação...
+[  86% ] reimport | Preparando arquivos para reimportação...
+[  87% ] reimport | Preparando arquivos para reimportação...
+[  88% ] reimport | Preparando arquivos para reimportação...
+[  89% ] reimport | Preparando arquivos para reimportação...
+[  90% ] reimport | Preparando arquivos para reimportação...
+[  91% ] reimport | Preparando arquivos para reimportação...
+[  92% ] reimport | Preparando arquivos para reimportação...
+[  93% ] reimport | Preparando arquivos para reimportação...
+[  94% ] reimport | Preparando arquivos para reimportação...
+[  95% ] reimport | Preparando arquivos para reimportação...
+[  96% ] reimport | Preparando arquivos para reimportação...
+[  97% ] reimport | Preparando arquivos para reimportação...
+[  98% ] reimport | Preparando arquivos para reimportação...
+[   0% ] reimport | Executando operações pré-reimportação...
+[   0% ] reimport | fase26-hud-1920x1080.png
+[   0% ] reimport | fase26-hud-1600x900.png
+[   1% ] reimport | fase26-hud-1280x720.png
+[   2% ] reimport | fase26-ferreiro-tooltip.png
+[   3% ] reimport | fase26-diario.png
+[   4% ] reimport | fase25-loot-1920x1080.png
+[   5% ] reimport | fase25-loot-1280x720.png
+[   6% ] reimport | fase25-filter-1920x1080.png
+[   7% ] reimport | fase25-filter-1280x720.png
+[   8% ] reimport | fase25-encounter-1920x1080.png
+[   9% ] reimport | fase25-encounter-1280x720.png
+[  10% ] reimport | fase24-workshop-1920x1080.png
+[  11% ] reimport | fase24-workshop-1280x720.png
+[  12% ] reimport | fase24-shop-1920x1080.png
+[  13% ] reimport | fase24-shop-1280x720.png
+[  14% ] reimport | fase24-dialogue-1920x1080.png
+[  15% ] reimport | fase24-dialogue-1280x720.png
+[  16% ] reimport | fase23-loot-inventory-1920x1080.png
+[  16% ] reimport | fase23-loot-inventory-1280x720.png
+[  17% ] reimport | fase23-icon-catalog.png
+[  18% ] reimport | fase23-comparison-1920x1080.png
+[  19% ] reimport | fase23-comparison-1280x720.png
+[  20% ] reimport | doma.png
+[  21% ] reimport | fase27-map_01-1280x720.png
+[  22% ] reimport | fix01-restored.png
+[  23% ] reimport | fix01-moving.png
+[  24% ] reimport | release-validado.png
+[  25% ] reimport | release-fase20-2.png
+[  26% ] reimport | pausa.png
+[  27% ] reimport | inventario-personagem.png
+[  28% ] reimport | hud-1920x1080.png
+[  29% ] reimport | hud-1280x720.png
+[  30% ] reimport | guarda-ativa.png
+[  31% ] reimport | gothic-inventory-1280x720.png
+[  32% ] reimport | gothic-hud-1920x1080.png
+[  33% ] reimport | gothic-hud-1280x720.png
+[  33% ] reimport | gothic-components-1920x1080.png
+[  34% ] reimport | gothic-components-1280x720.png
+[  35% ] reimport | fase27-xp-parcial-1920x1080.png
+[  36% ] reimport | fase27-xp-parcial-1280x720.png
+[  37% ] reimport | fase27-retorno-doma.png
+[  38% ] reimport | fase27-map_04-1920x1080.png
+[  39% ] reimport | fase27-map_04-1280x720.png
+[  40% ] reimport | fase27-map_03-1920x1080.png
+[  41% ] reimport | fase27-map_03-1280x720.png
+[  42% ] reimport | fase27-map_02-1920x1080.png
+[  43% ] reimport | fase27-map_02-1280x720.png
+[  44% ] reimport | fase27-map_01-1920x1080.png
+[  45% ] reimport | fase27-map_01-1280x720.png
+[  46% ] reimport | fase27-arquivo-mapa-expandido.png
+[  47% ] reimport | fase26-pausa.png
+[  48% ] reimport | fase26-inventario-tooltip.png
+[  49% ] reimport | quest_seal.svg
+[  50% ] reimport | plated_belt.svg
+[  50% ] reimport | plain_ring.svg
+[  51% ] reimport | plain_amulet.svg
+[  52% ] reimport | old_shield.svg
+[  53% ] reimport | mana_small.svg
+[  54% ] reimport | mana_medium.svg
+[  55% ] reimport | mana_large.svg
+[  56% ] reimport | long_sword.svg
+[  57% ] reimport | leather_gloves.svg
+[  58% ] reimport | leather_cap.svg
+[  59% ] reimport | leather_boots.svg
+[  60% ] reimport | iron_mace.svg
+[  61% ] reimport | iron_helm.svg
+[  62% ] reimport | iron_buckler.svg
+[  63% ] reimport | iron_axe.svg
+[  64% ] reimport | hp_small.svg
+[  65% ] reimport | hp_medium.svg
+[  66% ] reimport | hp_large.svg
+[  66% ] reimport | hand_axe.svg
+[  67% ] reimport | ether_ring.svg
+[  68% ] reimport | cloth_sash.svg
+[  69% ] reimport | chain_gloves.svg
+[  70% ] reimport | chain_boots.svg
+[  71% ] reimport | bronze_shard.svg
+[  72% ] reimport | annotated_map.svg
+[  73% ] reimport | fix01-dead.png
+[  74% ] reimport | ground_stone.png
+[  75% ] reimport | globe_liquid.png
+[  76% ] reimport | globe_frame.png
+[  77% ] reimport | aethel_portal.svg
+[  78% ] reimport | strike.svg
+[  79% ] reimport | guard.svg
+[  80% ] reimport | cleave.svg
+[  81% ] reimport | maera.svg
+[  82% ] reimport | doma.svg
+[  83% ] reimport | worn_fabric.svg
+[  83% ] reimport | worn_charm.svg
+[  84% ] reimport | wood_shield.svg
+[  85% ] reimport | war_axe.svg
+[  86% ] reimport | vigil_letter.svg
+[  87% ] reimport | unq_sino.svg
+[  88% ] reimport | unq_mascara.svg
+[  89% ] reimport | unq_egide.svg
+[  90% ] reimport | unq_anel.svg
+[  91% ] reimport | unq_amuleto.svg
+[  92% ] reimport | tower_shield.svg
+[  93% ] reimport | stone_dust.svg
+[  94% ] reimport | spiked_flail.svg
+[  95% ] reimport | short_sword.svg
+[  96% ] reimport | scale_mail.svg
+[  97% ] reimport | restorer_cape.svg
+[  98% ] reimport | quilted_armor.svg
+[  99% ] reimport | Finalizando Importação de Recursos...
+[ DONE ] reimport
+
+[   0% ] reimport | Started (Re)Importando Recursos (105 steps)
+[   0% ] reimport | Executando operações pós-reimportação...
+[ DONE ] reimport
+
+[   0% ] loading_editor_layout | Started Carregando editor (5 steps)
+[   0% ] loading_editor_layout | Carregando layout do editor...
+[  16% ] loading_editor_layout | Carregando abas...
+[ DONE ] loading_editor_layout
+

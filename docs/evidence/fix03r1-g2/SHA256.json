@@ -1,0 +1,18 @@
+{
+  "comparison.json": "302ad44c60701f1b32804f556b16350772997383e666b4f2d5a673ce969aa35b",
+  "existing-damage.log": "0b163510fb36eb1f2492d5bdd2150f685144fc8263d0f8f038553eed974407f5",
+  "existing-fix03.log": "d3e3dd6db80b9b47d1ab3fb7f5705864b7ce9d19034e99f327ed0b0d531c679e",
+  "original-exe-smoke.log": "018803b89f304a31021b5a8d46b97e609c76b8b3719cfaf2ff072d66da14397a",
+  "pck-engine-headless/engine.log": "4fd27658d0f108b1188fee0a32457106106ee5abe662c6a7fd047b02616efcf6",
+  "pck-engine-headless/trace.json": "22ac969a2575c1026cbaf99c7fddffe7057d14ac4102717adf4c33669575f7a2",
+  "pck-engine-render/01-one-anchor.png": "36140869e66bd0d59216e7370fcd02fced7ca372f187fbbf25ab6c29afe74fd3",
+  "pck-engine-render/02-peaceful-menu.png": "cac71a619090b8b04135560303ad368e13d05df19f48bd2c7ff9fe82eb569049",
+  "pck-engine-render/04-controlled-chase.png": "2085d25893e9c4f28c438c30c06a359965936952295d3f1d3f16622118bd0897",
+  "pck-engine-render/05-after-threat.png": "31a83198affcdb76a7487516c03dbdf02b08bef36dafaf83537154eeb0f40d4b",
+  "pck-engine-render/05-live-after-threat.png": "00f724ca68a6e8b3d32dc501dd8f195fbebc8f1a6ab60549fa4785b1a56dc722",
+  "pck-engine-render/06-authored-anchor.png": "e4abd02fb1a2b7a1f30cbc0c0a70ababc96e6bd997af025f9c85c0ad4ded9342",
+  "pck-engine-render/engine.log": "0130f905e655c7a51ec38100569e2fd3de65f6f88c51b1fb099e3efe2cc7809f",
+  "pck-engine-render/trace.json": "f9e3eb194b4d55ab76a925c61ebc090b1c36dd6fec2a2f7c102632e7cbf53d6f",
+  "source-headless/engine.log": "bdb6b09ae602099a3d1cf8a1bd8b2c401c90f8ebbd1c4fcb705b02a4b59bd505",
+  "source-headless/trace.json": "62c5bf5bcaea7e626c7056c9b35f6b31c1ddccecba8391ef5c918604ce37aa55"
+}

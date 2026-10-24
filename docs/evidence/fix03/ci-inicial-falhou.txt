@@ -1,0 +1,7 @@
+CI inicial: https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39903685554
+Commit: e1ee8ae27aad44ecc60a6e9d3bf3fecd17ae0394
+FIX03 ANCHORS: 28 checks, 0 failures
+FALHA: agent resumes after map synchronizes
+FIX02 AI: 23 checks, 1 failures
+Process completed with exit code 1.
+Os logs completos estao no artifact test-logs da execucao.

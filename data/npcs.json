@@ -1,0 +1,120 @@
+{
+  "doma": {
+    "name": "Doma Ferren",
+    "role": "Ferreiro de Vigília; preservar sua oficina.",
+    "types": [
+      "narrative",
+      "merchant",
+      "blacksmith"
+    ],
+    "visual": "blacksmith",
+    "animations": [
+      "idle"
+    ],
+    "dialogue": "doma_start",
+    "merchant": "doma",
+    "state": "available",
+    "availability": {
+      "region": "map_01"
+    },
+    "quest_indicator": "",
+    "special_interactions": [
+      "shop"
+    ],
+    "portraits": {
+      "default": "doma",
+      "expressions": {},
+      "states": {},
+      "acts": {}
+    },
+    "id": "doma"
+  },
+  "maera": {
+    "name": "Maera Voss",
+    "role": "Cartógrafa e mentora; desmontar o mercado de futuros.",
+    "types": [
+      "narrative",
+      "quest"
+    ],
+    "visual": "cartographer",
+    "animations": [
+      "idle"
+    ],
+    "dialogue": "maera_start",
+    "merchant": "",
+    "state": "available",
+    "availability": {
+      "region": "map_01"
+    },
+    "quest_indicator": "Investigar o bairro — demonstração",
+    "special_interactions": [
+      "investigation"
+    ],
+    "portraits": {
+      "default": "maera",
+      "expressions": {},
+      "states": {},
+      "acts": {}
+    },
+    "id": "maera"
+  },
+  "teren": {
+    "name": "Teren Hal",
+    "role": "Sineiro sem voz; documentar perdas.",
+    "types": [
+      "narrative",
+      "ambient"
+    ],
+    "visual": "pending",
+    "animations": [],
+    "dialogue": "",
+    "merchant": "",
+    "state": "not_instantiated",
+    "availability": {
+      "region": "map_01"
+    },
+    "quest_indicator": "",
+    "special_interactions": [],
+    "portraits": {},
+    "id": "teren"
+  },
+  "sive": {
+    "name": "Sive",
+    "role": "Jovem de duas histórias; escolher a própria continuidade.",
+    "types": [
+      "narrative",
+      "quest"
+    ],
+    "visual": "pending",
+    "animations": [],
+    "dialogue": "",
+    "merchant": "",
+    "state": "not_instantiated",
+    "availability": {
+      "act": 3
+    },
+    "quest_indicator": "",
+    "special_interactions": [],
+    "portraits": {},
+    "id": "sive"
+  },
+  "iro": {
+    "name": "Iro Sen",
+    "role": "Primeiro Restaurador; fixar uma única realidade.",
+    "types": [
+      "narrative"
+    ],
+    "visual": "pending",
+    "animations": [],
+    "dialogue": "",
+    "merchant": "",
+    "state": "not_instantiated",
+    "availability": {
+      "act": 4
+    },
+    "quest_indicator": "",
+    "special_interactions": [],
+    "portraits": {},
+    "id": "iro"
+  }
+}

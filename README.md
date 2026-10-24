@@ -1,167 +1,190 @@
-# ECHOES OF AETHEL
+# Fix03R2 — feedback das Âncoras de Travessia
 
-### Um ARPG de fantasia sombria sobre realidades que nunca deveriam existir
+Pacote: `EchoesOfAethel-US01-Fix03R2-Windows-x64.zip`. [Relatório R2](docs/BUG_US01_03_FIX03R2.md). Explica ausência de destinos e recusas sem alterar a regra de combate ou a janela de 5 segundos. G2 do Fix03R1 foi reprovado; Fix03R2 aguarda homologação. PR #18 Draft, sem merge.
 
-**Em desenvolvimento · Godot 4 · PC Windows · Single-player · Perspectiva isométrica 2.5D**
+# US-01 Fix03 — Ancoras fora de combate
 
-*Quando futuros que ninguém escolheu começam a existir, quem tem o direito de decidir qual realidade deve permanecer?*
+Entrega atual: EchoesOfAethel-US01-Fix03R2-Windows-x64.zip. Veja [regra aprovada e testes](docs/BUG_US01_03_FIX03.md). Fix01/Fix02 preservados; PR #18 Draft.
+
+# US-01 Fix02 — percepção e navegação inimiga
+
+Entrega atual: EchoesOfAethel-US01-Fix02-Windows-x64.zip. Veja [diagnóstico e regressões](docs/BUG_US01_02_FIX02.md). Fix01 preservado. PR #18 Draft; homologação gráfica Fix02 depende do PO.
+
+# US-01 Fix01 — load após morte
+
+Entrega atual: EchoesOfAethel-US01-Fix01-Windows-x64.zip. Veja [diagnóstico e regressão](docs/BUG_US01_01_FIX01.md). PR #18 Draft; homologação pendente do PO.
+
+# US-01 — baseline Windows para revisão
+
+PR #18 Draft; Godot 4.7.2 exata. Consulte [auditoria US-01](docs/US01_BASELINE_AUDIT.md) e [instruções](docs/README_TESTE_US01.txt). G2 depende do Product Owner.
+
+# Fase 27 — primeira sequência de mundo explorável
+
+Windows 0.27.0 / Godot 4.7.2. Cenas iniciais distintas: **Vigília ⇄ Bairro que Faltava ⇄ Pátio dos Endereços ⇄ Arquivo das Portas Seladas**. Navegação com desvios e altura, hub seguro, fog/minimapa por piso e persistência integrada. Mantém os sistemas e correções da Fase26. HUD enxuta com barras superiores e barra única de ações, conforme a nova proposta.
+
+Extraia o ZIP completo e abra `jogo/EchoesOfAethel-Fase27.exe` com o PCK ao lado. Fonte em `fonte/project.godot`. Aceite a investigação de Maera; use E/F nas entradas e objetos, M para ampliar/ocultar minimapa, F5/F9 para salvar/carregar e I/Del para mochila/descarte.
+
+Mapas em greybox/estrutura inicial, sem chefes ou campanha definitivos. [Auditoria](docs/FASE27_AUDIT.md), [arquitetura e limites](docs/FASE27_WORLD.md), [roteiro](docs/TESTING.md). Teste gráfico automatizado e inspeção de capturas não substituem playtest humano, pendente. PR Draft sem merge automático.
 
 ---
 
-## O jogo
+# Fase 26 — HUD, menus e feedback integrados
 
-**Echoes of Aethel** é um Action RPG *hack and slash* de fantasia sombria inspirado no ritmo de combate, progressão e exploração dos ARPGs clássicos, especialmente **Diablo II: Resurrected**, mas com universo, personagens, mecânicas narrativas e identidade próprios.
+Versão Windows 0.26.0, Godot 4.7.2. Continua a Fase 25, preservando combate, inventário multicélula e save v6. HUD por sinais, globos Vida/Éter, Fôlego, habilidades, efeitos, alvos, XP, diário U, opções persistentes e cinco canais de áudio.
 
-A direção técnica é **3D com câmera ortográfica inclinada** (apresentação 2.5D), cenários exploráveis, combate em tempo real, equipamentos e escolhas que repercutem na campanha.
+Corrigida a oscilação dos tooltips na loja e mochila. Selecione um item da mochila e use **Largar [Del]**, ou dê foco nele e pressione Delete: a pilha inteira vai ao chão e pode ser recolhida. Itens de missão/protegidos são bloqueados; desequipe antes de largar.
 
-> **Estado público do repositório (20/10/2026):** este repositório contém a documentação do projeto, mas **o código executável da Godot ainda não foi integrado à branch `main`**. Há protótipos experimentais em ZIP até a Fase 18, sem execução integrada comprovada na Godot 4.7.2; a integridade dos ZIPs não equivale a validação do jogo. Os 15 mapas **ainda não estão implementados**. Não há build pública homologada.
+Extraia o ZIP completo e abra `jogo/EchoesOfAethel-Fase26.exe`, mantendo o PCK ao lado. Fonte em `fonte/project.godot`. [Teste](docs/TESTING.md), [arquitetura e limites](docs/FASE26_HUD_EVENTS.md), [auditoria](docs/FASE26_AUDIT.md). Arte/sons provisórios; playtest humano pendente. PR Draft sem merge automático.
 
-## História — O Direito ao Impossível
+---
 
-Em Aethel, certas escolhas jamais realizadas deixam consequências reais. Esses vestígios, chamados **Ecos**, podem transformar ruas, memórias e pessoas. Um distrito surge de madrugada onde antes havia um vazio; navios chegam de expedições que ninguém realizou; crianças lembram aniversários de vidas incompatíveis.
+# Fase 25 — exploração, loot e interações
 
-O jogador assume o papel de um **Restaurador**, alguém capaz de encontrar as âncoras materiais desses acontecimentos e estabilizar o mundo. Cada intervenção irreversível, porém, cobra uma memória verdadeira e identificável do protagonista. Dependendo da âncora e das condições da missão, o Restaurador pode destruir, selar ou negociar coexistência entre realidades.
+Versão Windows 0.25.0, Godot 4.7.2. Base: Fase 24 / PR #12. Loot por tabelas, cinco raridades, filtro, campeão e elite com dois lacaios, contêineres, altar, poço e Âncoras de Travessia funcionais. Mortes, fontes consumidas, âncoras e loot pendente persistem no mesmo save do personagem.
 
-Não existe apenas um tirano a derrotar: facções disputam o poder de definir **quem merece existir**. A história é contada por ambientes, NPCs, itens, missões e decisões persistentes.
+Extraia o ZIP e abra `jogo/EchoesOfAethel-Fase25.exe` com PCK junto. Fonte: `fonte/project.godot`. Clique/E/F interage; Alt mostra nomes; O filtra; I inventário; F5/F9 salva/carrega. Aceite a investigação provisória com Maera para sair ao Bairro. [Roteiro](docs/TESTING.md), [auditoria](docs/FASE25_AUDIT.md), [regras e limites](docs/FASE25_EXPLORATION.md).
 
-### Personagens principais
+Área hostil, arte e sons são provisórios. Campanha e playtest humano continuam pendentes. PR Draft, sem merge automático.
 
-| Personagem | Função narrativa |
-| --- | --- |
-| **Maera Voss** | Cartógrafa exilada e mentora; ajudou a disseminar a cartografia de futuros proibidos. |
-| **Teren Hal** | Sineiro sem voz; documenta o preço das escolhas. |
-| **Sive** | Jovem com duas histórias igualmente reais; luta por autonomia. |
-| **Iro Sen** | Primeiro Restaurador; quer fixar uma realidade única para impedir novas rupturas. |
-| **Doma Ferren** | Ferreiro de Vigília, cuja história familiar foi alterada por um Eco. |
+---
 
-## Campanha — 15 mapas, incluindo 3 dungeons
+## Histórico da Fase 24
 
-**Escopo fechado:** 4 atos, **12 regiões não-dungeon** (incluindo 3 hubs) e **3 dungeons**. A numeração abaixo é também o identificador de conteúdo planejado (`map_01` a `map_15`).
+# Fase 24 — NPCs, diálogo e comércio integrado
 
-| ID | Ato | Local | Tipo |
-| --- | --- | --- | --- |
-| 01 | I — O Bairro que Faltava | **Vigília — Praça dos Sinos** | Hub |
-| 02 | I | Bairro que Faltava | Exterior |
-| 03 | I | Pátio dos Endereços | Exterior |
-| 04 | I | **Arquivo das Portas Seladas** | **Dungeon 1** |
-| 05 | II — Maré de Vidro | Estrada dos Retornos | Exterior |
-| 06 | II | **Cais de Sal** | Hub |
-| 07 | II | Estaleiro de Vidro | Exterior |
-| 08 | II | **Porão da Travessia Nula** | **Dungeon 2** |
-| 09 | III — Jardim dos Ausentes | Várzea das Promessas | Exterior |
-| 10 | III | **Jardim de Cobre** | Hub |
-| 11 | III | Pomar dos Nomes | Exterior |
-| 12 | III | Estufa das Causas | Exterior / chefe |
-| 13 | IV — Atlas do Nunca | Fenda dos Registros | Exterior |
-| 14 | IV | Observatório da Linha Única | Exterior |
-| 15 | IV | **Atlas do Nunca** | **Dungeon 3 / final** |
+Versão Windows 0.24.0, Godot 4.7.2. Parte da Fase 23 (PR #11), preservando inventário, equipamentos e combate. Doma tem diálogo ramificado, oficina provisória, estoque determinístico persistente e compra/venda reais; Maera apresenta uma investigação provisória com recompensa única. A missão canônica completa permanece pendente.
 
-**Chefes principais:** Porteiro das Portas Seladas, Almirante Sem Travessia, Jardineiro das Causas e Cartógrafo sem Norte.
+Execute `jogo/EchoesOfAethel-Fase24.exe` com PCK junto após extrair o ZIP. Fonte: `fonte/project.godot`. E/F conversa; clique em NPC distante aproxima; L abre loja perto de Doma; I mochila; F5/F9 salva/carrega. [Roteiro](docs/TESTING.md), [auditoria](docs/FASE24_AUDIT.md), [arquitetura e limites](docs/FASE24_NPCS.md). Arte procedural e retratos são provisórios. Playtest humano pendente. PR Draft, sem merge automático.
 
-A campanha foi concebida com **três conclusões** — *Linha Única*, *Mundo Poroso* e *Atlas Aberto* — condicionadas por escolhas anteriores. Esses desfechos são planejamento narrativo, não funcionalidades já implementadas.
+---
 
-## Classes jogáveis planejadas
+## Histórico da Fase 23
 
-| Classe | Especialidade |
-| --- | --- |
-| **Bastião do Crepúsculo** | Resistência, machado e escudo, controle corpo a corpo. |
-| **Tecelã do Éter** | Magia ofensiva, manipulação de área e controle. |
-| **Sentinela das Cinzas** | Arco, mobilidade, ataques precisos e armadilhas. |
-| **Invocadora dos Véus** | Invocações, espíritos e enfraquecimentos. |
-| **Inquisidor da Aurora** | Combate híbrido, proteção e julgamento. |
+# ECHOES OF AETHEL
 
-**Prioridade de implementação:** Bastião. As demais classes ainda dependem de implementação e balanceamento.
+## Fase 23 — inventário funcional da vertical slice
 
-## Sistemas do ARPG
+Versão **0.23.0**, Godot **4.7.2.stable.official.ed1daf0bf**, branch `feat/fase23-inventario` sobre a fundação visual do PR #10. A `main` e os PRs anteriores não foram mesclados automaticamente. [Auditoria e implementação](docs/FASE23_INVENTORY_AUDIT.md) · [Roteiro de teste atual](docs/TESTING.md).
 
-| Sistema | Situação |
-| --- | --- |
-| Movimento WASD e câmera ortográfica | Protótipo local |
-| Ataque, esquiva e inimigos simples | Protótipo local |
-| Indicadores de dano | Protótipo local; requer regressão |
-| Interação com Maera e missão introdutória | Protótipo experimental |
-| Modelos autorais low-poly para Bastião, Maera e Rasuras | Fase 11 preparada; aguardando teste |
-| Machado, escudo e animação procedural | Fase 11 preparada; aguardando teste |
-| Navegação por clique com `NavigationAgent3D` | Planejado |
-| Inventário em grade e equipamentos persistentes | Protótipos locais das Fases 12–18; visibilidade, coleta e persistência exigem validação em jogo |
-| Loot com raridades, afixos e tabelas | Protótipo local; coleta, geração e interface exigem integração validada |
-| Habilidades e árvore de progressão | Protótipo da Fase 14; efeitos e UI definitivos pendentes |
-| Missões ramificadas e consequências em save | Planejado |
-| 15 mapas e 3 dungeons | Design definido; implementação pendente |
-| Globos de Vida/Éter e Fôlego | Protótipos Fases 12–18; visibilidade em runtime não homologada |\n| Cinemáticas, áudio e interface definitiva | Planejado; scripts experimentais não representam arte final |
+**I/Tab** abre a mochila real: 40 células configuráveis, ícones individuais, quantidades, cinco raridades, seleção/foco, comparação numérica e botão Organizar. Arraste para mover/trocar/equipar/retirar; **M**, setas e Enter movem pelo teclado, Esc cancela. Slots canônicos funcionais, com cinto/talismã legados preservados. Requisitos, ocupação e compatibilidade de mãos são validados antes da transferência; falhas mantêm itens e posições. O mesmo gerenciador, cálculo de atributos, adaptador visual e save v4 continuam em uso.
 
-## Direção visual
+43 ícones vetoriais próprios são **placeholders**; materiais/objetos de missão têm registros reservados, sem novas recompensas ou sistemas de crafting. Comparação mostra deltas do item, separando dano base dos bônus do personagem. Equipamentos 3D usam apenas os modelos procedurais existentes; acessórios não recebem modelos falsos. Conjuntos/encaixes/Sigilos não foram antecipados.
 
-- **Câmera:** ortográfica em ângulo fixo, com leitura isométrica/oblíqua.
-- **Cenários:** geometria 3D, materiais, iluminação e sombras dinâmicas.
-- **Personagens:** visuais autorais com animações e equipamentos; a Fase 11 abandona o FBX externo do Bastião no fluxo principal.
-- **Interface:** HUD 2D independente do mundo (`CanvasLayer`), com vida, recursos, atalhos e feedback de combate.
-- **Atmosfera:** cidades impossíveis, ruínas, arquitetura gótica, iluminação quente em contraste com azuis e violetas espectrais.
+Pacote desta fase: **EchoesOfAethel-Fase23-Windows-x64.zip**. Extraia tudo e abra `jogo/EchoesOfAethel-Fase23.exe` com o PCK junto. Para editar, use o `project.godot` desta branch; no ZIP, `fonte/project.godot`. O workflow **Windows Fase 23** executa treze suítes, exporta e roda o EXE antes de publicar o artefato. Comandos de build permanecem em tools/build_windows.ps1 e tools/smoke_windows.ps1; veja docs/TESTING.md. As seções abaixo preservam o histórico da base anterior.
 
-Ilustrações e mockups produzidos durante a pré-produção **não representam screenshots de funcionalidades implementadas**.
+## Fundação visual gótica — Sino e Limiar
 
-## Engenharia
+Tema reutilizável aplicado à base da Fase 20.2: paleta de carvão/pedra/bronze, texto pergaminho, molduras de cinco raridades, foco visível e painel compacto com Vida/Éter/Fôlego independentes. Tooltips da mochila também abrem por teclado. Componentes de ícone, comparação e diálogo estão preparados para integração futura; retratos e interfaces definitivas continuam pendentes. [Design system, estados, tipografia e limites](docs/GOTHIC_UI_DESIGN_SYSTEM.md).
 
-**Engine-alvo informada pelo projeto:** Godot **4.7.2**. Verificar compatibilidade real no editor antes de anunciar uma versão homologada.
+## Fase 20.2 — base Godot integrada
 
-Arquitetura planejada (migração incremental; não implica existência atual de todos os diretórios):
+Branch `integration/fase20-2-godot`, baseada em `e66f451`, proposta contra `main`. Os PRs #4–8 estão abertos e não mesclados; esta branch preserva sua cadeia de commits e disponibiliza o projeto completo. [Auditoria da Fase 20.2](docs/FASE20_2_INTEGRATION_AUDIT.md).
 
-```text
-res://
-├── assets/
-│   ├── art/
-│   ├── audio/
-│   └── shaders/
-├── src/
-│   ├── core/               # estado e eventos
-│   ├── entities/           # player, NPCs, inimigos e componentes
-│   ├── combat/             # acertos, dano e efeitos
-│   ├── items/              # Resources, inventário e loot
-│   ├── skills/             # dados de habilidades e execução
-│   ├── quests/             # progressão narrativa
-│   ├── persistence/        # saves versionados
-│   └── ui/                 # HUD, menus e acessibilidade
-├── scenes/
-│   ├── maps/               # um mapa carregável por região
-│   └── menus/
-└── data/                   # catálogo de IDs e conteúdo
+Versão do jogo **0.20.2**, engine **4.7.2.stable.official.ed1daf0bf**. Projeto na raiz da branch; no pacote, abra `fonte/project.godot`. Para jogar, abra `jogo/EchoesOfAethel-Fase20.exe` mantendo o PCK junto.
+
+```powershell
+./tools/fetch_godot.ps1
+python tools/fetch_windows_template.py
+./tools/build_windows.ps1 -GodotExe "$pwd/.tools/Godot_v4.7.2-stable_win64_console.exe"
+./tools/smoke_windows.ps1
+python tools/package_windows.py
 ```
 
-**Princípios:** `CharacterBody3D` para movimento físico; `NavigationAgent3D` somente com navegação preparada; lógica de combate desacoplada de animações; `Resource` tipados para itens e habilidades; identificadores estáveis para mapa, NPC, quest e item; saves com versionamento e migração; testes de regressão ao substituir a camada visual.
+O download verifica SHA512 do ZIP oficial da engine; o template verifica CRC e SHA256 fixado. O build recusa outra versão/commit da engine ou hash do template. Dez suítes incluem integridade de cenas/Resources e unicidade de classes; a matriz de clique inclui 1920×1080. O smoke executa o EXE Windows em perfil isolado e verifica dez condições de gameplay, além do marcador do menu e saída correta.
 
-## Expansão de lore, identidade de mapas e combate (em revisão)
+Artefato atual: **EchoesOfAethel-PreAlpha-Windows-x64.zip**, com `jogo/`, `fonte/`, `evidencias/` e manifesto SHA256. Na aba Actions, selecione **Windows PreAlpha Fase 20.2** e baixe o artefato de mesmo nome. O workflow exporta e executa o EXE em Windows; não publica release estável. As seções de estabilização e o CI #4 abaixo registram o histórico da Fase 20.1.
 
-O **PR #3** reúne a especificação aprofundada das três dungeons, uma matriz de identidade para os 15 mapas e o compêndio literário *O Atlas do Nunca* — agora com a Ruptura de Contingência, as âncoras, o elenco, os cinco arquétipos, os quatro atos e os três finais. Os documentos estão na branch de design e **não comprovam cenas, chefes ou sistemas implementados**:
+[Pipeline da Fase 20.2 aprovado](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39515919505) no código a06b725, incluindo execução do EXE em Windows. [Baixar artefato Windows](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39515919505/artifacts/12307887323) · [PR #9 para revisão](https://github.com/Sarhuman/ECHOES-OF-AETHEL/pull/9).
 
-- [O Atlas do Nunca — Compêndio da Realidade Porosa](https://github.com/Sarhuman/ECHOES-OF-AETHEL/blob/design/environmental-narrative-dungeons/docs/LORE_ATLAS_DO_NUNCA.md)
-- [Matriz multissensorial dos 15 mapas](https://github.com/Sarhuman/ECHOES-OF-AETHEL/blob/design/environmental-narrative-dungeons/docs/MAP_IDENTITY_MATRIX.md)
-- [Balanceamento Normal/Pesadelo/Inferno e chefe Porteiro](https://github.com/Sarhuman/ECHOES-OF-AETHEL/blob/design/environmental-narrative-dungeons/docs/COMBAT_BALANCING_AND_PORTEIRO.md)
-- [Direção de arte e narrativa ambiental das dungeons](https://github.com/Sarhuman/ECHOES-OF-AETHEL/blob/design/environmental-narrative-dungeons/docs/ENVIRONMENTAL_STORYTELLING_AND_DUNGEONS.md)
-- [PR #3 — revisão de design](https://github.com/Sarhuman/ECHOES-OF-AETHEL/pull/3)
+Pré-alpha de ARPG de fantasia sombria, single-player, Windows x64, Godot **4.7.2.stable.official.ed1daf0bf**. Cenário 3D com câmera ortográfica inclinada, controle por clique e WASD relativo à câmera.
 
-**Critério para implementar:** validar primeiro Vigília (`map_01`), Bairro que Faltava (`map_02`) e Arquivo das Portas Seladas (`map_04`), com HUD, inventário, missões e save testados em jogo. Multiplicadores de dificuldade e inimigos propostos são hipóteses de balanceamento até passarem por testes.
+Esta branch consolida o **ZIP completo da Fase 20** com os adaptadores das Fases 21 e 22. Não usa o protótipo antigo de Downloads como base. Histórico, fontes e escolha de ancestral: [auditoria](docs/CONSOLIDATION_AUDIT.md) e [manifesto](docs/SOURCE_MANIFEST.json).
 
-## Próximos marcos
+## Estabilização crítica da Fase 20
 
-1. **Estabilizar a Fase 18:** validar parsing na Godot, câmera isométrica, HUD com globos e Fôlego, inventário com itens visíveis, combate, loot e save/load.
-2. **Versionar o projeto executável**, sem arquivos temporários e com licenças de assets revisadas.
-3. **Construir uma vertical slice de três áreas:** Vigília (hub), Bairro que Faltava (exterior) e Arquivo das Portas Seladas (dungeon).
-4. **Modularizar o jogo:** cenas de entidades, combate, inventário, missões e persistência.
-5. **Escalar o conteúdo:** expandir para as 15 regiões somente após estabilidade da vertical slice.
+Branch `fix/fase20-jogabilidade`, baseada na consolidação `596d9e6`. Câmera inicial 12 com zoom 10–18 pela roda, raycast para selecionar inimigos e validar o chão, aproximação limitada ao alcance, F1/F2/F3 com execução direta e estado visível, Doma humano com avental/martelo e ajuda recolhível em H. [Causas, regressões e limites](docs/FASE20_STABILIZATION.md).
 
-## Documentação de design
+As três técnicas já existentes são disponibilizadas como kit de teste desta vertical slice, inclusive ao carregar saves anteriores. Não foram criadas habilidades novas nem declarado balanceamento final; a tela K continua mostrando seus dados e o botão direito repete a última técnica usada. A árvore genérica de progressão continua disponível no componente existente.
 
-A documentação expandida está atualmente em uma **branch de revisão**, não na `main`:
+## Estado real
 
-- [Bíblia narrativa](https://github.com/Sarhuman/ECHOES-OF-AETHEL/blob/feat/original-narrative-foundation/docs/NARRATIVE_BIBLE.md)
-- [Atlas dos 15 mapas](https://github.com/Sarhuman/ECHOES-OF-AETHEL/blob/feat/original-narrative-foundation/docs/WORLD_ATLAS.md)
-- [Mockups de UX e mapas](https://github.com/Sarhuman/ECHOES-OF-AETHEL/blob/feat/original-narrative-foundation/docs/MOCKUPS.md)
-- [Catálogo JSON dos mapas](https://github.com/Sarhuman/ECHOES-OF-AETHEL/blob/feat/original-narrative-foundation/data/maps.json)
-- [PR #1 — documentação narrativa](https://github.com/Sarhuman/ECHOES-OF-AETHEL/pull/1)
-- [PR #2 — preparação de integração Godot](https://github.com/Sarhuman/ECHOES-OF-AETHEL/pull/2)
+| Situação | Conteúdo |
+|---|---|
+| Implementado e testado localmente | Bastião; movimento; ataque e alternância de golpes; bloqueio Q; esquiva; Rasuras; loot; cinco raridades; afixos; mochila; 12 slots; loja; atributos; habilidades; HUD Vida/Éter/Fôlego; missão com Maera; save v4, migração v2/v3 e backup; menu, pausa e opções |
+| Implementado com placeholders | Personagem procedural articulado; estados visuais; variantes de equipamento cadastradas; câmera 35,264°/45° com acompanhamento suave |
+| Validado em execução gráfica | Menu, mundo, HUD em 1280×720, 1366×768 e 1280×800, mochila, personagem, habilidades, loja, pausa e opções |
+| Ainda requer playtest humano | Sensação de combate, percurso por mouse, balanceamento amplo e experiência em outras máquinas |
+| Planejado | Quatro outras classes jogáveis; modelos/rigs/animações finais; áudio de produção; navmesh; dungeon map_04; 15 mapas, três dungeons e três finais completos |
+| CI validado | [Estabilização Windows #4](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39511987807) aprovada: nove suítes, exportação e [artefato Windows](https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/39511987807/artifacts/12306003453) |
 
-## Situação de lançamento
+Vigília (`map_01`) e Bairro que Faltava (`map_02`) compartilham a geometria de teste e mudam NPCs, inimigos e objetivos. Não são dois mapas artísticos finalizados. Não há conteúdo executável do Arquivo das Portas Seladas (`map_04`).
 
-**Pré-alpha / protótipo experimental.** Não há release, instalador ou build final disponível neste repositório. O código local e os assets precisam ser integrados, testados e documentados antes de distribuição.
+## Executar
 
-**Autoria e propriedade intelectual:** este projeto busca uma identidade própria; referências a outros jogos descrevem influências de gênero, não afiliação. Verificar direitos de uso de imagens, modelos, áudio, tipografia e nome antes de publicar comercialmente.
+No pacote Windows, extraia **todo** o ZIP e abra `jogo/EchoesOfAethel-Fase20.exe`. Mantenha o `.pck` junto ao executável. Nenhuma instalação separada da Godot é necessária.
+
+Para editar: importe o **project.godot da raiz deste repositório** na Godot 4.7.2. Execute com F6/F5 conforme a cena escolhida; a cena principal é `scenes/main_menu.tscn`.
+
+## Controles
+
+| Ação | Entrada |
+|---|---|
+| Mover | WASD/setas ou clique esquerdo no chão |
+| Atacar/perseguir | Clique em inimigo; Shift+clique para atacar parado; J para ataque básico |
+| Bloquear | Segurar Q com escudo; bloqueio manual consome Fôlego |
+| Esquivar | Espaço |
+| Habilidade | F1: Golpe; F2: Guarda (novamente cancela); F3: Eco. Barra também executa; botão direito repete a última técnica |
+| Interagir/coletar | E; configurável para F em Opções; clique também coleta drops |
+| Mochila/personagem/habilidades/loja | I ou Tab / C / K / L perto de Doma |
+| Mostrar itens comuns | Alt |
+| Poções | 1–4 |
+| Salvar/carregar | F5 / F9 |
+| Câmera / ajuda | Roda: zoom limitado; H: controles recolhíveis |
+| Pausa | Esc; retomar, salvar, opções, menu e saída |
+| Reiniciar após derrota | R, inicia uma nova sessão |
+
+Ações centralizadas no InputMap (`project.godot`) e em `AethelInput`; opções controlam tela cheia, volume do bus Master, tecla de interação e persistência do zoom. O jogo ainda não possui trilha ou efeitos de áudio finais.
+
+## Testar e exportar
+
+Requer Godot 4.7.2 e Python 3 (biblioteca padrão para obter o template oficial).
+
+```powershell
+python tools/fetch_windows_template.py
+./tools/test.ps1 -GodotExe 'C:/caminho/Godot_v4.7.2-stable_win64_console.exe'
+./tools/build_windows.ps1 -GodotExe 'C:/caminho/Godot_v4.7.2-stable_win64_console.exe'
+python tools/package_windows.py
+```
+
+O template Windows x64 é obtido por intervalos HTTP do pacote oficial, com CRC e SHA256 registrados em `.tools/templates/provenance.json`. A build usa exportação release com `.pck`, não o editor renomeado. Saída em `teste-fase20/`; ZIP final na raiz. CI em `.github/workflows/windows.yml` disponibiliza artefato de pré-alpha, sem publicar release estável.
+
+Os testes usam perfis isolados em `relatorios-fase20/profiles/`; não apagam os saves reais. `--fixed-fps 60` acelera a simulação sem alterar o passo lógico de 1/60 s. Logs e códigos de saída ficam em `relatorios-fase20/`. Resultados e limites em [VALIDATION](docs/VALIDATION.md); roteiro manual em [TESTING](docs/TESTING.md).
+
+## Persistência
+
+Save v4 mantém IDs de itens das fases anteriores e aceita saves v2/v3. Salva personagem, atributos, equipamentos, afixos, cinto, recursos, posição válida, região, habilidade selecionada e missão. Faz escrita temporária e backup `.bak`; dados inválidos tentam recuperar o backup. A posição fora do mapa ou dentro de colisão volta ao ponto inicial da região.
+
+O nome histórico do arquivo continua `aethel_phase13_save.json` no diretório de dados do projeto da Godot. Novo jogo ignora o save existente para a sessão, sem apagá-lo; salvar depois substitui o principal e preserva o anterior em backup. Não é um gerenciador de múltiplos personagens.
+
+## Estrutura
+
+- `scripts/`: mundo, física/combate do Bastião, Rasuras e placeholders procedurais recuperados.
+- `src/core/`: atributos, progressão, InputMap, configurações, caminhos de save e câmera.
+- `src/items/`: catálogo, instâncias, afixos, gerador único de loot e inventário único.
+- `src/characters/`: adaptadores visuais existentes e contratos extensíveis das cinco classes.
+- `src/ui/`, `src/skills/`: HUD, menus, interfaces e habilidades.
+- `scenes/`, `assets/`: cenas 3D e recursos locais; sem dependências de assets remotos.
+- `data/`, `docs/`: catálogo de mapas planejados, cânone, histórico e evidências.
+- `tests/`, `tools/`: regressões, capturas e distribuição reproduzível.
+
+O mundo ainda concentra parte da integração; a modularização foi incremental, preservando os sistemas funcionais da Fase 20. O legado 2D foi retirado do projeto ativo e continua recuperável no ZIP de origem.
+
+## Narrativa e limites
+
+**O Direito ao Impossível:** Ecos materializam consequências de escolhas nunca realizadas. O Restaurador encontra âncoras e decide como estabilizar realidades, pagando com memórias. Maera Voss orienta a missão inicial. A missão deste protótipo não implementa ainda o sistema narrativo de escolhas e custos de memória.
+
+Referências: [bíblia narrativa](docs/NARRATIVE_BIBLE.md), [atlas dos mapas](docs/WORLD_ATLAS.md), [Atlas do Nunca](docs/LORE_ATLAS_DO_NUNCA.md), [identidade dos mapas](docs/MAP_IDENTITY_MATRIX.md). São documentos de design; não representam funcionalidades já implementadas.
+
+Avisos da engine em `licenses/`. Assets procedurais/texturas vieram do pacote fornecido; não foi concluída uma auditoria jurídica para publicação comercial. O repositório não define ainda uma licença geral de redistribuição do jogo. Build não assinada, destinada a testes de pré-alpha.
+
+Fix03R1: viagem bloqueada por 5 segundos monotônicos após dano efetivo de inimigo; dano ambiental não arma a janela. Menu fecha ao receber dano inimigo; hit com ameaça ativa também bloqueia. Homologação G1/G2 pendente do PO.

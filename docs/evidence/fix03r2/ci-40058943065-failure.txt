@@ -1,0 +1,9 @@
+https://github.com/Sarhuman/ECHOES-OF-AETHEL/actions/runs/40058943065
+Commit a003ee0566fad4350e30ed16c671d2bc6af51b2c
+FIX03R2 FEEDBACK: 13 checks, 0 failures
+FIX03 DAMAGE: 24 checks, 0 failures
+FIX03 ANCHORS: 28 checks, 0 failures
+FIX02 SYNC: iteration=2 path_points=11
+FALHA: agent resumes after map synchronizes
+FIX02 AI: 23 checks, 1 failures
+Exit 1. No Windows artifact published in this failed run.

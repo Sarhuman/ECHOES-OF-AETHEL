@@ -1,0 +1,260 @@
+[
+  {
+    "id": "annotated_map",
+    "category": "quest",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "bronze_shard",
+    "category": "materials",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "chain_boots",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "chain_gloves",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "cloth_sash",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "ether_ring",
+    "category": "accessories",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "hand_axe",
+    "category": "weapons",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "hp_large",
+    "category": "potions",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "hp_medium",
+    "category": "potions",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "hp_small",
+    "category": "potions",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "iron_axe",
+    "category": "weapons",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "iron_buckler",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "iron_helm",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "iron_mace",
+    "category": "weapons",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "leather_boots",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "leather_cap",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "leather_gloves",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "long_sword",
+    "category": "weapons",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "mana_large",
+    "category": "potions",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "mana_medium",
+    "category": "potions",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "mana_small",
+    "category": "potions",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "old_shield",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "plain_amulet",
+    "category": "accessories",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "plain_ring",
+    "category": "accessories",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "plated_belt",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "quest_seal",
+    "category": "quest",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "quilted_armor",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "restorer_cape",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "scale_mail",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "short_sword",
+    "category": "weapons",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "spiked_flail",
+    "category": "weapons",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "stone_dust",
+    "category": "materials",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "tower_shield",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "unq_amuleto",
+    "category": "accessories",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "unq_anel",
+    "category": "accessories",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "unq_egide",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "unq_mascara",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "unq_sino",
+    "category": "weapons",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "vigil_letter",
+    "category": "quest",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "war_axe",
+    "category": "weapons",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "wood_shield",
+    "category": "armor",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "worn_charm",
+    "category": "accessories",
+    "placeholder": true,
+    "size": 64
+  },
+  {
+    "id": "worn_fabric",
+    "category": "materials",
+    "placeholder": true,
+    "size": 64
+  }
+]

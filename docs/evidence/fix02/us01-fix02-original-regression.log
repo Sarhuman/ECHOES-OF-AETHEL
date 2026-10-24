@@ -1,0 +1,17 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+FALHA: wall prevents proximity acquisition
+FALHA: loss of sight enters search
+FALHA: search uses observed position only
+FALHA: lost player search expires
+FALHA: agent physically routes around pillar
+FALHA: navigation failure has explicit status
+FALHA: unavailable navigation has no direct-motion fallback
+FALHA: disconnected agent never walks toward target through the gap
+FALHA: physical wall produces blocked navigation status
+FALHA: blocked search ends and returns instead of pushing wall
+FALHA: unsynchronized navigation waits
+FALHA: wall prevents melee initiation and damage
+FALHA: new wall during windup blocks attack resolution
+FALHA: corrupted damage also respects solid obstruction
+FIX02 AI: 23 checks, 14 failures
