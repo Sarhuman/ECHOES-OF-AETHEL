@@ -1,0 +1,38 @@
+{
+  "scripts/hybrid_enemy.gd": {
+    "unchanged": true,
+    "sha256_normalized": "1ab28fabc43872778bd08638ca296b010ff33045ff3e456f9528c108197977f8"
+  },
+  "scripts/hybrid_player.gd": {
+    "unchanged": true,
+    "sha256_normalized": "f4592b9cc87bf7ca8b83a4b51adcce4a786de9952b03ffd512e339b1ab7176eb"
+  },
+  "scripts/hybrid_world.gd": {
+    "unchanged": true,
+    "sha256_normalized": "7021a22ee17294c842ffb6c3cfae3294fb6531ad3edacdd2614cf040a8b9587e"
+  },
+  "src/characters/character_visual.gd": {
+    "unchanged": true,
+    "sha256_normalized": "fefa69e3679b53b21b0db6920e13881fccc1f3e1d5ac840dfa9acead310b7024"
+  },
+  "tests/test_us01_fix03.gd": {
+    "unchanged": true,
+    "sha256_normalized": "651b01b5914ecb83a9b7f3fc92eef854206ae0d00e075193bf7286304c1053e1"
+  },
+  "tests/test_us01_fix03_recent_damage.gd": {
+    "unchanged": true,
+    "sha256_normalized": "8edf6fe85909979e0b76e23da3a12bf540b40d04deddd4361822170456ac9397"
+  },
+  "tests/test_us01_fix01.gd": {
+    "unchanged": true,
+    "sha256_normalized": "89d989a8c7ef68ec4853a9c25503a16fc83a45d3df647a26bceac1e55e324c9f"
+  },
+  "tests/test_us01_fix02.gd": {
+    "unchanged": true,
+    "sha256_normalized": "12d4d3d2775d2b3abe8213006a1e55bcae4d70188aaf1b34ac0d43d1472ec833"
+  },
+  "monotonic_timer_and_combat_predicate": {
+    "unchanged": true,
+    "sha256": "16acfa4203540c1e3938edb7b7c2d9dde63910c40ed37d078b552f37d1c5d3f5"
+  }
+}

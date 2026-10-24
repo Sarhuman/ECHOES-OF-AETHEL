@@ -183,7 +183,12 @@ func request(id: String) -> bool:
 func activate(id: String) -> bool:
 	pending = ""
 	if not objects.has(id) or not objects[id].visible or world.game_over: return false
-	if world.player.global_position.distance_to(objects[id].global_position) > 2.5 or not reachable(objects[id]): return false
+	if world.player.global_position.distance_to(objects[id].global_position) > 2.5:
+		if definition_for(id).kind == "anchor": world._show_message("Aproxime-se da âncora para viajar")
+		return false
+	if not reachable(objects[id]):
+		if definition_for(id).kind == "anchor": world._show_message("O caminho até a âncora está obstruído")
+		return false
 	var row := definition_for(id)
 	world.player.clear_commands()
 	var offset: Vector3 = objects[id].global_position-world.player.global_position
@@ -274,6 +279,12 @@ func open_travel(source: String) -> void:
 	var title := Label.new()
 	title.text = "Âncoras de Travessia · destinos descobertos"
 	column.add_child(title)
+	if not anchors.any(func(id: String) -> bool: return id != source):
+		var empty := Label.new()
+		empty.text = "Nenhum outro destino descoberto. Explore e ative outra âncora."
+		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		empty.custom_minimum_size.x = 340
+		column.add_child(empty)
 	for id: String in anchors:
 		if id == source: continue
 		var button := Button.new()
@@ -289,12 +300,23 @@ func open_travel(source: String) -> void:
 	world.player.keyboard_active = false
 	close.grab_focus()
 
+func _travel_unavailable(reason: String) -> bool:
+	world._show_message(reason)
+	return false
+
 func travel(source: String,destination: String) -> bool:
 	if _reject_combat_travel(): return false
-	if not source in anchors or not destination in anchors or not objects.has(source) or not objects.has(destination): return false
-	if world.game_over or not objects[source].visible or world.player.global_position.distance_to(objects[source].global_position) > 2.5 or not reachable(objects[source]): return false
-	if definition_for(destination).region == "map_02" and not world.quest_started: return false
-	if not world.regions.move_to(str(definition_for(destination).region),objects[destination].position+Vector3(0,0,1.4)): return false
+	if not source in anchors or not destination in anchors or not objects.has(source) or not objects.has(destination):
+		return _travel_unavailable("Descubra as âncoras de origem e destino antes de viajar")
+	if world.game_over: return _travel_unavailable("Não é possível viajar após a derrota")
+	if not objects[source].visible: return _travel_unavailable("A âncora de origem não está nesta região")
+	if world.player.global_position.distance_to(objects[source].global_position) > 2.5:
+		return _travel_unavailable("Aproxime-se da âncora para viajar")
+	if not reachable(objects[source]): return _travel_unavailable("O caminho até a âncora está obstruído")
+	if definition_for(destination).region == "map_02" and not world.quest_started:
+		return _travel_unavailable("Converse com Maera para liberar a travessia ao Bairro")
+	if not world.regions.move_to(str(definition_for(destination).region),objects[destination].position+Vector3(0,0,1.4)):
+		return _travel_unavailable("Aguarde a travessia atual terminar" if world.regions.transitioning else "Não foi possível acessar o destino")
 	feedback(world.player.position,"Travessia concluída","anchor")
 	return true
 

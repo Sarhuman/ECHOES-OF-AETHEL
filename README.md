@@ -1,6 +1,10 @@
+# Fix03R2 — feedback das Âncoras de Travessia
+
+Pacote: `EchoesOfAethel-US01-Fix03R2-Windows-x64.zip`. [Relatório R2](docs/BUG_US01_03_FIX03R2.md). Explica ausência de destinos e recusas sem alterar a regra de combate ou a janela de 5 segundos. G2 do Fix03R1 foi reprovado; Fix03R2 aguarda homologação. PR #18 Draft, sem merge.
+
 # US-01 Fix03 — Ancoras fora de combate
 
-Entrega atual: EchoesOfAethel-US01-Fix03R1-Windows-x64.zip. Veja [regra aprovada e testes](docs/BUG_US01_03_FIX03.md). Fix01/Fix02 preservados; PR #18 Draft.
+Entrega atual: EchoesOfAethel-US01-Fix03R2-Windows-x64.zip. Veja [regra aprovada e testes](docs/BUG_US01_03_FIX03.md). Fix01/Fix02 preservados; PR #18 Draft.
 
 # US-01 Fix02 — percepção e navegação inimiga
 
